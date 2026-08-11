@@ -1,0 +1,38 @@
+package com.example.SistemaDeGestion.services.domain;
+
+import com.example.SistemaDeGestion.configs.exceptions.ConflictException;
+import com.example.SistemaDeGestion.configs.exceptions.NotFoundException;
+import com.example.SistemaDeGestion.dtos.request.ProductoCreateReqDto;
+import com.example.SistemaDeGestion.dtos.response.ProductoCreateResDto;
+import com.example.SistemaDeGestion.interfaces.ICreateProductoService;
+import com.example.SistemaDeGestion.mappers.ProductoMapper;
+import com.example.SistemaDeGestion.models.Producto;
+import com.example.SistemaDeGestion.models.Receta;
+import com.example.SistemaDeGestion.repositories.ProductosRepository;
+import com.example.SistemaDeGestion.repositories.RecetasRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@AllArgsConstructor
+public class ProductoCreateService implements ICreateProductoService {
+
+    private final ProductosRepository productosRepository;
+    private final RecetasRepository recetasRepository;
+
+    @Override
+    public ProductoCreateResDto execute(ProductoCreateReqDto request) {
+        Receta receta = recetasRepository.findById(request.idReceta())
+                .orElseThrow(() -> new NotFoundException(
+                        "No existe una receta registrada con el id " + request.idReceta()
+                ));
+
+        if (productosRepository.existsByNombreProductoIgnoreCase(request.nombreProducto())) {
+            throw new ConflictException("Ya existe un producto registrado con el nombre " + request.nombreProducto());
+        }
+
+        Producto producto = ProductoMapper.toModel(request, receta);
+        return ProductoMapper.toResponseDto(productosRepository.save(producto));
+    }
+
+}
