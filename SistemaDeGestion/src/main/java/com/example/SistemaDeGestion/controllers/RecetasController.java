@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Receta")
-@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class RecetasController {
 

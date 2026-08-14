@@ -1,0 +1,61 @@
+<div class="home-container">
+  <header class="home-header">
+    <div>
+      <h1>Hambur-Besa</h1>
+      <p class="welcome">
+        Bienvenido, {{ usuario()?.nombre }} {{ usuario()?.apellido }}
+      </p>
+    </div>
+    <button type="button" class="btn btn-danger" (click)="cerrarSesion()">
+      Cerrar sesion
+    </button>
+  </header>
+
+  <main class="home-main">
+    <section class="card">
+      <h2>Datos de la sesion</h2>
+      <ul class="user-data">
+        <li><strong>Nombre:</strong> {{ usuario()?.nombre }} {{ usuario()?.apellido }}</li>
+        <li><strong>Email:</strong> {{ usuario()?.email }}</li>
+        <li><strong>Rol:</strong> {{ usuario()?.rol }}</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Recursos protegidos</h2>
+      <p>
+        Esta seccion se accede con el token JWT obtenido al iniciar sesion.
+      </p>
+      <button type="button" class="btn btn-primary" (click)="cargarProductos()" [disabled]="cargando()">
+        {{ cargando() ? 'Consultando...' : 'Consultar productos' }}
+      </button>
+
+      @if (mensajeApi()) {
+        <div class="alert alert-error">{{ mensajeApi() }}</div>
+      }
+
+      @if (productos().length) {
+        <table class="productos-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Descripcion</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (producto of productos(); track producto.idProducto) {
+              <tr>
+                <td>{{ producto.idProducto }}</td>
+                <td>{{ producto.nombreProducto }}</td>
+                <td>{{ producto.descripcion }}</td>
+                <td>{{ producto.precio }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  </main>
+</div>
