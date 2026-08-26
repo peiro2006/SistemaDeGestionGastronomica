@@ -37,7 +37,10 @@ export class LoginComponent {
     };
 
     this.authService.login(credenciales).subscribe({
-      next: () => this.router.navigate(['/home']),
+      next: () => {
+        const destino = this.authService.currentUser()?.rol === 'ROLE_ADMIN' ? '/admin/productos' : '/catalogo';
+        this.router.navigate([destino]);
+      },
       error: (err) => {
         this.loading = false;
         this.errorMessage = this.extraerError(err);

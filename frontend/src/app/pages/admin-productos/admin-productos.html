@@ -1,0 +1,202 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Productos y recetas</h1>
+    </div>
+    <nav class="nav-actions">
+      <button type="button" class="notif-btn" (click)="toggleNotificaciones()">
+        Alertas @if (notificacionesNoLeidas()) { <span class="notif-badge">{{ notificacionesNoLeidas() }}</span> }
+      </button>
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (mostrarNotificaciones()) {
+    <section class="card notif-panel">
+      <h2>Alertas de stock bajo</h2>
+      @if (notificaciones().length) {
+        @for (notif of notificaciones(); track notif.idNotificacion) {
+          <div class="notif-item" [class.leida]="notif.leida">
+            <div>
+              <strong>{{ notif.nombreProducto || 'Insumo' }}</strong>
+              <p>{{ notif.mensaje }}</p>
+              <span class="notif-fecha">{{ notif.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            @if (!notif.leida) {
+              <button type="button" class="btn btn-light btn-sm" (click)="marcarNotificacionLeida(notif.idNotificacion)">Marcar leida</button>
+            }
+          </div>
+        }
+      } @else {
+        <p class="empty">No hay alertas pendientes.</p>
+      }
+    </section>
+  }
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <main class="grid">
+    <section class="card">
+      <div class="section-heading">
+        <h2>{{ productoEditando() ? 'Editar producto' : 'Crear producto' }}</h2>
+        @if (productoEditando()) {
+          <button type="button" class="btn btn-light" (click)="cancelarEdicion()">Cancelar</button>
+        }
+      </div>
+
+      <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()" class="form-grid">
+        <label>
+          Nombre
+          <input type="text" formControlName="nombreProducto" />
+        </label>
+
+        <label>
+          Precio
+          <input type="text" formControlName="precio" placeholder="1200.00" />
+        </label>
+
+        <label>
+          Categoria
+          <input type="text" formControlName="categoria" placeholder="Hamburguesas" />
+        </label>
+
+        <label>
+          Imagen URL
+          <input type="url" formControlName="imagenUrl" placeholder="https://..." />
+        </label>
+
+        <label class="span-2">
+          Descripcion
+          <textarea rows="3" formControlName="descripcion"></textarea>
+        </label>
+
+        <label>
+          Receta
+          <select formControlName="idReceta">
+            <option [ngValue]="0">Seleccione una receta</option>
+            @for (receta of recetas(); track receta.idReceta) {
+              <option [ngValue]="receta.idReceta">{{ receta.nombreReceta }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Stock minimo
+          <input type="number" formControlName="stockMinimo" min="0" />
+        </label>
+
+        <label>
+          Stock inicial
+          <input type="number" formControlName="stockActual" min="0" [readonly]="!!productoEditando()" />
+        </label>
+
+        @if (productoEditando()) {
+          <p class="hint span-2">El stock actual se modifica desde la pantalla de stock para mantener historial.</p>
+        }
+
+        <button class="btn btn-primary span-2" type="submit" [disabled]="guardandoProducto()">
+          {{ guardandoProducto() ? 'Guardando...' : productoEditando() ? 'Actualizar producto' : 'Crear producto' }}
+        </button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Crear receta con insumos</h2>
+      <form [formGroup]="recetaForm" (ngSubmit)="guardarReceta()" class="recipe-form">
+        <label>
+          Nombre de receta
+          <input type="text" formControlName="nombreReceta" />
+        </label>
+
+        <label>
+          Descripcion
+          <textarea rows="2" formControlName="descripcionReceta"></textarea>
+        </label>
+
+        <div class="ingredients-title">
+          <strong>Ingredientes por unidad</strong>
+          <button type="button" class="btn btn-light" (click)="agregarIngrediente()">Agregar</button>
+        </div>
+
+        @for (ingrediente of ingredientes(); track $index) {
+          <div class="ingredient-row">
+            <input type="text" placeholder="Insumo" [value]="ingrediente.nombreInsumo" (input)="actualizarIngrediente($index, 'nombreInsumo', $event)" />
+            <input type="number" min="0.01" step="0.01" placeholder="Cantidad" [value]="ingrediente.cantidad" (input)="actualizarIngrediente($index, 'cantidad', $event)" />
+            <input type="text" placeholder="Unidad" [value]="ingrediente.unidadMedida" (input)="actualizarIngrediente($index, 'unidadMedida', $event)" />
+            <button type="button" class="btn btn-danger" (click)="quitarIngrediente($index)" [disabled]="ingredientes().length === 1">Quitar</button>
+          </div>
+        }
+
+        @if (recetaError()) {
+          <div class="alert alert-error">{{ recetaError() }}</div>
+        }
+
+        <button class="btn btn-secondary" type="submit" [disabled]="guardandoReceta()">
+          {{ guardandoReceta() ? 'Creando...' : 'Crear receta' }}
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <section class="card table-card">
+    <div class="section-heading">
+      <h2>Listado de productos</h2>
+      @if (cargando()) {
+        <span class="muted">Cargando...</span>
+      }
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Receta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (producto of productos(); track producto.idProducto) {
+            <tr>
+              <td>
+                <strong>{{ producto.nombreProducto }}</strong>
+                <span>{{ producto.descripcion }}</span>
+              </td>
+              <td>{{ producto.categoria || '-' }}</td>
+              <td>${{ producto.precio }}</td>
+              <td>{{ producto.stockActual ?? 0 }}</td>
+              <td>
+                <span class="status" [class.inactive]="!producto.activo">
+                  {{ producto.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>{{ producto.nombreReceta || producto.idReceta || '-' }}</td>
+              <td class="actions-cell">
+                <button type="button" class="btn btn-light" (click)="editar(producto)">Editar</button>
+                <button type="button" class="btn" [class.btn-danger]="producto.activo" [class.btn-secondary]="!producto.activo" (click)="cambiarEstado(producto)">
+                  {{ producto.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty">No hay productos cargados.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

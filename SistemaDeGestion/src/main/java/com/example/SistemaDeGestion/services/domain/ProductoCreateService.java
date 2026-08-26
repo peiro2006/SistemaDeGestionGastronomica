@@ -12,6 +12,7 @@ import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import com.example.SistemaDeGestion.repositories.RecetasRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class ProductoCreateService implements ICreateProductoService {
     private final RecetasRepository recetasRepository;
 
     @Override
+    @Transactional
     public ProductoCreateResDto execute(ProductoCreateReqDto request) {
         Receta receta = recetasRepository.findById(request.idReceta())
                 .orElseThrow(() -> new NotFoundException(

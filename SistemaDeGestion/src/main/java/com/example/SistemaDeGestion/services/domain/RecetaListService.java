@@ -8,6 +8,7 @@ import com.example.SistemaDeGestion.repositories.RecetasRepository;
 import com.example.SistemaDeGestion.repositories.specs.RecetaSpecs;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class RecetaListService implements IRecetaListService {
     private final RecetasRepository recetasRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<RecetaCreateResDto> execute(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             return RecetaMapper.toResponseDtoList(recetasRepository.findAll());

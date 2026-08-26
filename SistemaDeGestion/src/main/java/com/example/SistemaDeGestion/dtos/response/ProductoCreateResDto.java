@@ -6,7 +6,13 @@ public record ProductoCreateResDto (
         String nombreProducto,
         String descripcion,
         String precio,
-        Long idReceta
+        String categoria,
+        String imagenUrl,
+        Boolean activo,
+        Integer stockActual,
+        Integer stockMinimo,
+        Long idReceta,
+        String nombreReceta
 
 ) {
 }

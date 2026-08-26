@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseResponse } from '../models/auth.models';
 import { Receta, RecetaCreateRequest } from '../models/receta.models';
@@ -9,8 +9,12 @@ export class RecetasService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:8080';
 
-  listar(): Observable<BaseResponse<Receta[]>> {
-    return this.http.get<BaseResponse<Receta[]>>(`${this.apiUrl}/Receta`);
+  listar(nombre?: string): Observable<BaseResponse<Receta[]>> {
+    let params = new HttpParams();
+    if (nombre) {
+      params = params.set('nombre', nombre);
+    }
+    return this.http.get<BaseResponse<Receta[]>>(`${this.apiUrl}/Receta`, { params });
   }
 
   crear(data: RecetaCreateRequest): Observable<BaseResponse<Receta>> {

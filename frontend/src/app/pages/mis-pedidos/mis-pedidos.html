@@ -1,0 +1,97 @@
+<div class="pedidos-shell">
+  <header class="pedidos-header">
+    <div>
+      <p class="eyebrow">Mi cuenta</p>
+      <h1>Mis pedidos</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <main class="pedidos-main">
+    @if (cargando()) {
+      <div class="empty">Cargando pedidos...</div>
+    } @else if (pedidos().length) {
+      @for (pedido of pedidos(); track pedido.idPedido) {
+        <article class="pedido-card">
+          <div class="pedido-header">
+            <div>
+              <strong>Pedido #{{ pedido.idPedido }}</strong>
+              <span class="pedido-fecha">{{ pedido.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <span class="badge" [class.creado]="pedido.estado === 'CREADO'" [class.entregado]="pedido.estado === 'ENTREGADO'" [class.cancelado]="pedido.estado === 'CANCELADO'">
+              {{ pedido.estado }}
+            </span>
+          </div>
+
+          <div class="pedido-items">
+            @for (item of pedido.items; track item.idPedidoItem) {
+              <div class="pedido-item">
+                <span>{{ item.nombreProducto }} x{{ item.cantidad }}</span>
+                <span>${{ item.subtotal }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="pedido-footer">
+            <strong>Total: ${{ pedido.total }}</strong>
+
+            @if (resenasPorPedido().has(pedido.idPedido)) {
+              <div class="resena-registrada">
+                <span class="resena-label">Tu resena:</span>
+                <span class="resena-estrellas">
+                  @for (estrella of estrellasArray(); track estrella) {
+                    <span [class.activa]="estrella <= (resenasPorPedido().get(pedido.idPedido)?.calificacion ?? 0)">&#9733;</span>
+                  }
+                </span>
+                @if (resenasPorPedido().get(pedido.idPedido)?.comentario) {
+                  <p class="resena-comentario">{{ resenasPorPedido().get(pedido.idPedido)?.comentario }}</p>
+                }
+              </div>
+            }
+
+            @if (puedeResenar(pedido)) {
+              @if (pedidoResenaAbierto() === pedido.idPedido) {
+                <div class="resena-form">
+                  <h3>Dejar resena</h3>
+                  <div class="estrellas-input">
+                    @for (estrella of estrellasArray(); track estrella) {
+                      <button
+                        type="button"
+                        class="star-btn"
+                        [class.activa]="estrella <= resenaForm.getRawValue().calificacion"
+                        (click)="setCalificacion(estrella)"
+                      >&#9733;</button>
+                    }
+                  </div>
+                  <textarea
+                    rows="2"
+                    placeholder="Comentario (opcional)"
+                    [formControl]="resenaForm.controls.comentario"
+                  ></textarea>
+                  <div class="resena-actions">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="enviarResena(pedido.idPedido)">Enviar</button>
+                    <button type="button" class="btn btn-light btn-sm" (click)="cerrarResena()">Cancelar</button>
+                  </div>
+                </div>
+              } @else {
+                <button type="button" class="btn btn-secondary btn-sm" (click)="abrirResena(pedido.idPedido)">Dejar resena</button>
+              }
+            }
+          </div>
+        </article>
+      }
+    } @else {
+      <div class="empty">No tienes pedidos registrados.</div>
+    }
+  </main>
+</div>

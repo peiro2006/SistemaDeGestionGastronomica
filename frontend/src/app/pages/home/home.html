@@ -22,13 +22,24 @@
     </section>
 
     <section class="card">
-      <h2>Recursos protegidos</h2>
+      <h2>Accesos</h2>
       <p>
-        Esta seccion se accede con el token JWT obtenido al iniciar sesion.
+        Use el catalogo para comprar o el panel administrativo si su usuario tiene permisos.
       </p>
+      <div class="actions">
+        <a class="btn btn-primary" routerLink="/catalogo">Ver catalogo</a>
+        <a class="btn btn-outline" routerLink="/mis-pedidos">Mis pedidos</a>
+        @if (usuario()?.rol === 'ROLE_ADMIN') {
+          <a class="btn btn-secondary" routerLink="/admin/productos">Administrar productos</a>
+          <a class="btn btn-secondary" routerLink="/admin/stock">Gestionar stock</a>
+        }
+      </div>
+
+      @if (usuario()?.rol === 'ROLE_ADMIN') {
       <button type="button" class="btn btn-primary" (click)="cargarProductos()" [disabled]="cargando()">
         {{ cargando() ? 'Consultando...' : 'Consultar productos' }}
       </button>
+      }
 
       @if (mensajeApi()) {
         <div class="alert alert-error">{{ mensajeApi() }}</div>

@@ -1,0 +1,139 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Gestion de stock</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <section class="card">
+      <h2>Ajustar stock</h2>
+      <form [formGroup]="form" (ngSubmit)="ajustar()" class="form-grid">
+        <label>
+          Tipo de recurso
+          <select formControlName="destino" (change)="actualizarDestino($event)">
+            <option value="producto">Producto</option>
+            <option value="insumo">Insumo</option>
+          </select>
+        </label>
+
+        @if (form.getRawValue().destino === 'producto') {
+          <label>
+            Producto
+            <select formControlName="idProducto">
+              <option [ngValue]="0">Seleccione un producto</option>
+              @for (producto of productos(); track producto.idProducto) {
+                <option [ngValue]="producto.idProducto">{{ producto.nombreProducto }} (stock: {{ producto.stockActual ?? 0 }})</option>
+              }
+            </select>
+          </label>
+        }
+
+        @if (form.getRawValue().destino === 'insumo') {
+          <label>
+            Insumo
+            <select formControlName="idInsumo">
+              <option [ngValue]="0">Seleccione un insumo</option>
+              @for (insumo of insumos(); track insumo.idInsumo) {
+                <option [ngValue]="insumo.idInsumo">{{ insumo.nombreInsumo }} (stock: {{ insumo.stockActual }})</option>
+              }
+            </select>
+          </label>
+        }
+
+        <label>
+          Tipo de movimiento
+          <select formControlName="tipo">
+            <option value="INGRESO">INGRESO (reposicion)</option>
+            <option value="EGRESO">EGRESO (merma/correccion)</option>
+          </select>
+        </label>
+
+        <label>
+          Cantidad
+          <input type="number" formControlName="cantidad" min="1" />
+        </label>
+
+        <label class="span-2">
+          Motivo
+          <input type="text" formControlName="motivo" placeholder="Reposicion, Rotura, Ajuste auditivo..." />
+        </label>
+
+        <button class="btn btn-primary span-2" type="submit" [disabled]="guardando()">
+          {{ guardando() ? 'Procesando...' : 'Aplicar ajuste' }}
+        </button>
+      </form>
+    </section>
+
+    <section class="card stats-card">
+      <h2>Resumen</h2>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <span class="stat-label">Productos</span>
+          <span class="stat-value">{{ productos().length }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Insumos</span>
+          <span class="stat-value">{{ insumos().length }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Movimientos registrados</span>
+          <span class="stat-value">{{ movimientos().length }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card table-card">
+    <h2>Historial de movimientos</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Recurso</th>
+            <th>Cantidad</th>
+            <th>Motivo</th>
+            <th>Saldo posterior</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (mov of movimientos(); track mov.idStockMovimiento) {
+            <tr>
+              <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <span class="badge" [class.ingreso]="mov.tipo === 'INGRESO'" [class.egreso]="mov.tipo === 'EGRESO'">
+                  {{ mov.tipo }}
+                </span>
+              </td>
+              <td>{{ mov.nombreProducto || mov.nombreInsumo }}</td>
+              <td>{{ mov.cantidad }}</td>
+              <td>{{ mov.motivo }}</td>
+              <td>{{ mov.saldoPosterior }}</td>
+              <td>{{ mov.usuarioEmail }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty">No hay movimientos registrados.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

@@ -8,6 +8,7 @@ import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import com.example.SistemaDeGestion.repositories.specs.ProductoSpecs;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ProductoListService implements IProductoListService {
     private final ProductosRepository productosRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductoCreateResDto> execute(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             return ProductoMapper.toResponseDtoList(productosRepository.findAll());

@@ -1,0 +1,135 @@
+<div class="catalogo-shell">
+  <header class="catalogo-header">
+    <div class="brand">
+      <h1>Hambur-Besa</h1>
+    </div>
+    <div class="header-actions">
+      @if (usuario()) {
+        @if (usuario()?.rol === 'ROLE_ADMIN') {
+          <a routerLink="/admin/productos" class="link-muted">Admin</a>
+        }
+        <a routerLink="/mis-pedidos" class="link-muted">Mis pedidos</a>
+        <a routerLink="/home" class="link-muted">Mi cuenta</a>
+        <button type="button" class="carrito-toggle" (click)="toggleCarrito()">
+          Carrito ({{ carritoCount() }})
+        </button>
+      } @else {
+        <button type="button" class="btn btn-outline" (click)="irALogin()">Iniciar sesion</button>
+      }
+    </div>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  @if (mostrarCarrito()) {
+    <section class="carrito-panel">
+      <h2>Mi carrito</h2>
+      @if (carrito().length) {
+        <div class="carrito-items">
+          @for (item of carrito(); track item.producto.idProducto) {
+            <div class="carrito-item">
+              <div>
+                <strong>{{ item.producto.nombreProducto }}</strong>
+                <span class="muted">{{ item.cantidad }} x ${{ item.producto.precio }}</span>
+              </div>
+              <div class="carrito-item-actions">
+                <span class="subtotal">${{ calcularSubtotal(item.producto.precio, item.cantidad) }}</span>
+                <button type="button" class="btn btn-danger btn-sm" (click)="quitarDelCarrito(item.producto.idProducto)">X</button>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="carrito-footer">
+          <strong>Total: ${{ totalCarrito().toFixed(2) }}</strong>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="checkout()"
+            [disabled]="checkoutProcesando() || !usuario()"
+          >
+            {{ checkoutProcesando() ? 'Procesando...' : 'Confirmar pedido' }}
+          </button>
+          @if (!usuario()) {
+            <p class="muted">Debe iniciar sesion para confirmar el pedido.</p>
+          }
+        </div>
+      } @else {
+        <p class="empty">El carrito esta vacio.</p>
+      }
+    </section>
+  }
+
+  <section class="filtros-bar">
+    <input
+      type="text"
+      class="filtro-input"
+      placeholder="Buscar producto..."
+      [ngModel]="textoBusqueda()"
+      (ngModelChange)="textoBusqueda.set($event)"
+      (keyup.enter)="buscar()"
+    />
+    <input
+      type="text"
+      class="filtro-input"
+      placeholder="Categoria..."
+      [ngModel]="categoriaFiltro()"
+      (ngModelChange)="categoriaFiltro.set($event)"
+      (keyup.enter)="buscar()"
+    />
+    <button type="button" class="btn btn-primary" (click)="buscar()">Buscar</button>
+    <button type="button" class="btn btn-light" (click)="limpiarFiltros()">Limpiar</button>
+  </section>
+
+  <main class="catalogo-main">
+    @if (cargando()) {
+      <div class="empty">Cargando productos...</div>
+    } @else if (productos().length) {
+      <div class="productos-grid">
+        @for (producto of productos(); track producto.idProducto) {
+          <article class="producto-card">
+            @if (producto.imagenUrl) {
+              <img [src]="producto.imagenUrl" [alt]="producto.nombreProducto" class="producto-img" />
+            } @else {
+              <div class="producto-img-placeholder">Sin imagen</div>
+            }
+            <div class="producto-body">
+              <span class="producto-categoria">{{ producto.categoria || 'General' }}</span>
+              <h3>{{ producto.nombreProducto }}</h3>
+              <p>{{ producto.descripcion }}</p>
+              <div class="producto-meta">
+                <span class="precio">${{ producto.precio }}</span>
+                <span class="stock" [class.sin-stock]="!producto.stockActual">
+                  {{ (producto.stockActual ?? 0) > 0 ? 'Stock: ' + producto.stockActual : 'Sin stock' }}
+                </span>
+              </div>
+              <div class="card-actions">
+                <input
+                  type="number"
+                  min="1"
+                  [max]="producto.stockActual ?? 0"
+                  value="1"
+                  [disabled]="!(producto.stockActual)"
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="agregarAlCarrito(producto, $event)"
+                  [disabled]="!(producto.stockActual)"
+                >
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty">No se encontraron productos disponibles.</div>
+    }
+  </main>
+</div>

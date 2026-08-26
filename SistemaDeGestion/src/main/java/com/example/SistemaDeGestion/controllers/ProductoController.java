@@ -2,9 +2,14 @@ package com.example.SistemaDeGestion.controllers;
 
 import com.example.SistemaDeGestion.configs.BaseResponse;
 import com.example.SistemaDeGestion.dtos.request.ProductoCreateReqDto;
+import com.example.SistemaDeGestion.dtos.request.ProductoEstadoReqDto;
+import com.example.SistemaDeGestion.dtos.request.ProductoUpdateReqDto;
 import com.example.SistemaDeGestion.dtos.response.ProductoCreateResDto;
 import com.example.SistemaDeGestion.interfaces.ICreateProductoService;
 import com.example.SistemaDeGestion.interfaces.IProductoListService;
+import com.example.SistemaDeGestion.services.domain.ProductoEstadoService;
+import com.example.SistemaDeGestion.services.domain.ProductoGetService;
+import com.example.SistemaDeGestion.services.domain.ProductoUpdateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,9 @@ public class ProductoController {
 
     private final ICreateProductoService productoCreateService;
     private final IProductoListService productoListService;
+    private final ProductoGetService productoGetService;
+    private final ProductoUpdateService productoUpdateService;
+    private final ProductoEstadoService productoEstadoService;
 
     @PostMapping
     public ResponseEntity<BaseResponse<ProductoCreateResDto>> createProducto(
@@ -40,6 +48,44 @@ public class ProductoController {
                 BaseResponse.ok(
                         productoListService.execute(nombre),
                         "Productos obtenidos correctamente"
+                )
+        );
+    }
+
+    @GetMapping("/{idProducto}")
+    public ResponseEntity<BaseResponse<ProductoCreateResDto>> getProducto(
+            @PathVariable Long idProducto
+    ) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        productoGetService.execute(idProducto),
+                        "Producto obtenido correctamente"
+                )
+        );
+    }
+
+    @PutMapping("/{idProducto}")
+    public ResponseEntity<BaseResponse<ProductoCreateResDto>> updateProducto(
+            @PathVariable Long idProducto,
+            @Valid @RequestBody ProductoUpdateReqDto request
+    ) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        productoUpdateService.execute(idProducto, request),
+                        "Producto actualizado correctamente"
+                )
+        );
+    }
+
+    @PatchMapping("/{idProducto}/estado")
+    public ResponseEntity<BaseResponse<ProductoCreateResDto>> cambiarEstado(
+            @PathVariable Long idProducto,
+            @Valid @RequestBody ProductoEstadoReqDto request
+    ) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        productoEstadoService.execute(idProducto, request.activo()),
+                        "Estado del producto actualizado correctamente"
                 )
         );
     }

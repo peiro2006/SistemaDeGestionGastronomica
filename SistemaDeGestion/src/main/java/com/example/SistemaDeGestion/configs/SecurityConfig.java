@@ -36,6 +36,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/registro", "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/catalogo/productos").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/Producto", "/Receta").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/Producto", "/Producto/**", "/Receta", "/Receta/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/Producto/**", "/Receta/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Producto/**", "/Receta/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/pedidos").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/pedidos").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/pedidos/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/pedidos/*/resena").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/pedidos/*/resena").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/pedidos/*/estado").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
