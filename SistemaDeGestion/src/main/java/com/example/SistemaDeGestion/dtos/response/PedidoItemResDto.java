@@ -2,7 +2,7 @@ package com.example.SistemaDeGestion.dtos.response;
 
 import java.math.BigDecimal;
 
-public record PedidoItemResDto(
+public record PedidoItemResDto (
 
         Long idPedidoItem,
         Long idProducto,

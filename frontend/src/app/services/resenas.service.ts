@@ -23,10 +23,10 @@ export class ResenasService {
   private readonly apiUrl = 'http://localhost:8080';
 
   crear(idPedido: number, data: ResenaCreateRequest): Observable<BaseResponse<Resena>> {
-    return this.http.post<BaseResponse<Resena>>(`${this.apiUrl}/pedidos/${idPedido}/resena`, data);
+    return this.http.post<BaseResponse<Resena>>(`${this.apiUrl}/pedido/${idPedido}/resena`, data);
   }
 
   listarPorPedido(idPedido: number): Observable<BaseResponse<Resena[]>> {
-    return this.http.get<BaseResponse<Resena[]>>(`${this.apiUrl}/pedidos/${idPedido}/resena`);
+    return this.http.get<BaseResponse<Resena[]>>(`${this.apiUrl}/pedido/${idPedido}/resena`);
   }
 }

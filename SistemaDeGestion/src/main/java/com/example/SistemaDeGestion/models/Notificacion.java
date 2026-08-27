@@ -1,16 +1,11 @@
 package com.example.SistemaDeGestion.models;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "Notificacion")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Notificacion {
 
     @Id
@@ -31,6 +26,17 @@ public class Notificacion {
     @Column(name = "fecha", nullable = false, updatable = false)
     private Instant fecha;
 
+    public Long getIdNotificacion() { return idNotificacion; }
+    public void setIdNotificacion(Long idNotificacion) { this.idNotificacion = idNotificacion; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public String getMensaje() { return mensaje; }
+    public void setMensaje(String mensaje) { this.mensaje = mensaje; }
+    public Boolean getLeida() { return leida; }
+    public void setLeida(Boolean leida) { this.leida = leida; }
+    public Instant getFecha() { return fecha; }
+    public void setFecha(Instant fecha) { this.fecha = fecha; }
+
     @PrePersist
     protected void onCreate() {
         if (leida == null) {
@@ -40,5 +46,4 @@ public class Notificacion {
             fecha = Instant.now();
         }
     }
-
 }

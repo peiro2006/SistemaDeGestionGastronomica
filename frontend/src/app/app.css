@@ -1,0 +1,150 @@
+:root {
+  --color-bg: #f4f6f9;
+  --color-surface: #ffffff;
+  --color-primary: #e63946;
+  --color-primary-dark: #c92a37;
+  --color-primary-soft: #fdecee;
+  --color-accent: #1f6feb;
+  --color-ink: #1a2230;
+  --color-ink-soft: #5b6675;
+  --color-muted: #8a94a6;
+  --color-border: #e6eaf0;
+  --color-success: #1b9e5a;
+  --color-success-soft: #e7f6ee;
+  --color-danger: #d23a3a;
+  --color-danger-soft: #fbe7e7;
+  --color-warning: #b7791f;
+  --color-warning-soft: #fcf3e3;
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 20px 50px rgba(16, 24, 40, 0.16);
+
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.45;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 10px 22px rgba(230, 57, 70, 0.45);
+}
+
+.btn-light {
+  background: #eef1f6;
+  color: var(--color-ink);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 0.42rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+/* ---------- Carteles / alertas ---------- */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: 1px solid transparent;
+}
+
+.alert::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.alert-ok {
+  color: var(--color-success);
+  background: var(--color-success-soft);
+  border-color: #bfe6cf;
+}
+
+.alert-ok::before {
+  background: var(--color-success);
+}
+
+.alert-error {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+  border-color: #f3c2c2;
+}
+
+.alert-error::before {
+  background: var(--color-danger);
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 2.5rem 1rem;
+  font-size: 0.95rem;
+}
+
+.muted {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}

@@ -48,13 +48,11 @@ public class RecetaCreateService implements IRecetaCreateService {
 
     private void agregarIngrediente(Receta receta, RecetaIngredienteReqDto request) {
         Insumo insumo = obtenerOCrearInsumo(request);
-        receta.getIngredientes().add(
-                RecetaInsumo.builder()
-                        .receta(receta)
-                        .insumo(insumo)
-                        .cantidad(request.cantidad())
-                        .build()
-        );
+        RecetaInsumo ri = new RecetaInsumo();
+        ri.setReceta(receta);
+        ri.setInsumo(insumo);
+        ri.setCantidad(request.cantidad());
+        receta.getIngredientes().add(ri);
     }
 
     private Insumo obtenerOCrearInsumo(RecetaIngredienteReqDto request) {
@@ -68,13 +66,13 @@ public class RecetaCreateService implements IRecetaCreateService {
         }
 
         return insumosRepository.findByNombreInsumoIgnoreCase(request.nombreInsumo())
-                .orElseGet(() -> insumosRepository.save(
-                        Insumo.builder()
-                                .nombreInsumo(request.nombreInsumo())
-                                .unidadMedida(request.unidadMedida())
-                                .stockActual(0)
-                                .build()
-                ));
+                .orElseGet(() -> {
+                    Insumo insumo = new Insumo();
+                    insumo.setNombreInsumo(request.nombreInsumo());
+                    insumo.setUnidadMedida(request.unidadMedida());
+                    insumo.setStockActual(0);
+                    return insumosRepository.save(insumo);
+                });
     }
 
     private String resumenIngredientes(RecetaCreateReqDto request) {

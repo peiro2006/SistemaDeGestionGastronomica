@@ -6,8 +6,10 @@ import { CatalogoComponent } from './pages/catalogo/catalogo';
 import { AdminProductosComponent } from './pages/admin-productos/admin-productos';
 import { AdminStockComponent } from './pages/admin-stock/admin-stock';
 import { MisPedidosComponent } from './pages/mis-pedidos/mis-pedidos';
+import { EmpleadoPedidosComponent } from './pages/empleado-pedidos/gestion-pedidos';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+import { empleadoGuard } from './guards/empleado.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/catalogo', pathMatch: 'full' },
@@ -16,6 +18,7 @@ export const routes: Routes = [
   { path: 'catalogo', component: CatalogoComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'mis-pedidos', component: MisPedidosComponent, canActivate: [authGuard] },
+  { path: 'empleado/pedidos', component: EmpleadoPedidosComponent, canActivate: [authGuard, empleadoGuard] },
   { path: 'admin/productos', component: AdminProductosComponent, canActivate: [authGuard, adminGuard] },
   { path: 'admin/stock', component: AdminStockComponent, canActivate: [authGuard, adminGuard] },
   { path: '**', redirectTo: '/catalogo' }

@@ -1,11 +1,10 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Producto } from '../../models/producto.models';
 import { AuthService } from '../../services/auth.service';
 import { ProductosService } from '../../services/productos.service';
-import { CarritoService, CarritoItem } from '../../services/carrito.service';
-import { PedidosService } from '../../services/pedidos.service';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-catalogo',
@@ -17,25 +16,17 @@ export class CatalogoComponent implements OnInit {
   private readonly productosService = inject(ProductosService);
   private readonly authService = inject(AuthService);
   private readonly carritoService = inject(CarritoService);
-  private readonly pedidosService = inject(PedidosService);
   private readonly router = inject(Router);
 
   readonly productos = signal<Producto[]>([]);
-  readonly carrito = this.carritoService.items;
-  readonly totalCarrito = this.carritoService.total;
   readonly cargando = signal(false);
   readonly mensaje = signal<string | null>(null);
   readonly error = signal<string | null>(null);
-  readonly checkoutProcesando = signal(false);
 
   readonly textoBusqueda = signal('');
   readonly categoriaFiltro = signal('');
-  readonly mostrarCarrito = signal(false);
 
   readonly usuario = this.authService.currentUser;
-  readonly carritoCount = computed(() =>
-    this.carritoService.items().reduce((sum, item) => sum + item.cantidad, 0)
-  );
 
   ngOnInit(): void {
     this.cargarCatalogo();
@@ -82,55 +73,6 @@ export class CatalogoComponent implements OnInit {
       return;
     }
     this.mensaje.set(`${producto.nombreProducto} agregado al carrito`);
-  }
-
-  quitarDelCarrito(idProducto: number): void {
-    this.carritoService.quitar(idProducto);
-  }
-
-  toggleCarrito(): void {
-    this.mostrarCarrito.update((v) => !v);
-  }
-
-  checkout(): void {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const items = this.carritoService.items();
-    if (!items.length) {
-      return;
-    }
-
-    this.checkoutProcesando.set(true);
-    this.error.set(null);
-    this.mensaje.set(null);
-
-    this.pedidosService
-      .crear({
-        items: items.map((item) => ({
-          idProducto: item.producto.idProducto,
-          cantidad: item.cantidad
-        }))
-      })
-      .subscribe({
-        next: (res) => {
-          this.checkoutProcesando.set(false);
-          this.carritoService.limpiar();
-          this.mostrarCarrito.set(false);
-          this.mensaje.set(`Pedido #${res.data.idPedido} creado correctamente. Total: $${res.data.total}`);
-          this.cargarCatalogo();
-        },
-        error: (err) => {
-          this.checkoutProcesando.set(false);
-          this.error.set(this.extraerError(err));
-        }
-      });
-  }
-
-  calcularSubtotal(precio: string, cantidad: number): string {
-    return (Number(precio) * cantidad).toFixed(2);
   }
 
   irALogin(): void {

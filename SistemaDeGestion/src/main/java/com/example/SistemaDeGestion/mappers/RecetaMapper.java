@@ -15,11 +15,11 @@ public class RecetaMapper {
     }
 
     public static Receta toModel(RecetaCreateReqDto request) {
-        return Receta.builder()
-                .nombreReceta(request.nombreReceta())
-                .descripcionReceta(request.descripcionReceta())
-                .ingredientesReceta(request.ingredientesReceta())
-                .build();
+        Receta receta = new Receta();
+        receta.setNombreReceta(request.nombreReceta());
+        receta.setDescripcionReceta(request.descripcionReceta());
+        receta.setIngredientesReceta(request.ingredientesReceta());
+        return receta;
     }
 
     public static RecetaCreateResDto toResponseDto(Receta receta) {

@@ -1,11 +1,9 @@
 package com.example.SistemaDeGestion.configs.exceptions;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-@Getter
 public abstract class CustomException extends RuntimeException {
 
     private final HttpStatus status;
@@ -17,4 +15,11 @@ public abstract class CustomException extends RuntimeException {
         this.errors = errors;
     }
 
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
 }

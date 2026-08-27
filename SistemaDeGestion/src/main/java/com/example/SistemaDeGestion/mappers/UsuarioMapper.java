@@ -10,13 +10,13 @@ public class UsuarioMapper {
     }
 
     public static Usuario toModel(UsuarioCreateReqDto request, String encodedPassword, String rol) {
-        return Usuario.builder()
-                .nombre(request.nombre())
-                .apellido(request.apellido())
-                .email(request.email())
-                .password(encodedPassword)
-                .rol(rol)
-                .build();
+        Usuario usuario = new Usuario();
+        usuario.setNombre(request.nombre());
+        usuario.setApellido(request.apellido());
+        usuario.setEmail(request.email());
+        usuario.setPassword(encodedPassword);
+        usuario.setRol(rol);
+        return usuario;
     }
 
     public static UsuarioCreateResDto toResponseDto(Usuario usuario) {

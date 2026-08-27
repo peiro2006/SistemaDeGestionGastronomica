@@ -1,0 +1,65 @@
+<div class="carrito-flotante">
+  <button type="button" class="carrito-fab" (click)="toggle()" aria-label="Abrir carrito">
+    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 4l.9 2h12.1l-2 8H8.2l-.6 2h11v2H7.1l1.2-4L5 4H2V2h3.2l.6 2Zm3.8 6h9.2l1.4-6H7.3l2.7 6Z"
+      />
+    </svg>
+    @if (carritoCount() > 0) {
+      <span class="carrito-badge">{{ carritoCount() }}</span>
+    }
+  </button>
+
+  @if (mostrar()) {
+    <div class="carrito-card" role="dialog" aria-label="Carrito de compras">
+      <div class="carrito-card-header">
+        <h3>Mi carrito</h3>
+        <button type="button" class="carrito-close" (click)="cerrar()" aria-label="Cerrar">×</button>
+      </div>
+
+      @if (mensaje()) {
+        <div class="alert alert-ok">{{ mensaje() }}</div>
+      }
+      @if (error()) {
+        <div class="alert alert-error">{{ error() }}</div>
+      }
+
+      @if (carrito().length) {
+        <div class="carrito-lista">
+          @for (item of carrito(); track item.producto.idProducto) {
+            <div class="carrito-linea">
+              <div class="carrito-linea-info">
+                <strong>{{ item.producto.nombreProducto }}</strong>
+                <span class="muted">${{ item.producto.precio }} c/u</span>
+              </div>
+              <div class="carrito-controles">
+                <button type="button" class="carrito-btn" (click)="decrementar(item.producto.idProducto)" aria-label="Restar">−</button>
+                <span class="carrito-cantidad">{{ item.cantidad }}</span>
+                <button type="button" class="carrito-btn" (click)="incrementar(item.producto.idProducto)" aria-label="Sumar">+</button>
+                <button type="button" class="carrito-eliminar" (click)="quitar(item.producto.idProducto)" aria-label="Eliminar">🗑</button>
+              </div>
+              <div class="carrito-subtotal">${{ calcularSubtotal(item.producto.precio, item.cantidad) }}</div>
+            </div>
+          }
+        </div>
+        <div class="carrito-card-footer">
+          <strong>Total: ${{ total().toFixed(2) }}</strong>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="checkout()"
+            [disabled]="procesando() || !estaLogueado()"
+          >
+            {{ procesando() ? 'Procesando...' : 'Confirmar pedido' }}
+          </button>
+          @if (!estaLogueado()) {
+            <p class="muted">Inicia sesion para confirmar el pedido.</p>
+          }
+        </div>
+      } @else {
+        <p class="empty">Tu carrito esta vacio.</p>
+      }
+    </div>
+  }
+</div>

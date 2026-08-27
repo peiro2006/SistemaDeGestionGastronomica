@@ -14,17 +14,17 @@ public class ProductoMapper {
     }
 
     public static Producto toModel(ProductoCreateReqDto request, Receta receta) {
-        return Producto.builder()
-                .nombreProducto(request.nombreProducto())
-                .descripcion(request.descripcion())
-                .precio(request.precio())
-                .categoria(request.categoria())
-                .imagenUrl(request.imagenUrl())
-                .activo(true)
-                .stockActual(request.stockActual())
-                .stockMinimo(request.stockMinimo())
-                .receta(receta)
-                .build();
+        Producto producto = new Producto();
+        producto.setNombreProducto(request.nombreProducto());
+        producto.setDescripcion(request.descripcion());
+        producto.setPrecio(request.precio());
+        producto.setCategoria(request.categoria());
+        producto.setImagenUrl(request.imagenUrl());
+        producto.setActivo(true);
+        producto.setStockActual(request.stockActual());
+        producto.setStockMinimo(request.stockMinimo());
+        producto.setReceta(receta);
+        return producto;
     }
 
     public static void updateModel(Producto producto, ProductoUpdateReqDto request, Receta receta) {

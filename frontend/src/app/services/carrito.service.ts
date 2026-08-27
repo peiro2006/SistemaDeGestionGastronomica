@@ -40,6 +40,30 @@ export class CarritoService {
     this.items.update((items) => items.filter((item) => item.producto.idProducto !== idProducto));
   }
 
+  incrementar(idProducto: number): void {
+    const item = this.items().find((i) => i.producto.idProducto === idProducto);
+    if (!item) {
+      return;
+    }
+    this.agregar(item.producto, 1);
+  }
+
+  decrementar(idProducto: number): void {
+    const item = this.items().find((i) => i.producto.idProducto === idProducto);
+    if (!item) {
+      return;
+    }
+    if (item.cantidad <= 1) {
+      this.quitar(idProducto);
+      return;
+    }
+    this.items.update((items) =>
+      items.map((i) =>
+        i.producto.idProducto === idProducto ? { ...i, cantidad: i.cantidad - 1 } : i
+      )
+    );
+  }
+
   limpiar(): void {
     this.items.set([]);
   }

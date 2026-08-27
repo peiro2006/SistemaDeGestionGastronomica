@@ -1,7 +1,9 @@
 package com.example.SistemaDeGestion.models;
 
 public enum EstadoPedido {
-    CREADO,
-    ENTREGADO,
-    CANCELADO
+    pendiente,
+    en_preparacion,
+    enviado,
+    entregado,
+    cancelado
 }

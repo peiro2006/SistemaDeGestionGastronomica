@@ -7,7 +7,7 @@ import com.example.SistemaDeGestion.dtos.request.ResenaCreateReqDto;
 import com.example.SistemaDeGestion.dtos.response.ResenaResDto;
 import com.example.SistemaDeGestion.mappers.ResenaMapper;
 import com.example.SistemaDeGestion.models.*;
-import com.example.SistemaDeGestion.repositories.PedidosRepository;
+import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.ResenasRepository;
 import com.example.SistemaDeGestion.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.List;
 public class ResenaService {
 
     private final ResenasRepository resenasRepository;
-    private final PedidosRepository pedidosRepository;
+    private final PedidoRepository pedidosRepository;
     private final UsuarioRepository usuarioRepository;
 
     @Transactional
@@ -33,11 +33,11 @@ public class ResenaService {
         Pedido pedido = pedidosRepository.findById(idPedido)
                 .orElseThrow(() -> new NotFoundException("No existe un pedido con el id " + idPedido));
 
-        if (!pedido.getCliente().getIdUsuario().equals(usuario.getIdUsuario())) {
+        if (!pedido.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
             throw new BadRequestException("El pedido no pertenece al usuario autenticado");
         }
 
-        if (pedido.getEstado() != EstadoPedido.ENTREGADO) {
+        if (pedido.getEstado() != EstadoPedido.entregado) {
             throw new BadRequestException("Solo puede reseñar pedidos en estado ENTREGADO");
         }
 
@@ -45,12 +45,11 @@ public class ResenaService {
             throw new ConflictException("Ya existe una reseña para este pedido");
         }
 
-        Resena resena = Resena.builder()
-                .pedido(pedido)
-                .usuario(usuario)
-                .calificacion(request.calificacion())
-                .comentario(request.comentario())
-                .build();
+        Resena resena = new Resena();
+        resena.setPedido(pedido);
+        resena.setUsuario(usuario);
+        resena.setCalificacion(request.calificacion());
+        resena.setComentario(request.comentario());
 
         return ResenaMapper.toResponseDto(resenasRepository.save(resena));
     }

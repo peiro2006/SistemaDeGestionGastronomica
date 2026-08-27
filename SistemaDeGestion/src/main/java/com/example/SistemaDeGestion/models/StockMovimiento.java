@@ -4,16 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.*;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "Stock_Movimiento")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class StockMovimiento {
 
     @Id
@@ -53,11 +48,29 @@ public class StockMovimiento {
     @Column(name = "fecha", nullable = false, updatable = false)
     private Instant fecha;
 
+    public Long getIdStockMovimiento() { return idStockMovimiento; }
+    public void setIdStockMovimiento(Long idStockMovimiento) { this.idStockMovimiento = idStockMovimiento; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public Insumo getInsumo() { return insumo; }
+    public void setInsumo(Insumo insumo) { this.insumo = insumo; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public String getMotivo() { return motivo; }
+    public void setMotivo(String motivo) { this.motivo = motivo; }
+    public Integer getSaldoPosterior() { return saldoPosterior; }
+    public void setSaldoPosterior(Integer saldoPosterior) { this.saldoPosterior = saldoPosterior; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Instant getFecha() { return fecha; }
+    public void setFecha(Instant fecha) { this.fecha = fecha; }
+
     @PrePersist
     protected void onCreate() {
         if (fecha == null) {
             fecha = Instant.now();
         }
     }
-
 }

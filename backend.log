@@ -1,0 +1,285 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.example:SistemaDeGestion >--------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.7:run (default-cli) > test-compile @ SistemaDeGestion >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ SistemaDeGestion ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ SistemaDeGestion ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 98 source files with javac [debug parameters release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ SistemaDeGestion ---
+[INFO] skip non existing resourceDirectory C:\Users\Usuario\Desktop\SistemaDeGestionGastronomica\SistemaDeGestion\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ SistemaDeGestion ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.7:run (default-cli) < test-compile @ SistemaDeGestion <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.7:run (default-cli) @ SistemaDeGestion ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.7)
+
+2026-08-27T11:02:36.927-03:00  INFO 10508 --- [Hambur-Besa] [           main] c.e.S.SistemaDeGestionApplication        : Starting SistemaDeGestionApplication using Java 21.0.9 with PID 10508 (C:\Users\Usuario\Desktop\SistemaDeGestionGastronomica\SistemaDeGestion\target\classes started by Usuario in C:\Users\Usuario\Desktop\SistemaDeGestionGastronomica\SistemaDeGestion)
+2026-08-27T11:02:36.930-03:00  INFO 10508 --- [Hambur-Besa] [           main] c.e.S.SistemaDeGestionApplication        : No active profile set, falling back to 1 default profile: "default"
+2026-08-27T11:02:37.936-03:00  INFO 10508 --- [Hambur-Besa] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-27T11:02:38.042-03:00  INFO 10508 --- [Hambur-Besa] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 94 ms. Found 9 JPA repository interfaces.
+2026-08-27T11:02:38.852-03:00  INFO 10508 --- [Hambur-Besa] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-08-27T11:02:38.876-03:00  INFO 10508 --- [Hambur-Besa] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-27T11:02:38.876-03:00  INFO 10508 --- [Hambur-Besa] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-27T11:02:38.946-03:00  INFO 10508 --- [Hambur-Besa] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1943 ms
+2026-08-27T11:02:39.154-03:00  INFO 10508 --- [Hambur-Besa] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-08-27T11:02:39.226-03:00  INFO 10508 --- [Hambur-Besa] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.19.Final
+2026-08-27T11:02:39.890-03:00  INFO 10508 --- [Hambur-Besa] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-27T11:02:39.931-03:00  INFO 10508 --- [Hambur-Besa] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-08-27T11:02:42.093-03:00  INFO 10508 --- [Hambur-Besa] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@46d69ca4
+2026-08-27T11:02:42.095-03:00  INFO 10508 --- [Hambur-Besa] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-08-27T11:02:42.310-03:00  WARN 10508 --- [Hambur-Besa] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-08-27T11:02:43.060-03:00  INFO 10508 --- [Hambur-Besa] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://ep-nameless-wind-ax9t847a-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.6
+	Default catalog/schema: neondb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-08-27T11:02:44.745-03:00  INFO 10508 --- [Hambur-Besa] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-27T11:02:46.536-03:00  INFO 10508 --- [Hambur-Besa] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-27T11:02:46.625-03:00  INFO 10508 --- [Hambur-Besa] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+Constraint pedido_estado_check eliminado (si existía)
+2026-08-27T11:02:48.387-03:00  WARN 10508 --- [Hambur-Besa] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-08-27T11:02:48.491-03:00  WARN 10508 --- [Hambur-Besa] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 6f0f1d1e-45a3-4a20-99e1-801a744a8cdb
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-08-27T11:02:48.501-03:00  INFO 10508 --- [Hambur-Besa] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-08-27T11:02:49.205-03:00  INFO 10508 --- [Hambur-Besa] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-08-27T11:02:49.215-03:00  INFO 10508 --- [Hambur-Besa] [           main] c.e.S.SistemaDeGestionApplication        : Started SistemaDeGestionApplication in 12.86 seconds (process running for 13.401)
+Productos existentes actualizados: activo=true, stock por defecto
+=== Datos de prueba cargados ===
+Admin: admin@hamburbesa.com / Admin123!
+Empleado: empleado@hamburbesa.com / Empleado123!
+Cliente: cliente@hamburbesa.com / Cliente123!
+2026-08-27T11:03:44.860-03:00  INFO 10508 --- [Hambur-Besa] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-27T11:03:44.860-03:00  INFO 10508 --- [Hambur-Besa] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-08-27T11:03:44.862-03:00  INFO 10508 --- [Hambur-Besa] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: insert into pedido (estado,fecha_actualizacion,fecha_creacion,total,id_usuario) values (?,?,?,?,?)
+Hibernate: insert into pedido_item (cantidad,id_pedido,precio_unitario,id_producto,subtotal) values (?,?,?,?,?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 order by p1_0.fecha_creacion desc
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 where p1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: update pedido set estado=?,fecha_actualizacion=?,total=?,id_usuario=? where id_pedido=?
+Hibernate: update producto set activo=?,categoria_producto=?,descripcion_producto=?,imagen_url=?,nombre_producto=?,precio_producto=?,id_receta=?,stock_actual=?,stock_minimo=? where id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.activo and p1_0.stock_actual>?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: insert into pedido (estado,fecha_actualizacion,fecha_creacion,total,id_usuario) values (?,?,?,?,?)
+Hibernate: insert into pedido_item (cantidad,id_pedido,precio_unitario,id_producto,subtotal) values (?,?,?,?,?)
+Hibernate: insert into pedido_item (cantidad,id_pedido,precio_unitario,id_producto,subtotal) values (?,?,?,?,?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 order by p1_0.fecha_creacion desc
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 where p1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: update pedido set estado=?,fecha_actualizacion=?,total=?,id_usuario=? where id_pedido=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 order by p1_0.fecha_creacion desc
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 where p1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: update pedido set estado=?,fecha_actualizacion=?,total=?,id_usuario=? where id_pedido=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 order by p1_0.fecha_creacion desc
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.activo and p1_0.stock_actual>?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.activo and p1_0.stock_actual>?
+Hibernate: select i1_0.id_receta,i1_0.id_receta_insumo,i1_0.cantidad,i1_0.id_insumo from receta_insumo i1_0 where i1_0.id_receta=?
+Hibernate: select n1_0.id_notificacion,n1_0.fecha,n1_0.leida,n1_0.mensaje,n1_0.id_producto from notificacion n1_0 where n1_0.leida=false order by n1_0.fecha desc
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_receta,i1_0.id_receta_insumo,i1_0.cantidad,i1_0.id_insumo from receta_insumo i1_0 where i1_0.id_receta=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select i1_0.id_receta,i1_0.id_receta_insumo,i1_0.cantidad,i1_0.id_insumo from receta_insumo i1_0 where i1_0.id_receta=?
+Hibernate: select i1_0.id_insumo,i1_0.nombre_insumo,i1_0.stock_actual,i1_0.unidad_medida from insumo i1_0 where i1_0.id_insumo=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select n1_0.id_notificacion,n1_0.fecha,n1_0.leida,n1_0.mensaje,n1_0.id_producto from notificacion n1_0 order by n1_0.fecha desc
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_pedido,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.total,p1_0.id_usuario from pedido p1_0 order by p1_0.fecha_creacion desc
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.activo and p1_0.stock_actual>?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: insert into pedido (estado,fecha_actualizacion,fecha_creacion,total,id_usuario) values (?,?,?,?,?)
+Hibernate: insert into pedido_item (cantidad,id_pedido,precio_unitario,id_producto,subtotal) values (?,?,?,?,?)
+Hibernate: insert into pedido_item (cantidad,id_pedido,precio_unitario,id_producto,subtotal) values (?,?,?,?,?)
+Hibernate: insert into pedido_item (cantidad,id_pedido,precio_unitario,id_producto,subtotal) values (?,?,?,?,?)
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.activo and p1_0.stock_actual>?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?
+Hibernate: select r1_0.id_receta,r1_0.descripcion_receta,r1_0.ingredientes_receta,r1_0.nombre_receta from receta r1_0 where r1_0.id_receta=?

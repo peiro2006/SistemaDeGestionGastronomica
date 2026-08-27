@@ -10,18 +10,22 @@ export class PedidosService {
   private readonly apiUrl = 'http://localhost:8080';
 
   crear(data: PedidoCreateRequest): Observable<BaseResponse<Pedido>> {
-    return this.http.post<BaseResponse<Pedido>>(`${this.apiUrl}/pedidos`, data);
+    return this.http.post<BaseResponse<Pedido>>(`${this.apiUrl}/pedido`, data);
   }
 
   listarMisPedidos(): Observable<BaseResponse<Pedido[]>> {
-    return this.http.get<BaseResponse<Pedido[]>>(`${this.apiUrl}/pedidos`);
+    return this.http.get<BaseResponse<Pedido[]>>(`${this.apiUrl}/pedido/mis-pedidos`);
+  }
+
+  listarTodos(): Observable<BaseResponse<Pedido[]>> {
+    return this.http.get<BaseResponse<Pedido[]>>(`${this.apiUrl}/pedido`);
   }
 
   obtenerPorId(idPedido: number): Observable<BaseResponse<Pedido>> {
-    return this.http.get<BaseResponse<Pedido>>(`${this.apiUrl}/pedidos/${idPedido}`);
+    return this.http.get<BaseResponse<Pedido>>(`${this.apiUrl}/pedido/${idPedido}`);
   }
 
   cambiarEstado(idPedido: number, estado: string): Observable<BaseResponse<Pedido>> {
-    return this.http.patch<BaseResponse<Pedido>>(`${this.apiUrl}/pedidos/${idPedido}/estado`, { estado });
+    return this.http.put<BaseResponse<Pedido>>(`${this.apiUrl}/pedido/${idPedido}/estado`, { estado });
   }
 }

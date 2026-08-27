@@ -1,18 +1,11 @@
 package com.example.SistemaDeGestion.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Pedido_Item")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "PedidoItem")
 public class PedidoItem {
 
     @Id
@@ -28,17 +21,33 @@ public class PedidoItem {
     @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 
-    @NotNull(message = "Debe ingresar la cantidad")
-    @Positive(message = "La cantidad debe ser mayor a 0")
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
 
-    @NotNull(message = "Debe registrarse el precio unitario")
-    @Column(name = "precio_unitario", nullable = false)
+    @Column(name = "precio_unitario", nullable = false, precision = 12, scale = 2)
     private BigDecimal precioUnitario;
 
-    @NotNull(message = "Debe registrarse el subtotal")
-    @Column(name = "subtotal", nullable = false)
+    @Column(name = "subtotal", nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
+    public Long getIdPedidoItem() { return idPedidoItem; }
+    public void setIdPedidoItem(Long idPedidoItem) { this.idPedidoItem = idPedidoItem; }
+    public Pedido getPedido() { return pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public BigDecimal getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+
+    public void calcularSubtotal() {
+        if (precioUnitario != null && cantidad != null) {
+            this.subtotal = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+        } else {
+            this.subtotal = BigDecimal.ZERO;
+        }
+    }
 }

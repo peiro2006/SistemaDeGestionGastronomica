@@ -12,11 +12,11 @@ public class InsumoMapper {
     }
 
     public static Insumo toModel(InsumoCreateReqDto request) {
-        return Insumo.builder()
-                .nombreInsumo(request.nombreInsumo())
-                .unidadMedida(request.unidadMedida())
-                .stockActual(request.stockActual())
-                .build();
+        Insumo insumo = new Insumo();
+        insumo.setNombreInsumo(request.nombreInsumo());
+        insumo.setUnidadMedida(request.unidadMedida());
+        insumo.setStockActual(request.stockActual());
+        return insumo;
     }
 
     public static InsumoResDto toResponseDto(Insumo insumo) {

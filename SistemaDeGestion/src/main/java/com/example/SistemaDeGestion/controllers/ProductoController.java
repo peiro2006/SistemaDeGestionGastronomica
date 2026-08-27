@@ -6,29 +6,32 @@ import com.example.SistemaDeGestion.dtos.request.ProductoEstadoReqDto;
 import com.example.SistemaDeGestion.dtos.request.ProductoUpdateReqDto;
 import com.example.SistemaDeGestion.dtos.response.ProductoCreateResDto;
 import com.example.SistemaDeGestion.interfaces.ICreateProductoService;
-import com.example.SistemaDeGestion.interfaces.IProductoListService;
+import com.example.SistemaDeGestion.services.domain.CatalogoProductosService;
 import com.example.SistemaDeGestion.services.domain.ProductoEstadoService;
 import com.example.SistemaDeGestion.services.domain.ProductoGetService;
 import com.example.SistemaDeGestion.services.domain.ProductoUpdateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/Producto")
+@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class ProductoController {
 
     private final ICreateProductoService productoCreateService;
-    private final IProductoListService productoListService;
+    private final CatalogoProductosService catalogoProductosService;
     private final ProductoGetService productoGetService;
     private final ProductoUpdateService productoUpdateService;
     private final ProductoEstadoService productoEstadoService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<ProductoCreateResDto>> createProducto(
             @Valid @RequestBody ProductoCreateReqDto request
     ) {
@@ -40,19 +43,22 @@ public class ProductoController {
         );
     }
 
-    @GetMapping
+@GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('EMPLEADO') or hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<List<ProductoCreateResDto>>> listProductos(
-            @RequestParam(required = false) String nombre
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String categoria
     ) {
         return ResponseEntity.ok(
                 BaseResponse.ok(
-                        productoListService.execute(nombre),
+                        catalogoProductosService.execute(nombre, categoria),
                         "Productos obtenidos correctamente"
                 )
         );
     }
 
     @GetMapping("/{idProducto}")
+    @PreAuthorize("hasRole('USER') or hasRole('EMPLEADO') or hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<ProductoCreateResDto>> getProducto(
             @PathVariable Long idProducto
     ) {
@@ -65,6 +71,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{idProducto}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<ProductoCreateResDto>> updateProducto(
             @PathVariable Long idProducto,
             @Valid @RequestBody ProductoUpdateReqDto request
@@ -78,6 +85,7 @@ public class ProductoController {
     }
 
     @PatchMapping("/{idProducto}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse<ProductoCreateResDto>> cambiarEstado(
             @PathVariable Long idProducto,
             @Valid @RequestBody ProductoEstadoReqDto request

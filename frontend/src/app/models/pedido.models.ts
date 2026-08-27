@@ -18,6 +18,7 @@ export interface PedidoItem {
 
 export interface Pedido {
   idPedido: number;
+  idUsuario: number;
   estado: string;
   total: number;
   fechaCreacion: string;

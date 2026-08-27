@@ -65,14 +65,7 @@ public class StockMovimientoService {
             producto.setStockActual(saldoPosterior);
             notificacionService.verificarStockBajo(producto.getIdProducto());
             return StockMovimientoMapper.toResponseDto(stockMovimientosRepository.save(
-                    StockMovimiento.builder()
-                            .producto(producto)
-                            .tipo(tipo)
-                            .cantidad(request.cantidad())
-                            .motivo(request.motivo())
-                            .saldoPosterior(saldoPosterior)
-                            .usuario(usuario)
-                            .build()
+                    crearStockMovimiento(producto, null, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario)
             ));
         }
 
@@ -81,15 +74,21 @@ public class StockMovimientoService {
         Integer saldoPosterior = calcularSaldo(insumo.getStockActual(), request.cantidad(), tipo);
         insumo.setStockActual(saldoPosterior);
         return StockMovimientoMapper.toResponseDto(stockMovimientosRepository.save(
-                StockMovimiento.builder()
-                        .insumo(insumo)
-                        .tipo(tipo)
-                        .cantidad(request.cantidad())
-                        .motivo(request.motivo())
-                        .saldoPosterior(saldoPosterior)
-                        .usuario(usuario)
-                        .build()
+                crearStockMovimiento(null, insumo, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario)
         ));
+    }
+
+    private StockMovimiento crearStockMovimiento(Producto producto, Insumo insumo, String tipo,
+            Integer cantidad, String motivo, Integer saldoPosterior, Usuario usuario) {
+        StockMovimiento sm = new StockMovimiento();
+        sm.setProducto(producto);
+        sm.setInsumo(insumo);
+        sm.setTipo(tipo);
+        sm.setCantidad(cantidad);
+        sm.setMotivo(motivo);
+        sm.setSaldoPosterior(saldoPosterior);
+        sm.setUsuario(usuario);
+        return sm;
     }
 
     private void validarDestino(StockAjusteReqDto request) {

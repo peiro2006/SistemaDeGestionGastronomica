@@ -5,14 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Producto")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Producto {
 
     @Id
@@ -54,6 +51,27 @@ public class Producto {
     @JoinColumn(name = "id_receta", nullable = false)
     private Receta receta;
 
+    public Long getIdProducto() { return idProducto; }
+    public void setIdProducto(Long idProducto) { this.idProducto = idProducto; }
+    public String getNombreProducto() { return nombreProducto; }
+    public void setNombreProducto(String nombreProducto) { this.nombreProducto = nombreProducto; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getPrecio() { return precio; }
+    public void setPrecio(String precio) { this.precio = precio; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+    public Boolean getActivo() { return activo; }
+    public void setActivo(Boolean activo) { this.activo = activo; }
+    public Integer getStockActual() { return stockActual; }
+    public void setStockActual(Integer stockActual) { this.stockActual = stockActual; }
+    public Integer getStockMinimo() { return stockMinimo; }
+    public void setStockMinimo(Integer stockMinimo) { this.stockMinimo = stockMinimo; }
+    public Receta getReceta() { return receta; }
+    public void setReceta(Receta receta) { this.receta = receta; }
+
     @PrePersist
     protected void onCreate() {
         if (activo == null) {
@@ -66,5 +84,4 @@ public class Producto {
             stockMinimo = 0;
         }
     }
-
 }

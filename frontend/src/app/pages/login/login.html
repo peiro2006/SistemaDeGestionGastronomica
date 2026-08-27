@@ -1,7 +1,7 @@
 <div class="auth-container">
   <div class="auth-card">
     <p class="auth-brand">Hambur-Besa</p>
-    <h1>Iniciar sesion</h1>
+    <h1>Iniciar sesión</h1>
     <p class="auth-subtitle">Ingrese sus credenciales para acceder al sistema</p>
 
     @if (errorMessage) {
@@ -21,21 +21,24 @@
           autocomplete="email"
         />
         @if (form.controls.email.touched && form.controls.email.invalid) {
-          <span class="field-error">Debe ingresar un email valido</span>
+          <span class="field-error">
+            @if (form.controls.email.errors?.['required']) { Email es requerido }
+            @else if (form.controls.email.errors?.['email']) { Formato de email inválido }
+          </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="password">Contrasena</label>
+        <label for="password">Contraseña</label>
         <input
           id="password"
           type="password"
           formControlName="password"
-          placeholder="Ingrese su contrasena"
+          placeholder="Ingrese su contraseña"
           autocomplete="current-password"
         />
         @if (form.controls.password.touched && form.controls.password.invalid) {
-          <span class="field-error">Debe ingresar su contrasena</span>
+          <span class="field-error">La contraseña es requerida</span>
         }
       </div>
 
@@ -46,7 +49,7 @@
 
     <p class="auth-footer">
       ¿No tiene una cuenta?
-      <a routerLink="/registro">Registrese aqui</a>
+      <a routerLink="/registro">Regístrese aquí</a>
     </p>
   </div>
 </div>

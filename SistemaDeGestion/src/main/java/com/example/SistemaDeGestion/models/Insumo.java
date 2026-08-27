@@ -4,14 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.*;
 
 @Entity
 @Table(name = "Insumo")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Insumo {
 
     @Id
@@ -32,11 +27,19 @@ public class Insumo {
     @Column(name = "stock_actual", nullable = false)
     private Integer stockActual;
 
+    public Long getIdInsumo() { return idInsumo; }
+    public void setIdInsumo(Long idInsumo) { this.idInsumo = idInsumo; }
+    public String getNombreInsumo() { return nombreInsumo; }
+    public void setNombreInsumo(String nombreInsumo) { this.nombreInsumo = nombreInsumo; }
+    public String getUnidadMedida() { return unidadMedida; }
+    public void setUnidadMedida(String unidadMedida) { this.unidadMedida = unidadMedida; }
+    public Integer getStockActual() { return stockActual; }
+    public void setStockActual(Integer stockActual) { this.stockActual = stockActual; }
+
     @PrePersist
     protected void onCreate() {
         if (stockActual == null) {
             stockActual = 0;
         }
     }
-
 }

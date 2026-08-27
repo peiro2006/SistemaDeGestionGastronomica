@@ -1,11 +1,11 @@
 package com.example.SistemaDeGestion.configs;
 
 import com.example.SistemaDeGestion.security.JwtAuthFilter;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,10 +22,14 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+        this.jwtAuthFilter = jwtAuthFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,18 +40,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/registro", "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/catalogo/productos").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/Producto", "/Receta").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/Producto", "/Producto/**", "/Receta", "/Receta/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/Producto/**", "/Receta/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/Producto/**", "/Receta/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/pedidos").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/pedidos").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/pedidos/*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/pedidos/*/resena").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/pedidos/*/resena").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/pedidos/*/estado").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -71,5 +63,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

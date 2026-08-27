@@ -1,0 +1,243 @@
+.carrito-flotante {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.carrito-fab {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(230, 57, 70, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.carrito-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 16px 34px rgba(230, 57, 70, 0.55);
+}
+
+.carrito-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: #111827;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+}
+
+.carrito-card {
+  width: 360px;
+  max-width: 92vw;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: carrito-aparecer 0.18s ease;
+}
+
+@keyframes carrito-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.carrito-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.1rem;
+  background: linear-gradient(120deg, #1a2230, #2b3a55);
+  color: #fff;
+}
+
+.carrito-card-header h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.carrito-close {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.carrito-close:hover {
+  opacity: 1;
+}
+
+.carrito-lista {
+  max-height: 48vh;
+  overflow-y: auto;
+  padding: 0.4rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.carrito-linea {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "info controles"
+    "subtotal controles";
+  gap: 0.25rem 0.5rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.carrito-linea-info {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+}
+
+.carrito-linea-info strong {
+  color: var(--color-ink);
+  font-size: 0.92rem;
+}
+
+.carrito-controles {
+  grid-area: controles;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.carrito-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #f7f9fc;
+  color: var(--color-ink);
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.carrito-btn:hover {
+  background: #eef2f8;
+}
+
+.carrito-cantidad {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 800;
+}
+
+.carrito-eliminar {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.carrito-eliminar:hover {
+  opacity: 1;
+}
+
+.carrito-subtotal {
+  grid-area: subtotal;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.carrito-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border-top: 1px solid var(--color-border);
+  background: #fbfcfe;
+}
+
+.carrito-card-footer .muted {
+  margin: 0;
+}
+
+.alert {
+  margin: 0.6rem 1.1rem 0;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.alert-ok {
+  color: var(--color-success);
+  background: var(--color-success-soft);
+}
+
+.alert-error {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-muted);
+  padding: 1.6rem;
+  margin: 0;
+}
+
+.btn {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.3);
+}
+
+.muted {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}

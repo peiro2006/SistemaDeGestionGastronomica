@@ -32,7 +32,7 @@ export class ProductosService {
 
   catalogo(filtros?: { nombre?: string; categoria?: string }): Observable<BaseResponse<Producto[]>> {
     const params = this.buildParams(filtros ?? {});
-    return this.http.get<BaseResponse<Producto[]>>(`${this.apiUrl}/catalogo/productos`, { params });
+    return this.http.get<BaseResponse<Producto[]>>(`${this.apiUrl}/Producto`, { params });
   }
 
   private buildParams(values: { nombre?: string; categoria?: string }): HttpParams {

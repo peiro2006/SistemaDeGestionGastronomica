@@ -10,9 +10,6 @@
         }
         <a routerLink="/mis-pedidos" class="link-muted">Mis pedidos</a>
         <a routerLink="/home" class="link-muted">Mi cuenta</a>
-        <button type="button" class="carrito-toggle" (click)="toggleCarrito()">
-          Carrito ({{ carritoCount() }})
-        </button>
       } @else {
         <button type="button" class="btn btn-outline" (click)="irALogin()">Iniciar sesion</button>
       }
@@ -24,44 +21,6 @@
   }
   @if (error()) {
     <div class="alert alert-error">{{ error() }}</div>
-  }
-
-  @if (mostrarCarrito()) {
-    <section class="carrito-panel">
-      <h2>Mi carrito</h2>
-      @if (carrito().length) {
-        <div class="carrito-items">
-          @for (item of carrito(); track item.producto.idProducto) {
-            <div class="carrito-item">
-              <div>
-                <strong>{{ item.producto.nombreProducto }}</strong>
-                <span class="muted">{{ item.cantidad }} x ${{ item.producto.precio }}</span>
-              </div>
-              <div class="carrito-item-actions">
-                <span class="subtotal">${{ calcularSubtotal(item.producto.precio, item.cantidad) }}</span>
-                <button type="button" class="btn btn-danger btn-sm" (click)="quitarDelCarrito(item.producto.idProducto)">X</button>
-              </div>
-            </div>
-          }
-        </div>
-        <div class="carrito-footer">
-          <strong>Total: ${{ totalCarrito().toFixed(2) }}</strong>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="checkout()"
-            [disabled]="checkoutProcesando() || !usuario()"
-          >
-            {{ checkoutProcesando() ? 'Procesando...' : 'Confirmar pedido' }}
-          </button>
-          @if (!usuario()) {
-            <p class="muted">Debe iniciar sesion para confirmar el pedido.</p>
-          }
-        </div>
-      } @else {
-        <p class="empty">El carrito esta vacio.</p>
-      }
-    </section>
   }
 
   <section class="filtros-bar">

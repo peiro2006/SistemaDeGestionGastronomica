@@ -4,16 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "Resena", uniqueConstraints = @UniqueConstraint(columnNames = {"id_pedido"}))
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Resena {
 
     @Id
@@ -41,11 +36,23 @@ public class Resena {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private Instant fechaCreacion;
 
+    public Long getIdResena() { return idResena; }
+    public void setIdResena(Long idResena) { this.idResena = idResena; }
+    public Pedido getPedido() { return pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Integer getCalificacion() { return calificacion; }
+    public void setCalificacion(Integer calificacion) { this.calificacion = calificacion; }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
+    public Instant getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(Instant fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
     @PrePersist
     protected void onCreate() {
         if (fechaCreacion == null) {
             fechaCreacion = Instant.now();
         }
     }
-
 }

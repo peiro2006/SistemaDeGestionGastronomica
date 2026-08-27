@@ -50,16 +50,14 @@ public class NotificacionService {
         if (stockMinimo > 0 && stockActual <= stockMinimo) {
             boolean yaExisteAlerta = notificacionesRepository.existsByProductoIdProductoAndLeidaFalse(idProducto);
             if (!yaExisteAlerta) {
-                notificacionesRepository.save(
-                        Notificacion.builder()
-                                .producto(producto)
-                                .mensaje(String.format(
-                                        "El producto '%s' tiene stock bajo. Actual: %d, minimo: %d",
-                                        producto.getNombreProducto(), stockActual, stockMinimo
-                                ))
-                                .leida(false)
-                                .build()
-                );
+                Notificacion notificacion = new Notificacion();
+                notificacion.setProducto(producto);
+                notificacion.setMensaje(String.format(
+                        "El producto '%s' tiene stock bajo. Actual: %d, minimo: %d",
+                        producto.getNombreProducto(), stockActual, stockMinimo
+                ));
+                notificacion.setLeida(false);
+                notificacionesRepository.save(notificacion);
             }
         }
     }

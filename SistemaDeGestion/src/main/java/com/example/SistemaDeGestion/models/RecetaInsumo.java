@@ -3,16 +3,11 @@ package com.example.SistemaDeGestion.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Receta_Insumo")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class RecetaInsumo {
 
     @Id
@@ -33,4 +28,12 @@ public class RecetaInsumo {
     @Column(name = "cantidad", nullable = false)
     private BigDecimal cantidad;
 
+    public Long getIdRecetaInsumo() { return idRecetaInsumo; }
+    public void setIdRecetaInsumo(Long idRecetaInsumo) { this.idRecetaInsumo = idRecetaInsumo; }
+    public Receta getReceta() { return receta; }
+    public void setReceta(Receta receta) { this.receta = receta; }
+    public Insumo getInsumo() { return insumo; }
+    public void setInsumo(Insumo insumo) { this.insumo = insumo; }
+    public BigDecimal getCantidad() { return cantidad; }
+    public void setCantidad(BigDecimal cantidad) { this.cantidad = cantidad; }
 }

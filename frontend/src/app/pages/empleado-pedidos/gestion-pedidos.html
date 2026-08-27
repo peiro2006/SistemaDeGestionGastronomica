@@ -1,0 +1,111 @@
+<div class="empleado-shell">
+  <header class="empleado-header">
+    <h1>Gestión de pedidos</h1>
+    <a routerLink="/catalogo" class="link-muted">Ir al catálogo</a>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="empty">Cargando pedidos...</div>
+  } @else if (pedidos().length) {
+    <section class="pedidos-seccion">
+      <h2 class="seccion-titulo">Pedidos activos</h2>
+      @if (pedidosActivos().length) {
+        <div class="pedidos-lista">
+          @for (pedido of pedidosActivos(); track pedido.idPedido) {
+            <article class="pedido-card">
+              <div class="pedido-card-head">
+                <div>
+                  <strong>Pedido #{{ pedido.idPedido }}</strong>
+                  <span class="muted">Usuario #{{ pedido.idUsuario }}</span>
+                </div>
+                <span class="estado-badge estado-{{ pedido.estado }}">{{ etiquetaEstado(pedido.estado) }}</span>
+              </div>
+
+              <div class="pedido-meta">
+                <span class="muted">{{ pedido.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</span>
+                <strong class="pedido-total">Total: ${{ pedido.total }}</strong>
+              </div>
+
+              <ul class="pedido-items">
+                @for (item of pedido.items; track item.idPedidoItem) {
+                  <li>
+                    <span>{{ item.nombreProducto }} x {{ item.cantidad }}</span>
+                    <span class="muted">${{ item.subtotal }}</span>
+                  </li>
+                }
+              </ul>
+
+              <div class="pedido-acciones">
+                <select
+                  class="estado-select"
+                  [value]="pedido.estado"
+                  (change)="onEstadoSeleccionado(pedido.idPedido, $any($event.target).value)"
+                >
+                  @for (estado of estados; track estado) {
+                    <option [value]="estado" [selected]="estado === pedido.estado">
+                      {{ etiquetaEstado(estado) }}
+                    </option>
+                  }
+                </select>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="guardando() || estadoCambio()?.id !== pedido.idPedido"
+                  (click)="guardarEstado(pedido.idPedido)"
+                >
+                  {{ estadoCambio()?.id === pedido.idPedido && guardando() ? 'Guardando...' : 'Cambiar estado' }}
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty">No hay pedidos activos.</div>
+      }
+    </section>
+
+    <section class="pedidos-seccion">
+      <h2 class="seccion-titulo">Finalizados (entregados / cancelados)</h2>
+      @if (pedidosFinalizados().length) {
+        <div class="pedidos-lista">
+          @for (pedido of pedidosFinalizados(); track pedido.idPedido) {
+            <article class="pedido-card pedido-finalizado">
+              <div class="pedido-card-head">
+                <div>
+                  <strong>Pedido #{{ pedido.idPedido }}</strong>
+                  <span class="muted">Usuario #{{ pedido.idUsuario }}</span>
+                </div>
+                <span class="estado-badge estado-{{ pedido.estado }}">{{ etiquetaEstado(pedido.estado) }}</span>
+              </div>
+
+              <div class="pedido-meta">
+                <span class="muted">{{ pedido.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</span>
+                <strong class="pedido-total">Total: ${{ pedido.total }}</strong>
+              </div>
+
+              <ul class="pedido-items">
+                @for (item of pedido.items; track item.idPedidoItem) {
+                  <li>
+                    <span>{{ item.nombreProducto }} x {{ item.cantidad }}</span>
+                    <span class="muted">${{ item.subtotal }}</span>
+                  </li>
+                }
+              </ul>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty">No hay pedidos finalizados.</div>
+      }
+    </section>
+  } @else {
+    <div class="empty">No hay pedidos registrados.</div>
+  }
+</div>

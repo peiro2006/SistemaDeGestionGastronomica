@@ -1,50 +1,54 @@
 package com.example.SistemaDeGestion.services.domain;
 
-import com.example.SistemaDeGestion.configs.exceptions.BadRequestException;
 import com.example.SistemaDeGestion.configs.exceptions.NotFoundException;
 import com.example.SistemaDeGestion.dtos.response.PedidoResDto;
+import com.example.SistemaDeGestion.interfaces.IPedidoListService;
 import com.example.SistemaDeGestion.mappers.PedidoMapper;
+import com.example.SistemaDeGestion.models.EstadoPedido;
 import com.example.SistemaDeGestion.models.Usuario;
-import com.example.SistemaDeGestion.repositories.PedidosRepository;
+import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.UsuarioRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
-public class PedidoListService {
+public class PedidoListService implements IPedidoListService {
 
-    private final PedidosRepository pedidosRepository;
+    private final PedidoRepository pedidoRepository;
     private final UsuarioRepository usuarioRepository;
 
-    @Transactional(readOnly = true)
-    public List<PedidoResDto> listarMisPedidos() {
-        Usuario usuario = obtenerUsuarioAutenticado();
-        return pedidosRepository.findByClienteIdUsuarioOrderByFechaCreacionDesc(usuario.getIdUsuario())
-                .stream()
-                .map(PedidoMapper::toResponseDto)
-                .toList();
+    public PedidoListService(PedidoRepository pedidoRepository, UsuarioRepository usuarioRepository) {
+        this.pedidoRepository = pedidoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    @Transactional(readOnly = true)
-    public PedidoResDto obtenerPorId(Long idPedido) {
-        return pedidosRepository.findById(idPedido)
-                .map(PedidoMapper::toResponseDto)
-                .orElseThrow(() -> new NotFoundException("No existe un pedido con el id " + idPedido));
+    private Usuario getUsuarioAutenticado() {
+        String email = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        return usuarioRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
     }
 
-    private Usuario obtenerUsuarioAutenticado() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null) {
-            throw new BadRequestException("No se pudo identificar al usuario autenticado");
+    @Override
+    public List<PedidoResDto> misPedidos() {
+        Usuario usuario = getUsuarioAutenticado();
+        return PedidoMapper.toResponseDtoList(pedidoRepository.findByUsuarioOrderByFechaCreacionDesc(usuario));
+    }
+
+    @Override
+    public List<PedidoResDto> pedidosPorEstado(String estado) {
+        try {
+            EstadoPedido estadoPedido = EstadoPedido.valueOf(estado.toLowerCase());
+            return PedidoMapper.toResponseDtoList(pedidoRepository.findByEstadoOrderByFechaCreacionAsc(estadoPedido));
+        } catch (IllegalArgumentException e) {
+            throw new com.example.SistemaDeGestion.configs.exceptions.BadRequestException("Estado inválido: " + estado);
         }
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new NotFoundException("No existe el usuario autenticado"));
     }
 
+    @Override
+    public List<PedidoResDto> listarTodos() {
+        return PedidoMapper.toResponseDtoList(
+                pedidoRepository.findAll(Sort.by(Sort.Direction.DESC, "fechaCreacion")));
+    }
 }

@@ -1,15 +1,14 @@
 package com.example.SistemaDeGestion.dtos.request;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
-public record PedidoCreateReqDto(
+public record PedidoCreateReqDto (
 
-        @NotEmpty(message = "Debe ingresar al menos un producto")
-        @Valid
-        List<PedidoItemCreateReqDto> items
+        @NotNull(message = "Debe ingresar al menos un producto")
+        @Size(min = 1, message = "Debe ingresar al menos un producto")
+        List<PedidoItemReqDto> items
 
 ) {
 }

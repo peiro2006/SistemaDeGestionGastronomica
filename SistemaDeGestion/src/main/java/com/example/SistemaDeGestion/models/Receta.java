@@ -3,17 +3,12 @@ package com.example.SistemaDeGestion.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Receta")
-@Data
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Receta {
 
     @Id
@@ -35,7 +30,16 @@ public class Receta {
     private String ingredientesReceta;
 
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<RecetaInsumo> ingredientes = new ArrayList<>();
 
+    public Long getIdReceta() { return idReceta; }
+    public void setIdReceta(Long idReceta) { this.idReceta = idReceta; }
+    public String getNombreReceta() { return nombreReceta; }
+    public void setNombreReceta(String nombreReceta) { this.nombreReceta = nombreReceta; }
+    public String getDescripcionReceta() { return descripcionReceta; }
+    public void setDescripcionReceta(String descripcionReceta) { this.descripcionReceta = descripcionReceta; }
+    public String getIngredientesReceta() { return ingredientesReceta; }
+    public void setIngredientesReceta(String ingredientesReceta) { this.ingredientesReceta = ingredientesReceta; }
+    public List<RecetaInsumo> getIngredientes() { return ingredientes; }
+    public void setIngredientes(List<RecetaInsumo> ingredientes) { this.ingredientes = ingredientes; }
 }
