@@ -11,5 +11,5 @@ export const empleadoGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/catalogo']);
+  return router.createUrlTree(['/acceso-denegado']);
 };

@@ -8,6 +8,9 @@
         @if (usuario()?.rol === 'ROLE_ADMIN') {
           <a routerLink="/admin/productos" class="link-muted">Admin</a>
         }
+        @if (usuario()?.rol === 'ROLE_EMPLEADO' || usuario()?.rol === 'ROLE_ADMIN') {
+          <a routerLink="/empleado/pedidos" class="link-muted">Pedidos</a>
+        }
         <a routerLink="/mis-pedidos" class="link-muted">Mis pedidos</a>
         <a routerLink="/home" class="link-muted">Mi cuenta</a>
       } @else {
