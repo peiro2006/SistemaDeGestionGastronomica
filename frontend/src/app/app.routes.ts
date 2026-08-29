@@ -5,6 +5,8 @@ import { HomeComponent } from './pages/home/home';
 import { CatalogoComponent } from './pages/catalogo/catalogo';
 import { AdminProductosComponent } from './pages/admin-productos/admin-productos';
 import { AdminStockComponent } from './pages/admin-stock/admin-stock';
+import { AdminCajasComponent } from './pages/admin-cajas/admin-cajas';
+import { AdminProveedoresComponent } from './pages/admin-proveedores/admin-proveedores';
 import { MisPedidosComponent } from './pages/mis-pedidos/mis-pedidos';
 import { EmpleadoPedidosComponent } from './pages/empleado-pedidos/gestion-pedidos';
 import { authGuard } from './guards/auth.guard';
@@ -21,5 +23,7 @@ export const routes: Routes = [
   { path: 'empleado/pedidos', component: EmpleadoPedidosComponent, canActivate: [authGuard, empleadoGuard] },
   { path: 'admin/productos', component: AdminProductosComponent, canActivate: [authGuard, adminGuard] },
   { path: 'admin/stock', component: AdminStockComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'admin/cajas', component: AdminCajasComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'admin/proveedores', component: AdminProveedoresComponent, canActivate: [authGuard, adminGuard] },
   { path: '**', redirectTo: '/catalogo' }
 ];

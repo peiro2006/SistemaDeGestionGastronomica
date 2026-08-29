@@ -1,0 +1,131 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Gestion de proveedores</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/admin/cajas">Cajas</a>
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <section class="card">
+      <h2>{{ proveedorEditando() ? 'Editar proveedor' : 'Registrar proveedor' }}</h2>
+      <form [formGroup]="form" (ngSubmit)="guardarProveedor()" class="form-grid">
+        <label class="span-2">
+          Razon social / Nombre
+          <input type="text" formControlName="razonSocial" placeholder="Ej. Distribuidora Central SA" />
+          @if (form.get('razonSocial')?.touched && form.get('razonSocial')?.invalid) {
+            <span class="field-error">La razon social es obligatoria y debe tener entre 2 y 100 caracteres.</span>
+          }
+        </label>
+
+        <label>
+          CUIT / RUT
+          <input type="text" formControlName="cuitRut" placeholder="Ej. 30111222333" maxlength="15" />
+          @if (form.get('cuitRut')?.touched && form.get('cuitRut')?.invalid) {
+            <span class="field-error">El CUIT/RUT es obligatorio y debe contener entre 6 y 15 numeros.</span>
+          }
+        </label>
+
+        <label>
+          Telefono
+          <input type="tel" formControlName="telefono" placeholder="Ej. +54 11 5555 4444" maxlength="20" />
+          @if (form.get('telefono')?.touched && form.get('telefono')?.invalid) {
+            <span class="field-error">El telefono es obligatorio (6 a 20 caracteres validos).</span>
+          }
+        </label>
+
+        <label class="span-2">
+          Correo de contacto
+          <input type="email" formControlName="correo" placeholder="Ej. ventas@proveedor.com" />
+          @if (form.get('correo')?.touched && form.get('correo')?.invalid) {
+            <span class="field-error">Debe ingresar un correo electronico valido.</span>
+          }
+        </label>
+
+        <label class="span-2">
+          Direccion
+          <input type="text" formControlName="direccion" placeholder="Ej. Av. Corrientes 1234, CABA" />
+          @if (form.get('direccion')?.touched && form.get('direccion')?.invalid) {
+            <span class="field-error">La direccion es obligatoria y debe tener entre 2 y 200 caracteres.</span>
+          }
+        </label>
+
+        <button class="btn btn-primary span-2" type="submit" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : (proveedorEditando() ? 'Guardar cambios' : 'Guardar') }}
+        </button>
+        @if (proveedorEditando()) {
+          <button class="btn btn-outline span-2" type="button" (click)="cancelarEdicion()">Cancelar edicion</button>
+        }
+      </form>
+    </section>
+
+    <section class="card stats-card">
+      <h2>Resumen</h2>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <span class="stat-label">Proveedores registrados</span>
+          <span class="stat-value">{{ proveedores().length }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card table-card">
+    <h2>Proveedores registrados</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Razon social</th>
+            <th>CUIT/RUT</th>
+            <th>Telefono</th>
+            <th>Correo</th>
+            <th>Direccion</th>
+            <th>Alta por</th>
+            <th>Fecha de alta</th>
+            <th>Ult. modificacion</th>
+            <th>Modificado por</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (proveedor of proveedores(); track proveedor.idProveedor) {
+            <tr>
+              <td>{{ proveedor.razonSocial }}</td>
+              <td>{{ proveedor.cuitRut }}</td>
+              <td>{{ proveedor.telefono }}</td>
+              <td>{{ proveedor.correo }}</td>
+              <td>{{ proveedor.direccion }}</td>
+              <td>{{ proveedor.usuarioAlta ?? '—' }}</td>
+              <td>{{ proveedor.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ proveedor.fechaUltimaModificacion ? (proveedor.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+              <td>{{ proveedor.usuarioUltimaModificacion ?? '—' }}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm" (click)="editar(proveedor)">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="eliminarProveedor(proveedor)">Eliminar</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="10" class="empty">No hay proveedores registrados.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

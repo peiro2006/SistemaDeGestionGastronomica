@@ -1,0 +1,131 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Gestion de cajas</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/admin/proveedores">Proveedores</a>
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <section class="card">
+      <h2>Crear nueva caja</h2>
+      <form [formGroup]="form" (ngSubmit)="guardarCaja()" class="form-grid">
+        <label class="span-2">
+          Nombre / Identificador
+          <input type="text" formControlName="nombreCaja" placeholder="Ej. Caja Central" />
+          @if (form.get('nombreCaja')?.touched && form.get('nombreCaja')?.invalid) {
+            <span class="field-error">El nombre es obligatorio y debe tener entre 2 y 100 caracteres.</span>
+          }
+        </label>
+
+        <label>
+          Monto inicial
+          <input type="number" formControlName="montoInicial" step="0.01" min="0" placeholder="0.00" />
+          @if (form.get('montoInicial')?.touched && form.get('montoInicial')?.invalid) {
+            <span class="field-error">El monto inicial no puede ser negativo.</span>
+          }
+        </label>
+
+        <label>
+          Moneda
+          <select formControlName="moneda">
+            <option value="ARS">ARS - Peso argentino</option>
+            <option value="USD">USD - Dolar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="BRL">BRL - Real</option>
+          </select>
+        </label>
+
+        <label class="span-2">
+          Descripcion de caja
+          <textarea formControlName="descripcionCaja" rows="3" placeholder="Objetivo o uso de la caja (ej. Caja principal del local, caja para delivery, ...)"></textarea>
+          @if (form.get('descripcionCaja')?.touched && form.get('descripcionCaja')?.invalid) {
+            <span class="field-error">La descripcion no puede superar los 500 caracteres.</span>
+          }
+        </label>
+
+        <label class="span-2">
+          Estado
+          <select formControlName="activa">
+            <option [ngValue]="true">Activa</option>
+            <option [ngValue]="false">Inactiva</option>
+          </select>
+        </label>
+
+        <button class="btn btn-primary span-2" type="submit" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </form>
+    </section>
+
+    <section class="card stats-card">
+      <h2>Resumen</h2>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <span class="stat-label">Cajas totales</span>
+          <span class="stat-value">{{ cajas().length }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Cajas activas</span>
+          <span class="stat-value">{{ cajasActivas() }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Monto inicial total</span>
+          <span class="stat-value">{{ montoTotal() | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card table-card">
+    <h2>Cajas disponibles</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Monto inicial</th>
+            <th>Moneda</th>
+            <th>Descripcion de caja</th>
+            <th>Estado</th>
+            <th>Fecha de creacion</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (caja of cajas(); track caja.idCaja) {
+            <tr>
+              <td>{{ caja.nombreCaja }}</td>
+              <td>{{ caja.montoInicial | number:'1.2-2' }}</td>
+              <td>{{ caja.moneda }}</td>
+              <td>{{ caja.descripcionCaja || 'Sin descripcion' }}</td>
+              <td>
+                <span class="badge" [class.activa]="caja.activa" [class.inactiva]="!caja.activa">
+                  {{ caja.activa ? 'Activa' : 'Inactiva' }}
+                </span>
+              </td>
+              <td>{{ caja.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty">No hay cajas registradas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
