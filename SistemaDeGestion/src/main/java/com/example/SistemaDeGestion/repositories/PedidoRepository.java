@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecif
     List<Pedido> findByEstadoOrderByFechaCreacionAsc(EstadoPedido estado);
 
     List<Pedido> findByUsuarioAndEstadoOrderByFechaCreacionDesc(Usuario usuario, EstadoPedido estado);
+
+    List<Pedido> findByFechaCreacionBetweenOrderByFechaCreacionDesc(Instant desde, Instant hasta);
 }

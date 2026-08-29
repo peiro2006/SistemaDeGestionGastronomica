@@ -1,0 +1,113 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Reportes de ventas y pedidos</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/admin/cajas">Cajas</a>
+      <a routerLink="/admin/proveedores">Proveedores</a>
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <section class="card filtros">
+    <div class="rango-preset">
+      <span class="filtro-label">Periodo</span>
+      <button type="button"
+        class="btn"
+        [class.btn-primary]="preset() === '7'"
+        (click)="aplicarPreset('7')">
+        Ultimos 7 dias
+      </button>
+      <button type="button"
+        class="btn"
+        [class.btn-primary]="preset() === '30'"
+        (click)="aplicarPreset('30')">
+        Ultimos 30 dias
+      </button>
+      <button type="button"
+        class="btn"
+        [class.btn-primary]="preset() === '90'"
+        (click)="aplicarPreset('90')">
+        Ultimos 90 dias
+      </button>
+      <button type="button"
+        class="btn"
+        [class.btn-primary]="preset() === 'todo'"
+        (click)="aplicarPreset('todo')">
+        Todo
+      </button>
+    </div>
+
+    <div class="rango-custom">
+      <label>
+        Desde
+        <input type="date" [ngModel]="desde()" (ngModelChange)="desde.set($event)" />
+      </label>
+      <label>
+        Hasta
+        <input type="date" [ngModel]="hasta()" (ngModelChange)="hasta.set($event)" />
+      </label>
+      <button type="button" class="btn btn-outline" (click)="aplicarFechas()">Aplicar</button>
+    </div>
+  </section>
+
+  @if (cargando()) {
+    <div class="empty">Generando reporte...</div>
+  } @else if (reporte(); as r) {
+    <section class="cards">
+      <div class="card metric">
+        <span class="metric-label">Total facturado</span>
+        <span class="metric-value">{{ r.totalFacturado | currency }}</span>
+        <span class="metric-period">Pedidos entregados</span>
+      </div>
+      <div class="card metric">
+        <span class="metric-label">Pedidos completados</span>
+        <span class="metric-value">{{ r.cantidadPedidosCompletados }}</span>
+        <span class="metric-period">{{ r.cantidadPedidosPeriodo }} pedidos en el periodo</span>
+      </div>
+      <div class="card metric">
+        <span class="metric-label">Promedio por pedido</span>
+        <span class="metric-value">{{ r.promedioValorPorPedido | currency }}</span>
+        <span class="metric-period">Entre pedidos entregados</span>
+      </div>
+      <div class="card metric">
+        <span class="metric-label">Periodo consultado</span>
+        <span class="metric-value period-value">
+          {{ r.desde | date:'dd/MM/yyyy' }}
+        </span>
+        <span class="metric-period">al {{ r.hasta | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <h2>Pedidos por estado</h2>
+        <span class="muted">{{ r.cantidadPedidosPeriodo }} pedidos en total</span>
+      </div>
+      <div class="bars">
+        @for (estado of estados; track estado) {
+          @if (estadoVisible(estado)) {
+            <div class="bar-row">
+              <span class="bar-label">{{ etiquetasEstado[estado] }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [class.bar-entregado]="estado === 'entregado'"
+                  [style.width.%]="((r.pedidosPorEstado?.[estado] ?? 0) / maxPorEstado()) * 100">
+                </div>
+              </div>
+              <span class="bar-value">{{ r.pedidosPorEstado?.[estado] ?? 0 }}</span>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  }
+</div>
