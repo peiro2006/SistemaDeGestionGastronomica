@@ -10,6 +10,7 @@
         }
         @if (usuario()?.rol === 'ROLE_EMPLEADO' || usuario()?.rol === 'ROLE_ADMIN') {
           <a routerLink="/empleado/pedidos" class="link-muted">Pedidos</a>
+          <button type="button" class="btn btn-primary" (click)="abrirCaja()">Abrir Caja</button>
         }
         <a routerLink="/mis-pedidos" class="link-muted">Mis pedidos</a>
         <a routerLink="/home" class="link-muted">Mi cuenta</a>

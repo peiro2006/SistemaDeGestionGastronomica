@@ -1,16 +1,18 @@
 package com.example.SistemaDeGestion.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
-@Table(name = "Caja", uniqueConstraints = @UniqueConstraint(columnNames = "nombre_caja"))
+@Table(name = "caja")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Caja {
 
     @Id
@@ -18,54 +20,69 @@ public class Caja {
     @Column(name = "id_caja")
     private Long idCaja;
 
-    @NotBlank(message = "Debe ingresar un nombre o identificador para la caja")
-    @Size(min = 2, max = 100, message = "El nombre de la caja debe tener entre 2 a 100 caracteres")
-    @Column(name = "nombre_caja", nullable = false)
-    private String nombreCaja;
+    @Column(name = "nombre_caja", nullable = false, length = 100)
+    private String nombre;
 
-    @NotNull(message = "Debe ingresar el monto inicial de la caja")
-    @DecimalMin(value = "0.0", message = "El monto inicial no puede ser negativo")
-    @Column(name = "monto_inicial", nullable = false, precision = 12, scale = 2)
+    @Column(name = "descripcion", length = 255)
+    private String descripcion;
+
+    @Column(name = "moneda", length = 3, nullable = false)
+    private String moneda = "ARS";
+
+    @Column(name = "monto_inicial", precision = 12, scale = 2)
     private BigDecimal montoInicial;
 
-    @NotBlank(message = "Debe ingresar la moneda de la caja")
-    @Column(name = "moneda", nullable = false)
-    private String moneda;
+    @Column(name = "monto_actual", precision = 12, scale = 2)
+    private BigDecimal montoActual;
 
-    @Column(name = "descripcion_caja")
-    private String descripcionCaja;
+    @Column(name = "password_hash", length = 255)
+    private String passwordHash;
 
-    @Column(name = "activa")
-    private Boolean activa;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", length = 20)
+    private EstadoCaja estado = EstadoCaja.INACTIVA;
 
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private LocalDateTime fechaCreacion;
+    @Column(name = "fecha_creacion")
+    private Instant fechaCreacion;
 
-    public Long getIdCaja() { return idCaja; }
-    public void setIdCaja(Long idCaja) { this.idCaja = idCaja; }
-    public String getNombreCaja() { return nombreCaja; }
-    public void setNombreCaja(String nombreCaja) { this.nombreCaja = nombreCaja; }
-    public BigDecimal getMontoInicial() { return montoInicial; }
-    public void setMontoInicial(BigDecimal montoInicial) { this.montoInicial = montoInicial; }
-    public String getMoneda() { return moneda; }
-    public void setMoneda(String moneda) { this.moneda = moneda; }
-    public String getDescripcionCaja() { return descripcionCaja; }
-    public void setDescripcionCaja(String descripcionCaja) { this.descripcionCaja = descripcionCaja; }
-    public Boolean getActiva() { return activa; }
-    public void setActiva(Boolean activa) { this.activa = activa; }
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    @Column(name = "fecha_actualizacion")
+    private Instant fechaActualizacion;
+
+    @Column(name = "abierta_por")
+    private Long abiertaPor;
+
+    @Column(name = "fecha_apertura")
+    private Instant fechaApertura;
 
     @PrePersist
-    protected void onCreate() {
-        if (activa == null) {
-            activa = true;
+    public void prePersist() {
+        fechaCreacion = Instant.now();
+        if (montoActual == null) {
+            montoActual = montoInicial;
         }
-        if (montoInicial == null) {
-            montoInicial = BigDecimal.ZERO;
+        if (estado == null) {
+            estado = EstadoCaja.INACTIVA;
         }
-        if (fechaCreacion == null) {
-            fechaCreacion = LocalDateTime.now();
+        // Si monto es 0, no disponible
+        if (montoInicial != null && montoInicial.compareTo(BigDecimal.ZERO) == 0) {
+            estado = EstadoCaja.NO_DISPONIBLE;
         }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        fechaActualizacion = Instant.now();
+        // Auto: si monto actual es 0, no disponible
+        if (montoActual != null && montoActual.compareTo(BigDecimal.ZERO) == 0) {
+            estado = EstadoCaja.NO_DISPONIBLE;
+        }
+    }
+
+    public boolean estaDisponible() {
+        return estado == EstadoCaja.ACTIVA || estado == EstadoCaja.INACTIVA;
+    }
+
+    public boolean tieneFondos() {
+        return montoActual != null && montoActual.compareTo(BigDecimal.ZERO) > 0;
     }
 }

@@ -1,17 +1,22 @@
 package com.example.SistemaDeGestion.dtos.response;
 
+import com.example.SistemaDeGestion.models.EstadoCaja;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record CajaResDto (
 
         Long idCaja,
-        String nombreCaja,
+        String nombre,
+        String descripcion,
         BigDecimal montoInicial,
-        String moneda,
-        String descripcionCaja,
-        Boolean activa,
-        LocalDateTime fechaCreacion
+        BigDecimal montoActual,
+        EstadoCaja estado,
+        Instant fechaCreacion,
+        Instant fechaActualizacion,
+        Long abiertaPor,
+        Instant fechaApertura
 
 ) {
 }

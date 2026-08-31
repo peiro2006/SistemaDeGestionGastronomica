@@ -1,17 +1,9 @@
 <div class="admin-shell">
   <header class="admin-header">
-    <div>
-      <p class="eyebrow">Panel administrativo</p>
-      <h1>Gestion de cajas</h1>
-    </div>
-    <nav class="nav-actions">
-<a routerLink="/admin/productos">Productos</a>
-      <a routerLink="/admin/stock">Stock</a>
-      <a routerLink="/admin/proveedores">Proveedores</a>
-      <a routerLink="/admin/reportes">Reportes</a>
-      <a routerLink="/catalogo">Catalogo</a>
-      <a routerLink="/home">Inicio</a>
-    </nav>
+    <h1>Gestión de Cajas</h1>
+    <button type="button" class="btn btn-primary" (click)="abrirModalCrear()">
+      + Nueva Caja
+    </button>
   </header>
 
   @if (mensaje()) {
@@ -21,112 +13,135 @@
     <div class="alert alert-error">{{ error() }}</div>
   }
 
-  <div class="grid">
-    <section class="card">
-      <h2>Crear nueva caja</h2>
-      <form [formGroup]="form" (ngSubmit)="guardarCaja()" class="form-grid">
-        <label class="span-2">
-          Nombre / Identificador
-          <input type="text" formControlName="nombreCaja" placeholder="Ej. Caja Central" />
-          @if (form.get('nombreCaja')?.touched && form.get('nombreCaja')?.invalid) {
-            <span class="field-error">El nombre es obligatorio y debe tener entre 2 y 100 caracteres.</span>
-          }
-        </label>
+  @if (cargando()) {
+    <div class="empty">Cargando cajas...</div>
+  } @else if (cajas().length) {
+    <div class="cajas-grid">
+      @for (caja of cajas(); track caja.idCaja) {
+        <article class="caja-card [caja.estadoColor(caja.estado)]">
+          <div class="caja-card-head">
+            <div>
+              <strong>Caja #{{ caja.idCaja }}: {{ caja.nombre }}</strong>
+              @if (caja.descripcion) {
+                <span class="muted">{{ caja.descripcion }}</span>
+              }
+            </div>
+            <span class="estado-badge [caja.estadoColor(caja.estado)]">
+              {{ cajaService.etiquetaEstado(caja.estado) }}
+            </span>
+          </div>
 
-        <label>
-          Monto inicial
-          <input type="number" formControlName="montoInicial" step="0.01" min="0" placeholder="0.00" />
-          @if (form.get('montoInicial')?.touched && form.get('montoInicial')?.invalid) {
-            <span class="field-error">El monto inicial no puede ser negativo.</span>
-          }
-        </label>
+          <div class="caja-montos">
+            <div class="monto-item">
+              <span class="monto-label">Inicial</span>
+              <span class="monto-valor">{{ cajaService.formatearMonto(caja.montoInicial) }}</span>
+            </div>
+            <div class="monto-item destacado">
+              <span class="monto-label">Actual</span>
+              <span class="monto-valor">{{ cajaService.formatearMonto(caja.montoActual) }}</span>
+            </div>
+          </div>
 
-        <label>
-          Moneda
-          <select formControlName="moneda">
-            <option value="ARS">ARS - Peso argentino</option>
-            <option value="USD">USD - Dolar</option>
-            <option value="EUR">EUR - Euro</option>
-            <option value="BRL">BRL - Real</option>
-          </select>
-        </label>
+          <div class="caja-meta">
+            <span class="muted">Creada: {{ caja.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</span>
+            @if (caja.fechaApertura) {
+              <span class="muted">Abierta: {{ caja.fechaApertura | date: 'dd/MM/yyyy HH:mm' }}</span>
+            }
+          </div>
 
-        <label class="span-2">
-          Descripcion de caja
-          <textarea formControlName="descripcionCaja" rows="3" placeholder="Objetivo o uso de la caja (ej. Caja principal del local, caja para delivery, ...)"></textarea>
-          @if (form.get('descripcionCaja')?.touched && form.get('descripcionCaja')?.invalid) {
-            <span class="field-error">La descripcion no puede superar los 500 caracteres.</span>
-          }
-        </label>
+          <div class="caja-acciones">
+            <button
+              type="button"
+              class="btn btn-light btn-sm"
+              (click)="abrirModalEditar(caja)"
+            >
+              Editar
+            </button>
 
-        <label class="span-2">
-          Estado
-          <select formControlName="activa">
-            <option [ngValue]="true">Activa</option>
-            <option [ngValue]="false">Inactiva</option>
-          </select>
-        </label>
-
-        <button class="btn btn-primary span-2" type="submit" [disabled]="guardando()">
-          {{ guardando() ? 'Guardando...' : 'Guardar' }}
-        </button>
-      </form>
-    </section>
-
-    <section class="card stats-card">
-      <h2>Resumen</h2>
-      <div class="stat-grid">
-        <div class="stat-item">
-          <span class="stat-label">Cajas totales</span>
-          <span class="stat-value">{{ cajas().length }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Cajas activas</span>
-          <span class="stat-value">{{ cajasActivas() }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Monto inicial total</span>
-          <span class="stat-value">{{ montoTotal() | number:'1.2-2' }}</span>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <section class="card table-card">
-    <h2>Cajas disponibles</h2>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Monto inicial</th>
-            <th>Moneda</th>
-            <th>Descripcion de caja</th>
-            <th>Estado</th>
-            <th>Fecha de creacion</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (caja of cajas(); track caja.idCaja) {
-            <tr>
-              <td>{{ caja.nombreCaja }}</td>
-              <td>{{ caja.montoInicial | number:'1.2-2' }}</td>
-              <td>{{ caja.moneda }}</td>
-              <td>{{ caja.descripcionCaja || 'Sin descripcion' }}</td>
-              <td>
-                <span class="badge" [class.activa]="caja.activa" [class.inactiva]="!caja.activa">
-                  {{ caja.activa ? 'Activa' : 'Inactiva' }}
-                </span>
-              </td>
-              <td>{{ caja.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="6" class="empty">No hay cajas registradas.</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+            <div class="estado-selector" [class.desactivado]="!tieneFondos(caja)">
+              <label class="muted">Cambiar estado:</label>
+              <select
+                [value]="caja.estado"
+                (change)="onEstadoChange(caja, $event)"
+                [disabled]="esEstadoInvalido(caja)"
+              >
+                <option value="INACTIVA">Inactiva</option>
+                <option value="ACTIVA" [disabled]="!tieneFondos(caja)">Activa</option>
+                <option value="NO_DISPONIBLE">No disponible</option>
+              </select>
+            </div>
+          </div>
+        </article>
+      }
     </div>
-  </section>
+  } @else {
+    <div class="empty">
+      No hay cajas registradas.
+      <button type="button" class="btn btn-primary" (click)="abrirModalCrear()">Crear la primera</button>
+    </div>
+  }
+
+  <!-- Modal Crear/Editar -->
+  @if (modalAbierto()) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editando() ? 'Editar Caja' : 'Nueva Caja' }}</h2>
+          <button type="button" class="modal-close" (click)="cerrarModal()">×</button>
+        </div>
+
+        @if (error()) {
+          <div class="alert alert-error">{{ error() }}</div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="guardar()">
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" formControlName="nombre" placeholder="Ej: Caja Principal" />
+            @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+              <span class="form-error">El nombre es obligatorio (máx. 100 caracteres)</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea formControlName="descripcion" rows="2" placeholder="Opcional"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Monto Inicial *</label>
+              <input type="number" formControlName="montoInicial" min="0" step="1" placeholder="0" />
+              @if (form.get('montoInicial')?.invalid && form.get('montoInicial')?.touched) {
+                <span class="form-error">El monto inicial es obligatorio y no puede ser negativo</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Moneda *</label>
+              <input type="text" formControlName="moneda" maxlength="3" placeholder="ARS" />
+              @if (form.get('moneda')?.invalid && form.get('moneda')?.touched) {
+                <span class="form-error">La moneda es obligatoria (3 caracteres, ej: ARS)</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Contraseña {{ editando() ? '(dejar vacío para no cambiar)' : '*' }}</label>
+            <input type="password" formControlName="password" [placeholder]="editando() ? '••••••' : 'Mín. 4 caracteres'" />
+            @if (form.get('password')?.invalid && form.get('password')?.touched) {
+              <span class="form-error">La contraseña es obligatoria (4-20 caracteres)</span>
+            }
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid || cargando()">
+              {{ cargando() ? 'Guardando...' : (editando() ? 'Actualizar' : 'Crear') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
 </div>

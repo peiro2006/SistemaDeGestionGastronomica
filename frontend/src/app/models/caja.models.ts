@@ -1,17 +1,43 @@
 export interface Caja {
   idCaja: number;
-  nombreCaja: string;
+  nombre: string;
+  descripcion: string | null;
   montoInicial: number;
-  moneda: string;
-  descripcionCaja: string | null;
-  activa: boolean | null;
+  montoActual: number;
+  estado: 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE';
   fechaCreacion: string;
+  fechaActualizacion: string | null;
+  abiertaPor: number | null;
+  fechaApertura: string | null;
 }
 
 export interface CajaCreateRequest {
-  nombreCaja: string;
-  montoInicial: number;
+  nombre: string;
+  descripcion?: string | null;
   moneda: string;
-  descripcionCaja?: string | null;
-  activa: boolean;
+  montoInicial: number;
+  password: string;
+}
+
+export interface CajaUpdateRequest {
+  nombre?: string;
+  descripcion?: string | null;
+  montoInicial?: number;
+  password?: string;
+}
+
+export interface CajaEstadoRequest {
+  estado: 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE';
+}
+
+export interface CajaLoginRequest {
+  idCaja: number;
+  password: string;
+}
+
+export interface CajaLoginResponse {
+  idCaja: number;
+  nombre: string;
+  montoActual: number;
+  token: string;
 }

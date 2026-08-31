@@ -1,6 +1,5 @@
 package com.example.SistemaDeGestion.mappers;
 
-import com.example.SistemaDeGestion.dtos.request.CajaCreateReqDto;
 import com.example.SistemaDeGestion.dtos.response.CajaResDto;
 import com.example.SistemaDeGestion.models.Caja;
 
@@ -8,35 +7,24 @@ import java.util.List;
 
 public class CajaMapper {
 
-    private CajaMapper() {
-    }
-
-    public static Caja toModel(CajaCreateReqDto request) {
-        Caja caja = new Caja();
-        caja.setNombreCaja(request.nombreCaja());
-        caja.setMontoInicial(request.montoInicial());
-        caja.setMoneda(request.moneda().toUpperCase());
-        caja.setDescripcionCaja(request.descripcionCaja());
-        caja.setActiva(request.activa() == null || request.activa());
-        return caja;
-    }
-
     public static CajaResDto toResponseDto(Caja caja) {
+        if (caja == null) return null;
         return new CajaResDto(
                 caja.getIdCaja(),
-                caja.getNombreCaja(),
+                caja.getNombre(),
+                caja.getDescripcion(),
                 caja.getMontoInicial(),
-                caja.getMoneda(),
-                caja.getDescripcionCaja(),
-                caja.getActiva(),
-                caja.getFechaCreacion()
+                caja.getMontoActual(),
+                caja.getEstado(),
+                caja.getFechaCreacion(),
+                caja.getFechaActualizacion(),
+                caja.getAbiertaPor(),
+                caja.getFechaApertura()
         );
     }
 
-    public static List<CajaResDto> toResponseDtoList(List<Caja> models) {
-        return models.stream()
-                .map(CajaMapper::toResponseDto)
-                .toList();
+    public static List<CajaResDto> toResponseDtoList(List<Caja> cajas) {
+        if (cajas == null) return List.of();
+        return cajas.stream().map(CajaMapper::toResponseDto).toList();
     }
-
 }

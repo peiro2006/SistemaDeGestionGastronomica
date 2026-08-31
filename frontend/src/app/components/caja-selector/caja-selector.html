@@ -1,0 +1,72 @@
+@if (mostrar()) {
+  <div class="caja-selector-overlay" (click)="cerrar()">
+    <div class="caja-selector-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Seleccionar Caja</h2>
+        <button type="button" class="modal-close" (click)="cerrar()">×</button>
+      </div>
+
+      @if (error()) {
+        <div class="alert alert-error">{{ error() }}</div>
+      }
+
+      @if (cargando()) {
+        <div class="empty">Cargando cajas disponibles...</div>
+      } @else if (cajas().length) {
+        <div class="cajas-lista">
+          @for (caja of cajas(); track caja.idCaja) {
+            <button
+              type="button"
+              class="caja-opcion [cajaService.estadoColor(caja.estado)]"
+              [class.seleccionada]="form().idCaja === caja.idCaja"
+              [disabled]="!tieneFondos(caja) || procesando()?.id === caja.idCaja"
+              (click)="seleccionarCaja(caja.idCaja)"
+            >
+              <div class="caja-opcion-info">
+                <strong>{{ caja.nombre }}</strong>
+                <span class="muted">{{ caja.descripcion ?? 'Sin descripción' }}</span>
+              </div>
+              <div class="caja-opcion-detalle">
+                <span class="estado-badge [cajaService.estadoColor(caja.estado)]">
+                  {{ cajaService.etiquetaEstado(caja.estado) }}
+                </span>
+                <span class="monto">{{ cajaService.formatearMonto(caja.montoActual) }}</span>
+              </div>
+              @if (!tieneFondos(caja)) {
+                <span class="sin-fondos">Sin fondos</span>
+              }
+            </button>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!form().idCaja || !form().password || procesando()"
+            (click)="abrirCaja()"
+          >
+            {{ procesando() ? 'Abriendo...' : 'Abrir Caja' }}
+          </button>
+        </div>
+
+        @if (form().idCaja) {
+          <div class="password-field">
+            <label>Contraseña de la caja</label>
+            <input
+              type="password"
+              [(ngModel)]="form().password"
+              placeholder="Ingrese la contraseña"
+              autocomplete="current-password"
+            />
+          </div>
+        }
+      } @else {
+        <div class="empty">
+          No hay cajas disponibles para abrir.
+          <button type="button" class="btn btn-primary" (click)="irAdminCajas()">Crear una caja</button>
+        </div>
+      }
+    </div>
+  </div>
+}

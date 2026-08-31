@@ -1,49 +1,43 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { Caja } from '../../models/caja.models';
-import { CajasService } from '../../services/cajas.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { CajaService } from '../../services/caja.service';
+import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest } from '../../models/caja.models';
 
 @Component({
   selector: 'app-admin-cajas',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe, DecimalPipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-cajas.html',
   styleUrl: './admin-cajas.css'
 })
 export class AdminCajasComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly cajasService = inject(CajasService);
+  protected readonly cajaService = inject(CajaService);
 
   readonly cajas = signal<Caja[]>([]);
   readonly cargando = signal(false);
-  readonly guardando = signal(false);
   readonly mensaje = signal<string | null>(null);
   readonly error = signal<string | null>(null);
 
+  readonly modalAbierto = signal(false);
+  readonly editando = signal<Caja | null>(null);
+
   readonly form = this.fb.nonNullable.group({
-    nombreCaja: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    nombre: ['', [Validators.required, Validators.maxLength(100)]],
+    descripcion: [''],
+    moneda: ['ARS', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
     montoInicial: [0, [Validators.required, Validators.min(0)]],
-    moneda: ['ARS', [Validators.required]],
-    descripcionCaja: ['', [Validators.maxLength(500)]],
-    activa: [true, [Validators.required]]
+    password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]]
   });
 
   ngOnInit(): void {
     this.cargarCajas();
   }
 
-  cajasActivas(): number {
-    return this.cajas().filter((caja) => caja.activa).length;
-  }
-
-  montoTotal(): number {
-    return this.cajas().reduce((total, caja) => total + (caja.montoInicial ?? 0), 0);
-  }
-
   cargarCajas(): void {
     this.cargando.set(true);
-    this.cajasService.listar().subscribe({
+    this.error.set(null);
+    this.cajaService.listarTodas().subscribe({
       next: (res) => {
         this.cajas.set(res.data ?? []);
         this.cargando.set(false);
@@ -55,37 +49,99 @@ export class AdminCajasComponent implements OnInit {
     });
   }
 
-  guardarCaja(): void {
+  abrirModalCrear(): void {
+    this.editando.set(null);
+    this.form.reset({ nombre: '', descripcion: '', montoInicial: 0, password: '' });
+    this.modalAbierto.set(true);
+  }
+
+  abrirModalEditar(caja: Caja): void {
+    this.editando.set(caja);
+    this.form.patchValue({
+      nombre: caja.nombre,
+      descripcion: caja.descripcion ?? '',
+      montoInicial: caja.montoInicial,
+      password: ''
+    });
+    this.modalAbierto.set(true);
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto.set(false);
+    this.editando.set(null);
+    this.error.set(null);
+  }
+
+  guardar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    this.guardando.set(true);
-    this.error.set(null);
-    this.mensaje.set(null);
-
     const value = this.form.getRawValue();
-    this.cajasService
-      .crear({
-        nombreCaja: value.nombreCaja.trim(),
+    const cajaEditando = this.editando();
+
+    if (cajaEditando) {
+      const request: CajaUpdateRequest = {
+        nombre: value.nombre,
+        descripcion: value.descripcion || null,
         montoInicial: value.montoInicial,
-        moneda: value.moneda,
-        descripcionCaja: value.descripcionCaja.trim() || null,
-        activa: value.activa
-      })
-      .subscribe({
+        password: value.password || undefined
+      };
+      this.cajaService.actualizar(cajaEditando.idCaja, request).subscribe({
         next: () => {
-          this.guardando.set(false);
-          this.mensaje.set('Caja creada correctamente');
-          this.form.reset({ nombreCaja: '', montoInicial: 0, moneda: 'ARS', descripcionCaja: '', activa: true });
+          this.mensaje.set('Caja actualizada correctamente');
+          this.cerrarModal();
           this.cargarCajas();
         },
-        error: (err) => {
-          this.guardando.set(false);
-          this.error.set(this.extraerError(err));
-        }
+        error: (err) => this.error.set(this.extraerError(err))
       });
+    } else {
+      const request: CajaCreateRequest = {
+        nombre: value.nombre,
+        descripcion: value.descripcion || null,
+        moneda: value.moneda,
+        montoInicial: value.montoInicial,
+        password: value.password
+      };
+      this.cajaService.crear(request).subscribe({
+        next: () => {
+          this.mensaje.set('Caja creada correctamente');
+          this.cerrarModal();
+          this.cargarCajas();
+        },
+        error: (err) => this.error.set(this.extraerError(err))
+      });
+    }
+  }
+
+  onEstadoChange(caja: Caja, event: Event): void {
+    const nuevoEstado = (event.target as HTMLSelectElement).value as 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE';
+    this.cambiarEstado(caja, nuevoEstado);
+  }
+
+  cambiarEstado(caja: Caja, nuevoEstado: 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE'): void {
+    if (caja.estado === nuevoEstado) return;
+
+    const request: CajaEstadoRequest = { estado: nuevoEstado };
+    this.cajaService.cambiarEstado(caja.idCaja, request).subscribe({
+      next: () => {
+        this.mensaje.set(`Estado de la caja "${caja.nombre}" cambiado a ${this.cajaService.etiquetaEstado(nuevoEstado)}`);
+        this.cargarCajas();
+      },
+      error: (err) => this.error.set(this.extraerError(err))
+    });
+  }
+
+  tieneFondos(caja: Caja): boolean {
+    return caja.montoActual > 0;
+  }
+
+  esEstadoInvalido(caja: Caja): boolean {
+    // Deshabilitar el select si la caja no tiene fondos y el usuario intenta poner ACTIVA
+    // Esto se evalúa en el momento del cambio, no en el disabled estático
+    // Para el disabled estático, solo deshabilitamos si no tiene fondos
+    return !this.tieneFondos(caja);
   }
 
   private extraerError(err: unknown): string {

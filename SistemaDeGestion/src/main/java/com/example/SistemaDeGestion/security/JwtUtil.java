@@ -40,6 +40,20 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateToken(String subject, String rol, java.util.Map<String, Object> claims) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + expirationSeconds * 1000);
+
+        return Jwts.builder()
+                .subject(subject)
+                .claim("rol", rol)
+                .claims(claims)
+                .issuedAt(now)
+                .expiration(expiration)
+                .signWith(secretKey)
+                .compact();
+    }
+
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
