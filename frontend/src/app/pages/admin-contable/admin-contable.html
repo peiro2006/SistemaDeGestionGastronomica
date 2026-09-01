@@ -1,0 +1,213 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Movimientos contables</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/admin/cajas">Cajas</a>
+      <a routerLink="/admin/proveedores">Proveedores</a>
+      <a routerLink="/admin/reportes">Reportes</a>
+      <a routerLink="/catalogo">Catalogo</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (mensaje()) {
+    <div class="alert alert-ok">{{ mensaje() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <section class="card actions-bar">
+    <button type="button" class="btn" [class.btn-primary]="!crearModo()" [class.btn-outline]="crearModo()" (click)="crearModo.set(false)">Consultar movimientos</button>
+    <button type="button" class="btn" [class.btn-primary]="crearModo()" [class.btn-outline]="!crearModo()" (click)="crearModo.set(true)">Registrar movimiento</button>
+  </section>
+
+  @if (crearModo()) {
+    <section class="card">
+      <h2>Registrar movimiento contable</h2>
+      <form (ngSubmit)="registrar()" class="form-grid">
+        <label>
+          Tipo
+          <select [(ngModel)]="nTipo" name="tipo">
+            <option value="INGRESO">Ingreso</option>
+            <option value="EGRESO">Egreso</option>
+          </select>
+        </label>
+        <label>
+          Monto
+          <input type="number" min="0.01" step="0.01" [(ngModel)]="nMonto" name="monto" placeholder="0.00" />
+        </label>
+        @if (nTipo() === 'INGRESO') {
+          <label>
+            Metodo de pago
+            <select [(ngModel)]="nMetodo" name="metodo">
+              @for (metodo of metodos; track metodo) {
+                <option [value]="metodo">{{ metodo }}</option>
+              }
+            </select>
+          </label>
+        }
+        <label class="span-2">
+          Concepto
+          <input type="text" [(ngModel)]="nConcepto" name="concepto" placeholder="Ej. Venta local, Pago a proveedor..." />
+        </label>
+        <button class="btn btn-primary span-2" type="submit" [disabled]="guardando()">
+          {{ guardando() ? 'Registrando...' : 'Registrar' }}
+        </button>
+      </form>
+    </section>
+  }
+
+  @if (!crearModo()) {
+    <section class="card filtros">
+      <label>
+        Tipo
+        <select [(ngModel)]="fTipo" name="fTipo">
+          <option value="">Todos</option>
+          <option value="INGRESO">Ingreso</option>
+          <option value="EGRESO">Egreso</option>
+        </select>
+      </label>
+      <label>
+        Metodo de pago
+        <select [(ngModel)]="fMetodo" name="fMetodo">
+          <option value="">Todos</option>
+          @for (metodo of metodos; track metodo) {
+            <option [value]="metodo">{{ metodo }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Desde
+        <input type="date" [(ngModel)]="fDesde" name="fDesde" />
+      </label>
+      <label>
+        Hasta
+        <input type="date" [(ngModel)]="fHasta" name="fHasta" />
+      </label>
+      <label>
+        Monto minimo
+        <input type="number" min="0" step="0.01" [(ngModel)]="fMontoMin" name="fMontoMin" />
+      </label>
+      <label>
+        Monto maximo
+        <input type="number" min="0" step="0.01" [(ngModel)]="fMontoMax" name="fMontoMax" />
+      </label>
+      <label class="concepto-filtro">
+        Concepto
+        <input type="text" [(ngModel)]="fConcepto" name="fConcepto" />
+      </label>
+      <div class="btn-fila">
+        <button type="button" class="btn btn-primary" (click)="aplicarFiltros()">Filtrar</button>
+        <button type="button" class="btn" (click)="onTodoElPeriodo()">Mes actual</button>
+        <button type="button" class="btn btn-outline" (click)="limpiarFiltros()">Limpiar</button>
+      </div>
+    </section>
+  }
+
+  @if (!crearModo()) {
+    @if (cargando()) {
+      <div class="empty">Cargando movimientos...</div>
+    } @else if (data(); as d) {
+      <section class="card metricas">
+        <div class="metric">
+          <span class="metric-label">Ingresos</span>
+          <span class="metric-value ingresos">{{ d.totalIngresos | currency }}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Egresos</span>
+          <span class="metric-value egresos">{{ d.totalEgresos | currency }}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Balance</span>
+          <span class="metric-value">{{ d.balance | currency }}</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Movimientos</span>
+          <span class="metric-value">{{ d.totalElements }}</span>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <div class="section-heading">
+          <h2>Listado de movimientos</h2>
+          <button type="button" class="btn btn-outline" (click)="exportar()">Exportar CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Metodo</th>
+                <th>Concepto</th>
+                <th>Registrado por</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (mov of d.content; track mov.idMovimiento) {
+                <tr>
+                  <td>{{ mov.idMovimiento }}</td>
+                  <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td>
+                    <span class="tipo-badge" [class.ingreso]="mov.tipo === 'INGRESO'" [class.egreso]="mov.tipo === 'EGRESO'">
+                      {{ mov.tipo === 'INGRESO' ? 'Ingreso' : 'Egreso' }}
+                    </span>
+                  </td>
+                  <td class="{{ mov.tipo === 'INGRESO' ? 'monto-ingreso' : 'monto-egreso' }}">
+                    {{ mov.tipo === 'INGRESO' ? '+' : '-' }}{{ mov.monto | currency }}
+                  </td>
+                  <td>{{ mov.metodoPago ?? '—' }}</td>
+                  <td>{{ mov.concepto ?? '—' }}</td>
+                  <td>{{ mov.registradoPor ?? '—' }}</td>
+                  <td>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="verDetalle(mov)">Ver</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="empty">No hay movimientos para el filtro aplicado.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="paginacion">
+          <button type="button" class="btn" [disabled]="!d.hasPrevious" (click)="irPagina(d.page - 1)">Anterior</button>
+          <span class="pagina-info">Pagina {{ d.page + 1 }} de {{ d.totalPages }}</span>
+          <button type="button" class="btn" [disabled]="!d.hasNext" (click)="irPagina(d.page + 1)">Siguiente</button>
+        </div>
+      </section>
+    }
+  }
+</div>
+
+@if (mostrarDetalle() && detalle(); as m) {
+  <div class="modal-overlay" (click)="cerrarDetalle()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h2>Detalle del movimiento</h2>
+      <dl class="detalle">
+        <dt>ID</dt><dd>{{ m.idMovimiento }}</dd>
+        <dt>Fecha</dt><dd>{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</dd>
+        <dt>Tipo</dt><dd>{{ m.tipo === 'INGRESO' ? 'Ingreso' : 'Egreso' }}</dd>
+        <dt>Monto</dt><dd>{{ m.monto | currency }}</dd>
+        <dt>Metodo de pago</dt><dd>{{ m.metodoPago ?? '—' }}</dd>
+        <dt>Caja</dt><dd>{{ m.idCaja ?? '—' }}</dd>
+        <dt>Concepto</dt><dd>{{ m.concepto ?? '—' }}</dd>
+        <dt>Registrado por</dt><dd>{{ m.registradoPor ?? '—' }}</dd>
+      </dl>
+      <div class="modal-acciones">
+        <button type="button" class="btn btn-primary" (click)="cerrarDetalle()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+}

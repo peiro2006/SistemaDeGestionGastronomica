@@ -35,6 +35,7 @@
           <a class="btn btn-secondary" routerLink="/admin/cajas">Gestionar cajas</a>
           <a class="btn btn-secondary" routerLink="/admin/proveedores">Gestionar proveedores</a>
           <a class="btn btn-secondary" routerLink="/admin/reportes">Ver reportes</a>
+          <a class="btn btn-secondary" routerLink="/admin/contable">Movimientos contables</a>
         }
         @if (usuario()?.rol === 'ROLE_EMPLEADO' || usuario()?.rol === 'ROLE_ADMIN') {
           <a class="btn btn-secondary" routerLink="/empleado/pedidos">Gestionar pedidos</a>
