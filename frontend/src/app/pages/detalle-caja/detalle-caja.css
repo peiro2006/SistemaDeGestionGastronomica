@@ -1,0 +1,304 @@
+.admin-shell {
+  min-height: 100dvh;
+  padding: 1.5rem;
+  background: #eef1f4;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto 1rem;
+}
+
+.admin-header h1 {
+  margin: 0;
+  color: #16212f;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 700;
+}
+
+.nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.nav-actions a {
+  color: #0d6efd;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #d9dee3;
+  border-radius: 10px;
+  padding: 1.1rem;
+  box-shadow: 0 10px 24px rgba(22, 33, 47, 0.06);
+  max-width: 1180px;
+  margin: 0 auto 1rem;
+}
+
+.info-card {
+  padding: 1.5rem;
+}
+
+.caja-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.caja-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.caja-dato.destacado .dato-valor {
+  color: #e63946;
+  font-size: 1.3rem;
+}
+
+.dato-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: #6c757d;
+}
+
+.dato-valor {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #16212f;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.status.inactive {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.resumen-card {
+  padding: 1.2rem 1.5rem;
+}
+
+.resumen-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: #16212f;
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.resumen-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.resumen-item.efectivo { border-left: 4px solid #198754; }
+.resumen-item.debito { border-left: 4px solid #0d6efd; }
+.resumen-item.credito { border-left: 4px solid #6f42c1; }
+.resumen-item.transferencia { border-left: 4px solid #fd7e14; }
+
+.resumen-icono {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.efectivo .resumen-icono { background: #198754; }
+.debito .resumen-icono { background: #0d6efd; }
+.credito .resumen-icono { background: #6f42c1; }
+.transferencia .resumen-icono { background: #fd7e14; }
+
+.resumen-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.resumen-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: #6c757d;
+}
+
+.resumen-valor {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #16212f;
+}
+
+.resumen-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.resumen-total-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6c757d;
+}
+
+.resumen-total-valor {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #e63946;
+}
+
+.table-card {
+  max-width: 1180px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #16212f;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.7rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.88rem;
+}
+
+th {
+  font-weight: 700;
+  color: #495057;
+  background: #f8f9fa;
+}
+
+td strong {
+  color: #16212f;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.estado-pendiente { background: #fff3cd; color: #8a6d00; }
+.estado-en_preparacion { background: #e3edff; color: #1f5fce; }
+.estado-enviado { background: #d1e7dd; color: #0f5132; }
+.estado-entregado { background: #d1e7dd; color: #0f5132; }
+.estado-cancelado { background: #f8d7da; color: #842029; }
+
+.pago-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.pago-EFECTIVO { background: #d1e7dd; color: #0f5132; }
+.pago-DEBITO { background: #e3edff; color: #1f5fce; }
+.pago-TARJETA_CREDITO { background: #e8dafe; color: #59359a; }
+.pago-TRANSFERENCIA { background: #fff3cd; color: #8a6d00; }
+
+.items-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #6c757d;
+}
+
+.items-list li {
+  margin-bottom: 0.15rem;
+}
+
+.empty {
+  text-align: center;
+  color: #6c757d;
+  padding: 2rem;
+}
+
+.muted {
+  color: #6c757d;
+  font-size: 0.82rem;
+}
+
+.alert {
+  max-width: 1180px;
+  margin: 0 auto 1rem;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+}
+
+.alert-error {
+  color: #842029;
+  background: #f8d7da;
+}
+
+@media (max-width: 768px) {
+  .resumen-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

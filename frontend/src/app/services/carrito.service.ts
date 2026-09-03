@@ -1,5 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { Producto } from '../models/producto.models';
+import { MetodoPago } from '../models/pedido.models';
 
 export interface CarritoItem {
   producto: Producto;
@@ -9,6 +10,7 @@ export interface CarritoItem {
 @Injectable({ providedIn: 'root' })
 export class CarritoService {
   readonly items = signal<CarritoItem[]>([]);
+  readonly metodoPago = signal<MetodoPago>('EFECTIVO');
   readonly total = computed(() =>
     this.items().reduce((total, item) => total + Number(item.producto.precio) * item.cantidad, 0)
   );
@@ -64,7 +66,12 @@ export class CarritoService {
     );
   }
 
+  setMetodoPago(metodo: MetodoPago): void {
+    this.metodoPago.set(metodo);
+  }
+
   limpiar(): void {
     this.items.set([]);
+    this.metodoPago.set('EFECTIVO');
   }
 }

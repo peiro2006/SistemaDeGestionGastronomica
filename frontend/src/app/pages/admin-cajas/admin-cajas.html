@@ -1,9 +1,16 @@
 <div class="admin-shell">
   <header class="admin-header">
-    <h1>Gestión de Cajas</h1>
-    <button type="button" class="btn btn-primary" (click)="abrirModalCrear()">
-      + Nueva Caja
-    </button>
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Gestión de Cajas</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/admin/proveedores">Proveedores</a>
+      <a routerLink="/admin/reportes">Reportes</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
   </header>
 
   @if (mensaje()) {
@@ -13,73 +20,109 @@
     <div class="alert alert-error">{{ error() }}</div>
   }
 
-  @if (cargando()) {
-    <div class="empty">Cargando cajas...</div>
-  } @else if (cajas().length) {
-    <div class="cajas-grid">
-      @for (caja of cajas(); track caja.idCaja) {
-        <article class="caja-card [caja.estadoColor(caja.estado)]">
-          <div class="caja-card-head">
-            <div>
-              <strong>Caja #{{ caja.idCaja }}: {{ caja.nombre }}</strong>
-              @if (caja.descripcion) {
-                <span class="muted">{{ caja.descripcion }}</span>
-              }
-            </div>
-            <span class="estado-badge [caja.estadoColor(caja.estado)]">
-              {{ cajaService.etiquetaEstado(caja.estado) }}
-            </span>
-          </div>
+  <main class="grid">
+    <section class="card">
+      <div class="section-heading">
+        <h2>{{ editando() ? 'Editar caja' : 'Crear caja' }}</h2>
+        @if (editando()) {
+          <button type="button" class="btn btn-light" (click)="cancelarEdicion()">Cancelar</button>
+        }
+      </div>
 
-          <div class="caja-montos">
-            <div class="monto-item">
-              <span class="monto-label">Inicial</span>
-              <span class="monto-valor">{{ cajaService.formatearMonto(caja.montoInicial) }}</span>
-            </div>
-            <div class="monto-item destacado">
-              <span class="monto-label">Actual</span>
-              <span class="monto-valor">{{ cajaService.formatearMonto(caja.montoActual) }}</span>
-            </div>
-          </div>
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="form-grid">
+        <label>
+          Nombre
+          <input type="text" formControlName="nombre" placeholder="Ej: Caja Principal" />
+        </label>
 
-          <div class="caja-meta">
-            <span class="muted">Creada: {{ caja.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</span>
-            @if (caja.fechaApertura) {
-              <span class="muted">Abierta: {{ caja.fechaApertura | date: 'dd/MM/yyyy HH:mm' }}</span>
-            }
-          </div>
+        <label>
+          Monto Inicial
+          <input type="number" formControlName="montoInicial" min="0" step="1" placeholder="0" />
+        </label>
 
-          <div class="caja-acciones">
-            <button
-              type="button"
-              class="btn btn-light btn-sm"
-              (click)="abrirModalEditar(caja)"
-            >
-              Editar
-            </button>
+        <label>
+          Moneda
+          <input type="text" formControlName="moneda" maxlength="3" placeholder="ARS" />
+        </label>
 
-            <div class="estado-selector" [class.desactivado]="!tieneFondos(caja)">
-              <label class="muted">Cambiar estado:</label>
-              <select
-                [value]="caja.estado"
-                (change)="onEstadoChange(caja, $event)"
-                [disabled]="esEstadoInvalido(caja)"
-              >
-                <option value="INACTIVA">Inactiva</option>
-                <option value="ACTIVA" [disabled]="!tieneFondos(caja)">Activa</option>
-                <option value="NO_DISPONIBLE">No disponible</option>
-              </select>
-            </div>
-          </div>
-        </article>
+        <label class="span-2">
+          Descripcion
+          <textarea rows="2" formControlName="descripcion" placeholder="Opcional"></textarea>
+        </label>
+
+        <label>
+          Contraseña {{ editando() ? '(dejar vacío para no cambiar)' : '' }}
+          <input type="password" formControlName="password" [placeholder]="editando() ? '••••••' : 'Mín. 4 caracteres'" />
+        </label>
+
+        <button class="btn btn-primary span-2" type="submit" [disabled]="form.invalid || cargando()">
+          {{ cargando() ? 'Guardando...' : editando() ? 'Actualizar caja' : 'Crear caja' }}
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <section class="card table-card">
+    <div class="section-heading">
+      <h2>Listado de cajas</h2>
+      @if (cargando()) {
+        <span class="muted">Cargando...</span>
       }
     </div>
-  } @else {
-    <div class="empty">
-      No hay cajas registradas.
-      <button type="button" class="btn btn-primary" (click)="abrirModalCrear()">Crear la primera</button>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Monto Inicial</th>
+            <th>Monto Actual</th>
+            <th>Estado</th>
+            <th>Creada</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (caja of cajas(); track caja.idCaja) {
+            <tr>
+              <td>
+                <strong>{{ caja.nombre }}</strong>
+                @if (caja.descripcion) {
+                  <span>{{ caja.descripcion }}</span>
+                }
+              </td>
+              <td>{{ cajaService.formatearMonto(caja.montoInicial) }}</td>
+              <td>{{ cajaService.formatearMonto(caja.montoActual) }}</td>
+              <td>
+                <span class="status" [class.inactive]="caja.estado !== 'ACTIVA'">
+                  {{ cajaService.etiquetaEstado(caja.estado) }}
+                </span>
+              </td>
+              <td>{{ caja.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td class="actions-cell">
+                <button type="button" class="btn btn-light" (click)="editarCaja(caja)">Editar</button>
+                <button type="button" class="btn btn-light" [routerLink]="['/admin/cajas', caja.idCaja]">Ver movimientos</button>
+                <select
+                  class="estado-select"
+                  [value]="caja.estado"
+                  (change)="onEstadoChange(caja, $event)"
+                  [disabled]="!tieneFondos(caja)"
+                >
+                  <option value="INACTIVA">Inactiva</option>
+                  <option value="ACTIVA" [disabled]="!tieneFondos(caja)">Activa</option>
+                  <option value="NO_DISPONIBLE">No disponible</option>
+                </select>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty">No hay cajas registradas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
-  }
+  </section>
 
   <!-- Modal Crear/Editar -->
   @if (modalAbierto()) {

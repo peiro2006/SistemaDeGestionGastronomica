@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CarritoService, CarritoItem } from '../../services/carrito.service';
 import { AuthService } from '../../services/auth.service';
 import { PedidosService } from '../../services/pedidos.service';
+import { MetodoPago } from '../../models/pedido.models';
 
 @Component({
   selector: 'app-carrito-widget',
@@ -17,9 +18,17 @@ export class CarritoWidgetComponent {
 
   readonly carrito = this.carritoService.items;
   readonly total = this.carritoService.total;
+  readonly metodoPago = this.carritoService.metodoPago;
   readonly usuario = this.authService.currentUser;
 
   readonly mostrar = signal(false);
+
+  readonly metodosPago: { valor: MetodoPago; label: string; icono: string }[] = [
+    { valor: 'EFECTIVO', label: 'Efectivo', icono: '$' },
+    { valor: 'DEBITO', label: 'Debito', icono: 'D' },
+    { valor: 'TARJETA_CREDITO', label: 'Credito', icono: 'C' },
+    { valor: 'TRANSFERENCIA', label: 'Transferencia', icono: 'T' }
+  ];
 
   estaLogueado(): boolean {
     return this.authService.isAuthenticated();
@@ -56,6 +65,10 @@ export class CarritoWidgetComponent {
     return (Number(precio) * cantidad).toFixed(2);
   }
 
+  seleccionarMetodoPago(metodo: MetodoPago): void {
+    this.carritoService.setMetodoPago(metodo);
+  }
+
   checkout(): void {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
@@ -76,7 +89,8 @@ export class CarritoWidgetComponent {
         items: items.map((item) => ({
           idProducto: item.producto.idProducto,
           cantidad: item.cantidad
-        }))
+        })),
+        metDePago: this.metodoPago()
       })
       .subscribe({
         next: (res) => {

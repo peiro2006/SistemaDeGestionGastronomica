@@ -7,9 +7,11 @@ import com.example.SistemaDeGestion.dtos.response.PedidoResDto;
 import com.example.SistemaDeGestion.interfaces.IPedidoEstadoService;
 import com.example.SistemaDeGestion.mappers.PedidoMapper;
 import com.example.SistemaDeGestion.models.EstadoPedido;
+import com.example.SistemaDeGestion.models.MetodoPago;
 import com.example.SistemaDeGestion.models.Pedido;
 import com.example.SistemaDeGestion.models.PedidoItem;
 import com.example.SistemaDeGestion.models.Producto;
+import com.example.SistemaDeGestion.repositories.CajaRepository;
 import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ public class PedidoEstadoService implements IPedidoEstadoService {
 
     private final PedidoRepository pedidoRepository;
     private final ProductosRepository productosRepository;
+    private final CajaRepository cajaRepository;
 
     @Override
     @Transactional
@@ -52,6 +55,7 @@ public class PedidoEstadoService implements IPedidoEstadoService {
         // Descontar stock solo cuando el empleado confirma que el pedido esta hecho (entregado)
         if (nuevoEstado == EstadoPedido.entregado && estadoAnterior != EstadoPedido.entregado) {
             descontarStock(pedido);
+            sumarAMontoCaja(pedido);
         }
 
         return PedidoMapper.toResponseDto(pedidoRepository.save(pedido));
@@ -64,6 +68,16 @@ public class PedidoEstadoService implements IPedidoEstadoService {
             int cantidad = item.getCantidad() != null ? item.getCantidad() : 0;
             producto.setStockActual(stockActual - cantidad);
             productosRepository.save(producto);
+        }
+    }
+
+    private void sumarAMontoCaja(Pedido pedido) {
+        if (pedido.getCaja() != null && pedido.getMetDePago() == MetodoPago.EFECTIVO) {
+            var caja = cajaRepository.findById(pedido.getCaja().getIdCaja()).orElse(null);
+            if (caja != null) {
+                caja.setMontoActual(caja.getMontoActual().add(pedido.getTotal()));
+                cajaRepository.save(caja);
+            }
         }
     }
 

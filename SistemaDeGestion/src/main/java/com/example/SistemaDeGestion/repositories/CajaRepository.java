@@ -21,4 +21,6 @@ public interface CajaRepository extends JpaRepository<Caja, Long> {
     boolean existsByNombreIgnoreCase(String nombre);
 
     List<Caja> findAllByOrderByFechaCreacionDesc();
+
+    Optional<Caja> findFirstByEstadoOrderByFechaCreacionDesc(EstadoCaja estado);
 }

@@ -20,9 +20,17 @@ public class Pedido {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_caja")
+    private Caja caja;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false, length = 20)
     private EstadoPedido estado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "met_de_pago", nullable = false, length = 20)
+    private MetodoPago metDePago = MetodoPago.EFECTIVO;
 
     @Column(name = "total", nullable = false, precision = 12, scale = 2)
     private BigDecimal total;
@@ -40,8 +48,12 @@ public class Pedido {
     public void setIdPedido(Long idPedido) { this.idPedido = idPedido; }
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Caja getCaja() { return caja; }
+    public void setCaja(Caja caja) { this.caja = caja; }
     public EstadoPedido getEstado() { return estado; }
     public void setEstado(EstadoPedido estado) { this.estado = estado; }
+    public MetodoPago getMetDePago() { return metDePago; }
+    public void setMetDePago(MetodoPago metDePago) { this.metDePago = metDePago; }
     public BigDecimal getTotal() { return total; }
     public void setTotal(BigDecimal total) { this.total = total; }
     public Instant getFechaCreacion() { return fechaCreacion; }

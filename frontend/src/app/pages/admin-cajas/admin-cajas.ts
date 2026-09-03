@@ -1,12 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CajaService } from '../../services/caja.service';
 import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest } from '../../models/caja.models';
 
 @Component({
   selector: 'app-admin-cajas',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './admin-cajas.html',
   styleUrl: './admin-cajas.css'
 })
@@ -55,7 +56,7 @@ export class AdminCajasComponent implements OnInit {
     this.modalAbierto.set(true);
   }
 
-  abrirModalEditar(caja: Caja): void {
+  editarCaja(caja: Caja): void {
     this.editando.set(caja);
     this.form.patchValue({
       nombre: caja.nombre,
@@ -64,6 +65,11 @@ export class AdminCajasComponent implements OnInit {
       password: ''
     });
     this.modalAbierto.set(true);
+  }
+
+  cancelarEdicion(): void {
+    this.editando.set(null);
+    this.form.reset({ nombre: '', descripcion: '', montoInicial: 0, password: '' });
   }
 
   cerrarModal(): void {

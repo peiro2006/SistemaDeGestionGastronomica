@@ -7,10 +7,13 @@ import com.example.SistemaDeGestion.dtos.request.PedidoItemReqDto;
 import com.example.SistemaDeGestion.dtos.response.PedidoResDto;
 import com.example.SistemaDeGestion.interfaces.IPedidoCreateService;
 import com.example.SistemaDeGestion.mappers.PedidoMapper;
+import com.example.SistemaDeGestion.models.Caja;
+import com.example.SistemaDeGestion.models.EstadoCaja;
 import com.example.SistemaDeGestion.models.Pedido;
 import com.example.SistemaDeGestion.models.PedidoItem;
 import com.example.SistemaDeGestion.models.Producto;
 import com.example.SistemaDeGestion.models.Usuario;
+import com.example.SistemaDeGestion.repositories.CajaRepository;
 import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import com.example.SistemaDeGestion.repositories.UsuarioRepository;
@@ -25,12 +28,14 @@ public class PedidoCreateService implements IPedidoCreateService {
     private final PedidoRepository pedidoRepository;
     private final ProductosRepository productosRepository;
     private final UsuarioRepository usuarioRepository;
+    private final CajaRepository cajaRepository;
 
     public PedidoCreateService(PedidoRepository pedidoRepository, ProductosRepository productosRepository,
-            UsuarioRepository usuarioRepository) {
+            UsuarioRepository usuarioRepository, CajaRepository cajaRepository) {
         this.pedidoRepository = pedidoRepository;
         this.productosRepository = productosRepository;
         this.usuarioRepository = usuarioRepository;
+        this.cajaRepository = cajaRepository;
     }
 
     @Override
@@ -80,6 +85,15 @@ public class PedidoCreateService implements IPedidoCreateService {
         }
 
         pedido.setTotal(total);
-        return PedidoMapper.toResponseDto(pedidoRepository.save(pedido));
+        Pedido guardado = pedidoRepository.save(pedido);
+
+        // Asignar automáticamente la caja activa (solo puede haber una)
+        cajaRepository.findFirstByEstadoOrderByFechaCreacionDesc(EstadoCaja.ACTIVA)
+                .ifPresent(caja -> {
+                    guardado.setCaja(caja);
+                    pedidoRepository.save(guardado);
+                });
+
+        return PedidoMapper.toResponseDto(guardado);
     }
 }

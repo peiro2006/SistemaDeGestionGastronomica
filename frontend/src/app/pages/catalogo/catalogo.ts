@@ -5,7 +5,6 @@ import { Producto } from '../../models/producto.models';
 import { AuthService } from '../../services/auth.service';
 import { ProductosService } from '../../services/productos.service';
 import { CarritoService } from '../../services/carrito.service';
-import { CajaSelectorService } from '../../services/caja-selector.service';
 
 @Component({
   selector: 'app-catalogo',
@@ -18,7 +17,6 @@ export class CatalogoComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly carritoService = inject(CarritoService);
   private readonly router = inject(Router);
-  private readonly cajaSelector = inject(CajaSelectorService);
 
   readonly productos = signal<Producto[]>([]);
   readonly cargando = signal(false);
@@ -32,10 +30,6 @@ export class CatalogoComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCatalogo();
-  }
-
-  abrirCaja(): void {
-    this.cajaSelector.abrir();
   }
 
   cargarCatalogo(): void {

@@ -9,10 +9,14 @@ import com.example.SistemaDeGestion.dtos.request.CajaLoginReqDto;
 import com.example.SistemaDeGestion.dtos.request.CajaUpdateReqDto;
 import com.example.SistemaDeGestion.dtos.response.CajaLoginResDto;
 import com.example.SistemaDeGestion.dtos.response.CajaResDto;
+import com.example.SistemaDeGestion.dtos.response.CajaResumenDto;
+import com.example.SistemaDeGestion.dtos.response.PedidoResDto;
 import com.example.SistemaDeGestion.services.domain.CajaCreateService;
 import com.example.SistemaDeGestion.services.domain.CajaEstadoService;
 import com.example.SistemaDeGestion.services.domain.CajaListService;
 import com.example.SistemaDeGestion.services.domain.CajaLoginService;
+import com.example.SistemaDeGestion.services.domain.CajaMovimientosService;
+import com.example.SistemaDeGestion.services.domain.CajaResumenService;
 import com.example.SistemaDeGestion.services.domain.CajaUpdateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,6 +37,8 @@ public class CajaController {
     private final CajaUpdateService cajaUpdateService;
     private final CajaEstadoService cajaEstadoService;
     private final CajaLoginService cajaLoginService;
+    private final CajaMovimientosService cajaMovimientosService;
+    private final CajaResumenService cajaResumenService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -87,6 +93,22 @@ public class CajaController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.ok(cajaEstadoService.execute(idCaja, request), "Estado actualizado correctamente")
+        );
+    }
+
+    @GetMapping("/{idCaja}/movimientos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<List<PedidoResDto>>> obtenerMovimientos(@PathVariable Long idCaja) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(cajaMovimientosService.execute(idCaja), "Movimientos obtenidos correctamente")
+        );
+    }
+
+    @GetMapping("/{idCaja}/resumen")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<CajaResumenDto>> obtenerResumen(@PathVariable Long idCaja) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(cajaResumenService.execute(idCaja), "Resumen obtenido correctamente")
         );
     }
 

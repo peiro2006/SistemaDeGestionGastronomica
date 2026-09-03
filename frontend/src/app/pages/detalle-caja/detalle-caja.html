@@ -1,0 +1,133 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Movimientos de caja</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/cajas">Volver a Cajas</a>
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="empty">Cargando movimientos...</div>
+  } @else if (caja()) {
+    <section class="card info-card">
+      <div class="caja-info">
+        <div class="caja-dato">
+          <span class="dato-label">Nombre</span>
+          <span class="dato-valor">{{ caja()!.nombre }}</span>
+        </div>
+        <div class="caja-dato">
+          <span class="dato-label">Estado</span>
+          <span class="status" [class.inactive]="caja()!.estado !== 'ACTIVA'">
+            {{ cajaService.etiquetaEstado(caja()!.estado) }}
+          </span>
+        </div>
+        <div class="caja-dato">
+          <span class="dato-label">Monto Inicial</span>
+          <span class="dato-valor">{{ cajaService.formatearMonto(caja()!.montoInicial) }}</span>
+        </div>
+        <div class="caja-dato destacado">
+          <span class="dato-label">Monto Actual (Efectivo)</span>
+          <span class="dato-valor">{{ cajaService.formatearMonto(caja()!.montoActual) }}</span>
+        </div>
+      </div>
+    </section>
+
+    @if (resumen()) {
+      <section class="card resumen-card">
+        <h2>Resumen por metodo de pago</h2>
+        <div class="resumen-grid">
+          <div class="resumen-item efectivo">
+            <span class="resumen-icono">$</span>
+            <div class="resumen-info">
+              <span class="resumen-label">Efectivo</span>
+              <span class="resumen-valor">{{ cajaService.formatearMonto(resumen()!.totalEfectivo) }}</span>
+            </div>
+          </div>
+          <div class="resumen-item debito">
+            <span class="resumen-icono">D</span>
+            <div class="resumen-info">
+              <span class="resumen-label">Debito</span>
+              <span class="resumen-valor">{{ cajaService.formatearMonto(resumen()!.totalDebito) }}</span>
+            </div>
+          </div>
+          <div class="resumen-item credito">
+            <span class="resumen-icono">C</span>
+            <div class="resumen-info">
+              <span class="resumen-label">Credito</span>
+              <span class="resumen-valor">{{ cajaService.formatearMonto(resumen()!.totalCredito) }}</span>
+            </div>
+          </div>
+          <div class="resumen-item transferencia">
+            <span class="resumen-icono">T</span>
+            <div class="resumen-info">
+              <span class="resumen-label">Transferencia</span>
+              <span class="resumen-valor">{{ cajaService.formatearMonto(resumen()!.totalTransferencia) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="resumen-footer">
+          <span class="resumen-total-label">Total no efectivo:</span>
+          <span class="resumen-total-valor">{{ cajaService.formatearMonto(resumen()!.totalNoEfectivo) }}</span>
+        </div>
+      </section>
+    }
+
+    <section class="card table-card">
+      <div class="section-heading">
+        <h2>Pedidos asociados</h2>
+        <span class="muted">{{ movimientos().length }} pedido(s) - Total: {{ cajaService.formatearMonto(totalMovimientos()) }}</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pedido</th>
+              <th>Estado</th>
+              <th>Pago</th>
+              <th>Total</th>
+              <th>Fecha</th>
+              <th>Items</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pedido of movimientos(); track pedido.idPedido) {
+              <tr>
+                <td><strong>#{{ pedido.idPedido }}</strong></td>
+                <td>
+                  <span class="status-badge estado-{{ pedido.estado }}">{{ pedido.estado }}</span>
+                </td>
+                <td>
+                  <span class="pago-badge pago-{{ pedido.metDePago }}">{{ etiquetaMetodoPago(pedido.metDePago) }}</span>
+                </td>
+                <td><strong>{{ cajaService.formatearMonto(pedido.total) }}</strong></td>
+                <td>{{ pedido.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <ul class="items-list">
+                    @for (item of pedido.items; track item.idPedidoItem) {
+                      <li>{{ item.nombreProducto }} x {{ item.cantidad }}</li>
+                    }
+                  </ul>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="empty">No hay movimientos registrados para esta caja.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

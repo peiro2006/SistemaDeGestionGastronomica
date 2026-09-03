@@ -22,6 +22,7 @@ public class PedidoMapper {
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
         pedido.setEstado(EstadoPedido.pendiente);
+        pedido.setMetDePago(request.metDePago());
         pedido.setTotal(BigDecimal.ZERO);
         return pedido;
     }
@@ -44,7 +45,9 @@ public class PedidoMapper {
         return new PedidoResDto(
                 pedido.getIdPedido(),
                 pedido.getUsuario().getIdUsuario(),
+                pedido.getCaja() != null ? pedido.getCaja().getIdCaja() : null,
                 pedido.getEstado().name(),
+                pedido.getMetDePago() != null ? pedido.getMetDePago().name() : "EFECTIVO",
                 pedido.getTotal(),
                 pedido.getFechaCreacion(),
                 pedido.getFechaActualizacion(),

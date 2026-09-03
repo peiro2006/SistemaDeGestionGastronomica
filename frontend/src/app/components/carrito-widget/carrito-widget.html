@@ -37,12 +37,30 @@
                 <button type="button" class="carrito-btn" (click)="decrementar(item.producto.idProducto)" aria-label="Restar">−</button>
                 <span class="carrito-cantidad">{{ item.cantidad }}</span>
                 <button type="button" class="carrito-btn" (click)="incrementar(item.producto.idProducto)" aria-label="Sumar">+</button>
-                <button type="button" class="carrito-eliminar" (click)="quitar(item.producto.idProducto)" aria-label="Eliminar">🗑</button>
+                <button type="button" class="carrito-eliminar" (click)="quitar(item.producto.idProducto)" aria-label="Eliminar">×</button>
               </div>
               <div class="carrito-subtotal">${{ calcularSubtotal(item.producto.precio, item.cantidad) }}</div>
             </div>
           }
         </div>
+
+        <div class="carrito-pago">
+          <span class="pago-label">Metodo de pago</span>
+          <div class="pago-opciones">
+            @for (metodo of metodosPago; track metodo.valor) {
+              <button
+                type="button"
+                class="pago-btn"
+                [class.pago-btn-activo]="metodoPago() === metodo.valor"
+                (click)="seleccionarMetodoPago(metodo.valor)"
+              >
+                <span class="pago-icono">{{ metodo.icono }}</span>
+                <span>{{ metodo.label }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
         <div class="carrito-card-footer">
           <strong>Total: ${{ total().toFixed(2) }}</strong>
           <button

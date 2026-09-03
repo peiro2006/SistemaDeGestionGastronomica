@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseResponse } from '../models/auth.models';
-import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest, CajaLoginRequest, CajaLoginResponse } from '../models/caja.models';
+import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest, CajaLoginRequest, CajaLoginResponse, CajaResumen } from '../models/caja.models';
+import { Pedido } from '../models/pedido.models';
 
 @Injectable({ providedIn: 'root' })
 export class CajaService {
@@ -35,6 +36,14 @@ export class CajaService {
 
   loginCaja(data: CajaLoginRequest): Observable<BaseResponse<CajaLoginResponse>> {
     return this.http.post<BaseResponse<CajaLoginResponse>>(`${this.apiUrl}/caja/login`, data);
+  }
+
+  obtenerMovimientos(idCaja: number): Observable<BaseResponse<Pedido[]>> {
+    return this.http.get<BaseResponse<Pedido[]>>(`${this.apiUrl}/caja/${idCaja}/movimientos`);
+  }
+
+  obtenerResumen(idCaja: number): Observable<BaseResponse<CajaResumen>> {
+    return this.http.get<BaseResponse<CajaResumen>>(`${this.apiUrl}/caja/${idCaja}/resumen`);
   }
 
   etiquetaEstado(estado: string): string {

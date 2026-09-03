@@ -41,3 +41,12 @@ export interface CajaLoginResponse {
   montoActual: number;
   token: string;
 }
+
+export interface CajaResumen {
+  totalEfectivo: number;
+  totalDebito: number;
+  totalCredito: number;
+  totalTransferencia: number;
+  totalNoEfectivo: number;
+  montoActual: number;
+}

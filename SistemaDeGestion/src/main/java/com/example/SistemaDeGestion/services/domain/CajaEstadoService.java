@@ -45,10 +45,20 @@ public class CajaEstadoService implements ICajaEstadoService {
         caja.setEstado(nuevoEstado);
         caja.setFechaActualizacion(Instant.now());
 
-        // Si se abre (ACTIVA), registrar quien la abrió y cuándo
+        // Si se abre (ACTIVA), desactivar la caja que esté activa (solo una a la vez)
         if (nuevoEstado == EstadoCaja.ACTIVA && estadoAnterior != EstadoCaja.ACTIVA) {
-            // El usuario actual se setea desde el controlador
+            cajaRepository.findFirstByEstadoOrderByFechaCreacionDesc(EstadoCaja.ACTIVA).ifPresent(activa -> {
+                if (!activa.getIdCaja().equals(caja.getIdCaja())) {
+                    activa.setEstado(EstadoCaja.INACTIVA);
+                    activa.setAbiertaPor(null);
+                    activa.setFechaApertura(null);
+                    activa.setFechaActualizacion(Instant.now());
+                    cajaRepository.save(activa);
+                }
+            });
+            caja.setFechaApertura(Instant.now());
         }
+
         // Si se cierra (INACTIVA)
         if (nuevoEstado == EstadoCaja.INACTIVA && estadoAnterior == EstadoCaja.ACTIVA) {
             caja.setAbiertaPor(null);
