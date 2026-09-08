@@ -29,7 +29,9 @@ public record ProductoUpdateReqDto(
         Integer stockMinimo,
 
         @NotNull(message = "Debe seleccionar una receta para el producto")
-        Long idReceta
+        Long idReceta,
+
+        Long idProveedor
 
 ) {
 }

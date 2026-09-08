@@ -22,4 +22,9 @@ public interface ProductosRepository extends JpaRepository<Producto, Long>, JpaS
     @Query("select p from Producto p where p.idProducto = :id")
     Optional<Producto> findByIdForUpdate(@Param("id") Long id);
 
+    @Query("SELECT COALESCE(SUM(p.stockActual), 0) FROM Producto p")
+    java.math.BigDecimal sumStock();
+
+    @Query("SELECT COUNT(p) FROM Producto p WHERE p.activo = true")
+    Long countByActivoTrue();
 }

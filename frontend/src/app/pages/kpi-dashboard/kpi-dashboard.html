@@ -1,0 +1,94 @@
+<div class="admin-layout">`n  <app-admin-sidebar />`n  <div class="admin-main">`n    <div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel de análisis — Tiempo definido · Datos medibles · Control</p>
+      <h1>KPI — Rendimiento detallado</h1>
+      @if (kpis(); as k) { <p class="subtitle">Gráficos detallados de todo lo que sucede · {{k.periodo}} · {{k.timestamp | date:'dd/MM/yyyy HH:mm'}}</p> }
+    </div>
+    
+  </header>
+
+  @if (cargando()) { <div class="alert alert-info">Cargando dashboard ejecutivo...</div> }
+  @if (error()) { <div class="alert alert-error">{{error()}}</div> }
+
+  @if (!cargando() && kpis(); as k) {
+
+    <div class="hero">
+      <div>
+        <h1>Objetivos estratégicos — Cumplimiento {{k.cumplimientoMeta}}%</h1>
+        <p>Meta mensual {{fmtARS(k.metaMensual)}} · Ingresos 30d {{fmtARS(k.ingresos30Dias)}} · {{k.tasaExito}}% pedidos entregados</p>
+      </div>
+      <div class="hero-badge"><strong>{{k.cumplimientoMeta}}%</strong><span>cumplimiento meta</span></div>
+      <div class="hero-badge"><strong>{{fmt(k.totalPedidos)}}</strong><span>pedidos totales</span></div>
+      <div class="hero-badge"><strong>{{fmtARS(k.ingresosTotales)}}</strong><span>ingresos totales</span></div>
+    </div>
+
+    <section class="kpi-section">
+      <div class="section-title"><strong>Cumplimiento de meta mensual</strong><span class="badge-meta">{{fmtARS(k.ingresos30Dias)}} / {{fmtARS(k.metaMensual)}}</span></div>
+      <div class="progress-bar"><div class="progress-fill" [style.width.%]="k.cumplimientoMeta>100?100:k.cumplimientoMeta"></div></div>
+      <div class="progress-label"><span>0%</span><span>50%</span><span>100%+</span></div>
+    </section>
+
+    <!-- VENTAS -->
+    <div class="area">
+      <div class="area-head"><span class="area-dot" style="background:var(--ventas)"></span><span class="area-title">Ventas</span><span class="area-line"></span></div>
+      <div class="kpi-grid">
+        <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Total pedidos</span><span class="kpi-trend" [class.up]="k.tasaExito>=70" [class.down]="k.tasaExito<50">{{k.tasaExito}}% éxito</span></div><span class="kpi-value">{{fmt(k.totalPedidos)}}</span><span class="kpi-sub">7d {{k.pedidos7Dias}} · 30d {{k.pedidos30Dias}} · 90d {{k.pedidos90Dias}}</span></div>
+        <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Ingresos totales</span><span class="kpi-trend up">{{fmtARS(k.promedioPedido)}} prom.</span></div><span class="kpi-value highlight">{{fmtARS(k.ingresosTotales)}}</span><span class="kpi-sub">7d {{fmtARS(k.ingresos7Dias)}} · 30d {{fmtARS(k.ingresos30Dias)}} · 90d {{fmtARS(k.ingresos90Dias)}}</span></div>
+        <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Tasa conversión</span><span class="kpi-trend">{{k.tasaConversion}}% conv.</span></div><span class="kpi-value">{{k.tasaConversion}}%</span><span class="kpi-sub">CAC {{fmtARS(k.cac)}} · 30d {{fmtARS(k.cac30)}}</span></div>
+        <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Tasa cancelación</span><span class="kpi-trend down">{{k.tasaCancelacion}}% canc.</span></div><span class="kpi-value">{{k.tasaCancelacion}}%</span><span class="kpi-sub">Éxito {{k.tasaExito}}% — control operativo</span></div>
+      </div>
+    </div>
+
+    <!-- MARKETING + FINANZAS + RRHH -->
+    <div class="area">
+      <div class="area-head"><span class="area-dot" style="background:var(--marketing)"></span><span class="area-title">Marketing</span><span class="area-line"></span><span class="area-dot" style="background:var(--finanzas)"></span><span class="area-title">Finanzas</span><span class="area-line"></span><span class="area-dot" style="background:var(--rrhh)"></span><span class="area-title">RRHH</span><span class="area-line"></span></div>
+      <div class="kpi-grid">
+        <div class="kpi-card marketing"><div class="kpi-top"><span class="kpi-label">Tráfico web 30d</span><span class="kpi-trend">CTR {{k.ctr}}%</span></div><span class="kpi-value">{{fmt(k.traficoWeb30)}}</span><span class="kpi-sub">7d {{k.traficoWeb7}} · CTR 7d {{k.ctr7}}%</span></div>
+        <div class="kpi-card marketing"><div class="kpi-top"><span class="kpi-label">CTR — % clics</span><span class="kpi-trend up">{{k.ctr}}%</span></div><span class="kpi-value">{{k.ctr}}%</span><span class="kpi-sub">Pedidos / visitas · medible</span></div>
+        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">ROI — Retorno inversión</span><span class="kpi-trend up">ROI {{k.roi}}</span></div><span class="kpi-value highlight">{{k.roi}}</span><span class="kpi-sub">Ingresos / stock</span></div>
+        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">Margen beneficio neto</span><span class="kpi-trend">Margen {{k.margenBeneficio}}</span></div><span class="kpi-value">{{k.margenBeneficio}}</span><span class="kpi-sub">30d {{k.margen30}} ARS/pedido</span></div>
+        <div class="kpi-card rrhh"><div class="kpi-top"><span class="kpi-label">Retención empleados</span><span class="kpi-trend" [class.up]="k.tasaRetencion>=60">{{k.tasaRetencion}}% ret.</span></div><span class="kpi-value">{{k.tasaRetencion}}%</span><span class="kpi-sub">Rotación {{k.tasaRotacion}}% · {{k.totalUsuarios}} usuarios</span></div>
+        <div class="kpi-card stock"><div class="kpi-top"><span class="kpi-label">Stock total</span><span class="kpi-trend" [class.down]="k.stockBajo>0">{{k.stockBajo}} bajo</span></div><span class="kpi-value">{{fmt(k.stockTotal)}}</span><span class="kpi-sub">Activos {{k.productosActivos}}/{{k.totalProductos}} · Inactivos {{k.productosInactivos}}</span></div>
+        <div class="kpi-card stock wide"><div class="kpi-top"><span class="kpi-label">Proveedores</span><span class="kpi-trend">{{k.proveedoresActivos}}/{{k.totalProveedores}} act.</span></div><span class="kpi-value">{{k.proveedoresActivos}}/{{k.totalProveedores}}</span><span class="kpi-sub">Productos con proveedor vs sin proveedor — control</span></div>
+      </div>
+    </div>
+
+    <!-- GRÁFICOS FILA 1 -->
+    <div class="charts-grid">
+      <div class="card chart-card"><div class="chart-head"><h2>Pedidos por estado</h2><span class="chart-meta">Control operativo</span></div><div class="chart-container compact"><canvas #estadoChart></canvas></div>
+        <div class="breakdown-list">@for (est of estados; track est.estado) {<div class="breakdown-item"><span class="badge" [style.background]="estadoColor(est.estado)">{{etiquetaEstado(est.estado)}}</span><span class="breakdown-count">{{est.count}}</span><div class="breakdown-bar"><div class="breakdown-fill" [style.width.%]="maxBarWidth(est.count)" [style.background]="estadoColor(est.estado)"></div></div></div>}</div>
+      </div>
+      <div class="card chart-card"><div class="chart-head"><h2>Ingresos por método de pago</h2><span class="chart-meta">Finanzas</span></div><div class="chart-container compact"><canvas #metodoPagoChart></canvas></div>
+        <div class="chart-legend">@for (m of (k.ingresosPorMetodoPago | keyvalue); track m.key) {<span class="legend-item"><span class="legend-dot" style="background:#059669"></span>{{etiquetaMetodo(m.key)}}: {{fmtARS($any(m.value))}} ({{k.pedidosPorMetodoPago[m.key]}})</span>}</div>
+      </div>
+      <div class="card chart-card span4"><div class="chart-head"><h2>Top 5 productos más vendidos</h2><span class="chart-meta">Ventas</span></div><div class="chart-container compact"><canvas #topProdChart></canvas></div>
+        <div class="top-list">@for (p of k.topProductos; track p.nombre) {<div class="top-item"><span class="top-rank">{{$index+1}}</span><span class="top-name">{{p.nombre}}</span><span class="top-qty">{{p.cantidad}}u · {{fmtARS(p.ingresos)}}</span></div>} @empty {<p class="empty">Sin ventas aún</p>}</div>
+      </div>
+    </div>
+
+    <!-- TENDENCIA -->
+    <div class="charts-grid">
+      <div class="card chart-card span12"><div class="chart-head"><h2>Tendencia 30 días — Ingresos y pedidos</h2><span class="badge-meta">{{k.pedidos30Dias}} pedidos · {{fmtARS(k.ingresos30Dias)}}</span></div><div class="chart-container large"><canvas #tendenciaChart></canvas></div><p class="hint">Tiempo definido: cada punto es un día · datos medibles para control y mejora</p></div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card chart-card"><div class="chart-head"><h2>Ingresos 7 / 30 / 90 días</h2><span class="chart-meta">Objetivos estratégicos</span></div><div class="chart-container"><canvas #ingresosChart></canvas></div><p class="hint">Comparativa vs meta mensual</p></div>
+      <div class="card chart-card"><div class="chart-head"><h2>Stock por categoría</h2><span class="chart-meta">Stock</span></div><div class="chart-container"><canvas #stockCatChart></canvas></div></div>
+      <div class="card chart-card span4"><div class="chart-head"><h2>Productos por proveedor</h2><span class="chart-meta">Proveedores</span></div><div class="chart-container compact"><canvas #proveedorChart></canvas></div></div>
+      <div class="card chart-card span4"><div class="chart-head"><h2>Usuarios por rol</h2><span class="chart-meta">RRHH</span></div><div class="chart-container compact"><canvas #usuariosChart></canvas></div><p class="hint">Retención {{k.tasaRetencion}}%</p></div>
+    </div>
+
+    <section class="kpi-explain">
+      <h2>Qué evalúa cada KPI</h2>
+      <div class="explain-grid">
+        <div class="explain-card"><div><h3>Objetivos estratégicos</h3><p>Meta mensual {{fmtARS(k.metaMensual)}} y cumplimiento {{k.cumplimientoMeta}}% conectados al plan de negocio.</p></div></div>
+        <div class="explain-card"><div><h3>Datos medibles</h3><p>Cifras exactas y porcentajes reales de BD, sin subjetividad. CTR, ROI, CAC con números.</p></div></div>
+        <div class="explain-card"><div><h3>Control e influencia</h3><p>Estados, stock, métodos de pago y proveedores accionables por el equipo.</p></div></div>
+        <div class="explain-card"><div><h3>Tiempo definido</h3><p>Ventanas 7/30/90 días y tendencia diaria para medir evolución.</p></div></div>
+      </div>
+    </section>
+  }
+</div>
+  </div>
+</div>

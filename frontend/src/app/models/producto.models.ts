@@ -10,6 +10,8 @@ export interface Producto {
   stockMinimo: number | null;
   idReceta?: number;
   nombreReceta?: string | null;
+  idProveedor?: number;
+  nombreProveedor?: string | null;
 }
 
 export interface ProductoCreateRequest {
@@ -21,6 +23,7 @@ export interface ProductoCreateRequest {
   stockActual: number;
   stockMinimo: number;
   idReceta: number;
+  idProveedor?: number;
 }
 
 export interface ProductoUpdateRequest {
@@ -31,4 +34,5 @@ export interface ProductoUpdateRequest {
   imagenUrl?: string | null;
   stockMinimo: number;
   idReceta: number;
+  idProveedor?: number;
 }

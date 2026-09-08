@@ -9,19 +9,27 @@ export class ProveedoresService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:8080';
 
-  listar(): Observable<BaseResponse<Proveedor[]>> {
-    return this.http.get<BaseResponse<Proveedor[]>>(`${this.apiUrl}/Proveedor`);
+  listarTodas(): Observable<BaseResponse<Proveedor[]>> {
+    return this.http.get<BaseResponse<Proveedor[]>>(`${this.apiUrl}/proveedor`);
+  }
+
+  listarActivos(): Observable<BaseResponse<Proveedor[]>> {
+    return this.http.get<BaseResponse<Proveedor[]>>(`${this.apiUrl}/proveedor/activos`);
+  }
+
+  listarDisponibles(): Observable<BaseResponse<Proveedor[]>> {
+    return this.http.get<BaseResponse<Proveedor[]>>(`${this.apiUrl}/proveedor/disponibles`);
+  }
+
+  obtenerPorId(idProveedor: number): Observable<BaseResponse<Proveedor>> {
+    return this.http.get<BaseResponse<Proveedor>>(`${this.apiUrl}/proveedor/${idProveedor}`);
   }
 
   crear(data: ProveedorCreateRequest): Observable<BaseResponse<Proveedor>> {
-    return this.http.post<BaseResponse<Proveedor>>(`${this.apiUrl}/Proveedor`, data);
+    return this.http.post<BaseResponse<Proveedor>>(`${this.apiUrl}/proveedor`, data);
   }
 
   actualizar(idProveedor: number, data: ProveedorUpdateRequest): Observable<BaseResponse<Proveedor>> {
-    return this.http.put<BaseResponse<Proveedor>>(`${this.apiUrl}/Proveedor/${idProveedor}`, data);
-  }
-
-  eliminar(idProveedor: number): Observable<BaseResponse<null>> {
-    return this.http.delete<BaseResponse<null>>(`${this.apiUrl}/Proveedor/${idProveedor}`);
+    return this.http.put<BaseResponse<Proveedor>>(`${this.apiUrl}/proveedor/${idProveedor}`, data);
   }
 }

@@ -13,6 +13,7 @@ import { AdminFeedbackComponent } from './pages/admin-feedback/admin-feedback';
 import { MisPedidosComponent } from './pages/mis-pedidos/mis-pedidos';
 import { EmpleadoPedidosComponent } from './pages/empleado-pedidos/gestion-pedidos';
 import { AccesoDenegadoComponent } from './pages/acceso-denegado/acceso-denegado';
+import { KpiDashboardComponent } from './pages/kpi-dashboard/kpi-dashboard';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 import { empleadoGuard } from './guards/empleado.guard';
@@ -33,5 +34,6 @@ export const routes: Routes = [
   { path: 'admin/proveedores', component: AdminProveedoresComponent, canActivate: [authGuard, adminGuard] },
   { path: 'admin/reportes', component: AdminReportesComponent, canActivate: [authGuard, adminGuard] },
   { path: 'admin/feedback', component: AdminFeedbackComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'kpi', component: KpiDashboardComponent, canActivate: [authGuard, adminGuard] },
   { path: '**', redirectTo: '/catalogo' }
 ];

@@ -1,13 +1,16 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Producto } from '../../models/producto.models';
 import { Receta } from '../../models/receta.models';
+import { Proveedor } from '../../models/proveedor.models';
 import { Notificacion } from '../../services/notificaciones.service';
 import { ProductosService } from '../../services/productos.service';
 import { RecetasService } from '../../services/recetas.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
+import { ProveedoresService } from '../../services/proveedores.service';
+import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 
 interface IngredienteForm {
   nombreInsumo: string;
@@ -17,7 +20,7 @@ interface IngredienteForm {
 
 @Component({
   selector: 'app-admin-productos',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe],
+  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, DatePipe, AdminSidebarComponent],
   templateUrl: './admin-productos.html',
   styleUrl: './admin-productos.css'
 })
@@ -26,9 +29,11 @@ export class AdminProductosComponent implements OnInit {
   private readonly productosService = inject(ProductosService);
   private readonly recetasService = inject(RecetasService);
   private readonly notificacionesService = inject(NotificacionesService);
+  private readonly proveedoresService = inject(ProveedoresService);
 
   readonly productos = signal<Producto[]>([]);
   readonly recetas = signal<Receta[]>([]);
+  readonly proveedores = signal<Proveedor[]>([]);
   readonly notificaciones = signal<Notificacion[]>([]);
   readonly notificacionesNoLeidas = signal(0);
   readonly mostrarNotificaciones = signal(false);
@@ -49,7 +54,8 @@ export class AdminProductosComponent implements OnInit {
     imagenUrl: [''],
     stockActual: [0, [Validators.required, Validators.min(0)]],
     stockMinimo: [0, [Validators.required, Validators.min(0)]],
-    idReceta: [0, [Validators.required, Validators.min(1)]]
+    idReceta: [0, [Validators.required, Validators.min(1)]],
+    idProveedor: [0]
   });
 
   readonly recetaForm = this.fb.nonNullable.group({
@@ -61,6 +67,7 @@ export class AdminProductosComponent implements OnInit {
     this.cargarRecetas();
     this.cargarProductos();
     this.cargarNotificaciones();
+    this.cargarProveedores();
   }
 
   cargarProductos(): void {
@@ -74,6 +81,13 @@ export class AdminProductosComponent implements OnInit {
         this.error.set(this.extraerError(err));
         this.cargando.set(false);
       }
+    });
+  }
+
+  cargarProveedores(): void {
+    this.proveedoresService.listarActivos().subscribe({
+      next: (res) => this.proveedores.set(res.data ?? []),
+      error: () => {}
     });
   }
 
@@ -106,7 +120,8 @@ export class AdminProductosComponent implements OnInit {
           categoria: value.categoria.trim(),
           imagenUrl: value.imagenUrl.trim() || null,
           stockMinimo: value.stockMinimo,
-          idReceta: value.idReceta
+          idReceta: value.idReceta,
+          idProveedor: value.idProveedor || undefined
         })
         .subscribe(this.productoHandler('Producto actualizado correctamente'));
       return;
@@ -121,7 +136,8 @@ export class AdminProductosComponent implements OnInit {
         imagenUrl: value.imagenUrl.trim() || null,
         stockActual: value.stockActual,
         stockMinimo: value.stockMinimo,
-        idReceta: value.idReceta
+        idReceta: value.idReceta,
+        idProveedor: value.idProveedor || undefined
       })
       .subscribe(this.productoHandler('Producto creado correctamente'));
   }
@@ -136,13 +152,14 @@ export class AdminProductosComponent implements OnInit {
       imagenUrl: producto.imagenUrl ?? '',
       stockActual: producto.stockActual ?? 0,
       stockMinimo: producto.stockMinimo ?? 0,
-      idReceta: producto.idReceta ?? 0
+      idReceta: producto.idReceta ?? 0,
+      idProveedor: producto.idProveedor ?? 0
     });
     this.mensaje.set(null);
     this.error.set(null);
   }
 
-  cancelarEdicion(): void {
+cancelarEdicion(): void {
     this.productoEditando.set(null);
     this.productoForm.reset({
       nombreProducto: '',
@@ -152,7 +169,8 @@ export class AdminProductosComponent implements OnInit {
       imagenUrl: '',
       stockActual: 0,
       stockMinimo: 0,
-      idReceta: 0
+      idReceta: 0,
+      idProveedor: 0
     });
   }
 

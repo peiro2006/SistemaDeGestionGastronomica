@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Proveedor } from '../../models/proveedor.models';
 import { ProveedoresService } from '../../services/proveedores.service';
 
 @Component({
   selector: 'app-admin-proveedores',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe],
+  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, DatePipe, AdminSidebarComponent],
   templateUrl: './admin-proveedores.html',
   styleUrl: './admin-proveedores.css'
 })
@@ -23,11 +24,11 @@ export class AdminProveedoresComponent implements OnInit {
   readonly error = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
-    razonSocial: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    cuitRut: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15), Validators.pattern(/^[0-9]+$/)]],
-    telefono: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), Validators.pattern(/^[0-9+\-\s()]+$/)]],
-    correo: ['', [Validators.required, Validators.email]],
-    direccion: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]]
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+    telefono: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
+    direccion: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
+    ciudad: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]]
   });
 
   ngOnInit(): void {
@@ -36,7 +37,7 @@ export class AdminProveedoresComponent implements OnInit {
 
   cargarProveedores(): void {
     this.cargando.set(true);
-    this.proveedoresService.listar().subscribe({
+    this.proveedoresService.listarTodas().subscribe({
       next: (res) => {
         this.proveedores.set(res.data ?? []);
         this.cargando.set(false);
@@ -62,11 +63,11 @@ export class AdminProveedoresComponent implements OnInit {
     const editando = this.proveedorEditando();
 
     const datos = {
-      razonSocial: value.razonSocial.trim(),
-      cuitRut: value.cuitRut.trim(),
+      nombre: value.nombre.trim(),
       telefono: value.telefono.trim(),
-      correo: value.correo.trim(),
-      direccion: value.direccion.trim()
+      email: value.email.trim(),
+      direccion: value.direccion.trim(),
+      ciudad: value.ciudad.trim()
     };
 
     const accion = editando
@@ -90,11 +91,11 @@ export class AdminProveedoresComponent implements OnInit {
   editar(proveedor: Proveedor): void {
     this.proveedorEditando.set(proveedor);
     this.form.patchValue({
-      razonSocial: proveedor.razonSocial,
-      cuitRut: proveedor.cuitRut,
+      nombre: proveedor.nombre,
       telefono: proveedor.telefono,
-      correo: proveedor.correo,
-      direccion: proveedor.direccion
+      email: proveedor.email,
+      direccion: proveedor.direccion,
+      ciudad: proveedor.ciudad
     });
     this.mensaje.set(null);
     this.error.set(null);
@@ -102,22 +103,20 @@ export class AdminProveedoresComponent implements OnInit {
 
   cancelarEdicion(): void {
     this.proveedorEditando.set(null);
-    this.form.reset({ razonSocial: '', cuitRut: '', telefono: '', correo: '', direccion: '' });
+    this.form.reset({ nombre: '', telefono: '', email: '', direccion: '', ciudad: '' });
   }
 
   eliminarProveedor(proveedor: Proveedor): void {
     const confirmacion = window.confirm(
-      `¿Seguro que desea eliminar el proveedor "${proveedor.razonSocial}" (CUIT/RUT ${proveedor.cuitRut})?`
+      `¿Seguro que desea eliminar el proveedor "${proveedor.nombre}"?`
     );
-    if (!confirmacion) {
-      return;
-    }
+    if (!confirmacion) return;
 
     this.error.set(null);
     this.mensaje.set(null);
-    this.proveedoresService.eliminar(proveedor.idProveedor).subscribe({
+    this.proveedoresService.actualizar(proveedor.idProveedor, { activo: false }).subscribe({
       next: () => {
-        this.mensaje.set('Proveedor eliminado correctamente');
+        this.mensaje.set('Proveedor desactivado correctamente');
         this.cargarProveedores();
       },
       error: (err) => this.error.set(this.extraerError(err))

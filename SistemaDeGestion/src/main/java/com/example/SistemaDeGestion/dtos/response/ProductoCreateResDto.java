@@ -12,7 +12,9 @@ public record ProductoCreateResDto (
         Integer stockActual,
         Integer stockMinimo,
         Long idReceta,
-        String nombreReceta
+        String nombreReceta,
+        Long idProveedor,
+        String nombreProveedor
 
 ) {
 }

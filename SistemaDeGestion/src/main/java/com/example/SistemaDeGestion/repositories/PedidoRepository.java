@@ -39,4 +39,22 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecif
 
     @Query("SELECT COALESCE(SUM(p.total), 0) FROM Pedido p WHERE p.caja = :caja AND p.metDePago = :metodo AND p.estado != 'cancelado' AND p.fechaCreacion >= :desde")
     BigDecimal sumTotalByCajaAndMetDePagoYFecha(@Param("caja") Caja caja, @Param("metodo") MetodoPago metodo, @Param("desde") Instant desde);
+
+    @Query("SELECT COALESCE(SUM(p.total), 0) FROM Pedido p")
+    BigDecimal sumTotales();
+
+    @Query("SELECT COALESCE(AVG(p.total), 0) FROM Pedido p")
+    BigDecimal avgTotal();
+
+    @Query("SELECT p.estado, COUNT(p) FROM Pedido p GROUP BY p.estado")
+    List<Object[]> countByEstadoGrouped();
+
+    @Query("SELECT COALESCE(SUM(p.total), 0) FROM Pedido p WHERE p.fechaCreacion >= :fecha")
+    BigDecimal sumTotalesByFechaAfter(@Param("fecha") Instant fecha);
+
+    @Query("SELECT MONTH(p.fechaCreacion), COALESCE(SUM(p.total), 0) FROM Pedido p WHERE p.fechaCreacion >= :desde GROUP BY MONTH(p.fechaCreacion) ORDER BY MONTH(p.fechaCreacion)")
+    List<Object[]> sumTotalesGroupedByMonth(@Param("desde") Instant desde);
+
+    @Query("SELECT p FROM Pedido p ORDER BY p.fechaCreacion DESC")
+    List<Pedido> findTop10ByOrderByFechaCreacionDesc();
 }

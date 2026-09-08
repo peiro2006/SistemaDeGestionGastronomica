@@ -1,19 +1,17 @@
 package com.example.SistemaDeGestion.dtos.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record ProveedorResDto (
 
         Long idProveedor,
-        String razonSocial,
-        String cuitRut,
+        String nombre,
         String telefono,
-        String correo,
+        String email,
         String direccion,
-        LocalDateTime fechaCreacion,
-        LocalDateTime fechaUltimaModificacion,
-        String usuarioAlta,
-        String usuarioUltimaModificacion
+        String ciudad,
+        boolean activo,
+        Instant fechaCreacion
 
 ) {
 }

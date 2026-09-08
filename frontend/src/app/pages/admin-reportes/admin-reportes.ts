@@ -1,7 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { EstadoPedido, ReporteRes } from '../../models/reporte.models';
 import { ReporteService } from '../../services/reporte.service';
 import { CajaService } from '../../services/caja.service';
@@ -10,7 +11,7 @@ import { Pedido } from '../../models/pedido.models';
 
 @Component({
   selector: 'app-admin-reportes',
-  imports: [FormsModule, RouterLink, DatePipe, CurrencyPipe],
+  imports: [FormsModule, RouterLink, RouterLinkActive, DatePipe, CurrencyPipe, AdminSidebarComponent],
   templateUrl: './admin-reportes.html',
   styleUrl: './admin-reportes.css'
 })

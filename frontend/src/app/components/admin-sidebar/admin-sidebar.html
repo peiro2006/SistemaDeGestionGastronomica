@@ -1,0 +1,35 @@
+<aside class="sidebar" [class.collapsed]="collapsed()">
+  <div class="sidebar-head">
+    <div class="brand">
+      <span class="brand-mark">HB</span>
+      <div class="brand-text">
+        <strong>Hambur-Besa</strong>
+        <span>Panel administrativo</span>
+      </div>
+    </div>
+    <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Colapsar"></button>
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (group of groups; track group.label) {
+      <div class="nav-group" [class.open]="isOpen(group.label)">
+        <button class="group-head" (click)="toggleGroup(group.label)">
+          <span class="group-label">{{group.label}}</span>
+          <span class="group-caret" [class.rotated]="!isOpen(group.label)"></span>
+        </button>
+        @if (isOpen(group.label)) {
+          <div class="group-items">
+            @for (item of group.items; track item.route) {
+              <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">{{item.label}}</a>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+
+  <div class="sidebar-foot">
+    <a routerLink="/home" class="nav-item muted">Inicio</a>
+    <a routerLink="/catalogo" class="nav-item muted">Catalogo</a>
+  </div>
+</aside>

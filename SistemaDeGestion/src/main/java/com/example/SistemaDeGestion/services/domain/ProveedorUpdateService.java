@@ -1,54 +1,41 @@
 package com.example.SistemaDeGestion.services.domain;
 
 import com.example.SistemaDeGestion.configs.exceptions.BadRequestException;
-import com.example.SistemaDeGestion.configs.exceptions.ConflictException;
 import com.example.SistemaDeGestion.configs.exceptions.NotFoundException;
 import com.example.SistemaDeGestion.dtos.request.ProveedorUpdateReqDto;
 import com.example.SistemaDeGestion.dtos.response.ProveedorResDto;
+import com.example.SistemaDeGestion.interfaces.IProveedorUpdateService;
 import com.example.SistemaDeGestion.mappers.ProveedorMapper;
 import com.example.SistemaDeGestion.models.Proveedor;
-import com.example.SistemaDeGestion.models.Usuario;
-import com.example.SistemaDeGestion.repositories.ProveedoresRepository;
-import com.example.SistemaDeGestion.repositories.UsuarioRepository;
+import com.example.SistemaDeGestion.repositories.ProveedorRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @AllArgsConstructor
-public class ProveedorUpdateService {
+public class ProveedorUpdateService implements IProveedorUpdateService {
 
-    private final ProveedoresRepository proveedoresRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final ProveedorRepository proveedorRepository;
 
+    @Override
     @Transactional
     public ProveedorResDto execute(Long idProveedor, ProveedorUpdateReqDto request) {
-        Proveedor proveedor = proveedoresRepository.findById(idProveedor)
-                .orElseThrow(() -> new NotFoundException("No existe un proveedor con el id " + idProveedor));
+        Proveedor proveedor = proveedorRepository.findById(idProveedor)
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrada con id " + idProveedor));
 
-        if (proveedoresRepository.existsByCuitRutAndIdProveedorNot(request.cuitRut(), idProveedor)) {
-            throw new ConflictException("Ya existe un proveedor registrado con el CUIT/RUT " + request.cuitRut());
+        if (request.nombre() != null && !request.nombre().equals(proveedor.getNombre())) {
+            if (proveedorRepository.existsByNombreIgnoreCase(request.nombre())) {
+                throw new BadRequestException("Ya existe un proveedor con ese nombre");
+            }
+            proveedor.setNombre(request.nombre());
         }
+        if (request.telefono() != null) proveedor.setTelefono(request.telefono());
+        if (request.email() != null) proveedor.setEmail(request.email());
+        if (request.direccion() != null) proveedor.setDireccion(request.direccion());
+        if (request.ciudad() != null) proveedor.setCiudad(request.ciudad());
+        if (request.activo() != null) proveedor.setActivo(request.activo());
 
-        String usuarioEmail = obtenerUsuarioAutenticado();
-        proveedor.setFechaUltimaModificacion(LocalDateTime.now());
-        proveedor.setUsuarioUltimaModificacion(usuarioEmail);
-        ProveedorMapper.updateModel(proveedor, request);
-        return ProveedorMapper.toResponseDto(proveedoresRepository.save(proveedor));
+        return ProveedorMapper.toResponseDto(proveedorRepository.save(proveedor));
     }
-
-    private String obtenerUsuarioAutenticado() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null) {
-            throw new BadRequestException("No se pudo identificar al usuario autenticado");
-        }
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .map(Usuario::getEmail)
-                .orElseThrow(() -> new NotFoundException("No existe el usuario autenticado"));
-    }
-
 }

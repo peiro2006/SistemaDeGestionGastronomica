@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Caja, CajaResumen } from '../../models/caja.models';
 import { Pedido } from '../../models/pedido.models';
 import { CajaService } from '../../services/caja.service';
 
 @Component({
   selector: 'app-detalle-caja',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, RouterLinkActive, AdminSidebarComponent],
   templateUrl: './detalle-caja.html',
   styleUrl: './detalle-caja.css'
 })

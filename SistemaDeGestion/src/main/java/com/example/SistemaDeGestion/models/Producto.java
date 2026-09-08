@@ -51,6 +51,10 @@ public class Producto {
     @JoinColumn(name = "id_receta", nullable = false)
     private Receta receta;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_proveedor")
+    private Proveedor proveedor;
+
     public Long getIdProducto() { return idProducto; }
     public void setIdProducto(Long idProducto) { this.idProducto = idProducto; }
     public String getNombreProducto() { return nombreProducto; }
@@ -71,6 +75,8 @@ public class Producto {
     public void setStockMinimo(Integer stockMinimo) { this.stockMinimo = stockMinimo; }
     public Receta getReceta() { return receta; }
     public void setReceta(Receta receta) { this.receta = receta; }
+    public Proveedor getProveedor() { return proveedor; }
+    public void setProveedor(Proveedor proveedor) { this.proveedor = proveedor; }
 
     @PrePersist
     protected void onCreate() {

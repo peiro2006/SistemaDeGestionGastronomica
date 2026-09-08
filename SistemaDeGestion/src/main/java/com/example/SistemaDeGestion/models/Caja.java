@@ -27,6 +27,7 @@ public class Caja {
     private String descripcion;
 
     @Column(name = "moneda", length = 3, nullable = false)
+    @Builder.Default
     private String moneda = "ARS";
 
     @Column(name = "monto_inicial", precision = 12, scale = 2)
@@ -40,6 +41,7 @@ public class Caja {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", length = 20)
+    @Builder.Default
     private EstadoCaja estado = EstadoCaja.INACTIVA;
 
     @Column(name = "fecha_creacion")
@@ -81,4 +83,29 @@ public class Caja {
     public boolean tieneFondos() {
         return montoActual != null && montoActual.compareTo(BigDecimal.ZERO) > 0;
     }
+
+    public Long getIdCaja() { return idCaja; }
+    public void setIdCaja(Long idCaja) { this.idCaja = idCaja; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getMoneda() { return moneda; }
+    public void setMoneda(String moneda) { this.moneda = moneda; }
+    public BigDecimal getMontoInicial() { return montoInicial; }
+    public void setMontoInicial(BigDecimal montoInicial) { this.montoInicial = montoInicial; }
+    public BigDecimal getMontoActual() { return montoActual; }
+    public void setMontoActual(BigDecimal montoActual) { this.montoActual = montoActual; }
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public EstadoCaja getEstado() { return estado; }
+    public void setEstado(EstadoCaja estado) { this.estado = estado; }
+    public Instant getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(Instant fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public Instant getFechaActualizacion() { return fechaActualizacion; }
+    public void setFechaActualizacion(Instant fechaActualizacion) { this.fechaActualizacion = fechaActualizacion; }
+    public Long getAbiertaPor() { return abiertaPor; }
+    public void setAbiertaPor(Long abiertaPor) { this.abiertaPor = abiertaPor; }
+    public Instant getFechaApertura() { return fechaApertura; }
+    public void setFechaApertura(Instant fechaApertura) { this.fechaApertura = fechaApertura; }
 }

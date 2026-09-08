@@ -1,22 +1,27 @@
 export interface Proveedor {
   idProveedor: number;
-  razonSocial: string;
-  cuitRut: string;
+  nombre: string;
   telefono: string;
-  correo: string;
+  email: string;
   direccion: string;
+  ciudad: string;
+  activo: boolean;
   fechaCreacion: string;
-  fechaUltimaModificacion: string | null;
-  usuarioAlta: string | null;
-  usuarioUltimaModificacion: string | null;
 }
 
 export interface ProveedorCreateRequest {
-  razonSocial: string;
-  cuitRut: string;
+  nombre: string;
   telefono: string;
-  correo: string;
+  email: string;
   direccion: string;
+  ciudad: string;
 }
 
-export type ProveedorUpdateRequest = ProveedorCreateRequest;
+export interface ProveedorUpdateRequest {
+  nombre?: string;
+  telefono?: string;
+  email?: string;
+  direccion?: string;
+  ciudad?: string;
+  activo?: boolean;
+}

@@ -1,15 +1,10 @@
-<div class="admin-shell">
+<div class="admin-layout">`n  <app-admin-sidebar />`n  <div class="admin-main">`n    <div class="admin-shell">
   <header class="admin-header">
     <div>
       <p class="eyebrow">Panel administrativo</p>
       <h1>Movimientos de caja</h1>
     </div>
-    <nav class="nav-actions">
-      <a routerLink="/admin/cajas">Volver a Cajas</a>
-      <a routerLink="/admin/productos">Productos</a>
-      <a routerLink="/admin/stock">Stock</a>
-      <a routerLink="/home">Inicio</a>
-    </nav>
+    
   </header>
 
   @if (error()) {
@@ -130,4 +125,6 @@
       </div>
     </section>
   }
+</div>
+  </div>
 </div>

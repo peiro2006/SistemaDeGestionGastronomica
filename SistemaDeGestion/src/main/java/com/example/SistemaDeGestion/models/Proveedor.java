@@ -1,15 +1,17 @@
 package com.example.SistemaDeGestion.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
-@Table(name = "Proveedor", uniqueConstraints = @UniqueConstraint(columnNames = "cuit_rut"))
+@Table(name = "proveedor")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Proveedor {
 
     @Id
@@ -17,70 +19,75 @@ public class Proveedor {
     @Column(name = "id_proveedor")
     private Long idProveedor;
 
-    @NotBlank(message = "Debe ingresar la razon social o nombre del proveedor")
-    @Size(min = 2, max = 100, message = "La razon social debe tener entre 2 a 100 caracteres")
-    @Column(name = "razon_social", nullable = false)
-    private String razonSocial;
+    @Column(name = "nombre", length = 150)
+    private String nombre;
 
-    @NotBlank(message = "Debe ingresar el CUIT/RUT del proveedor")
-    @Size(min = 6, max = 15, message = "El CUIT/RUT debe tener entre 6 a 15 caracteres")
-    @Pattern(regexp = "^[0-9]+$", message = "El CUIT/RUT debe contener solo numeros")
-    @Column(name = "cuit_rut", nullable = false)
-    private String cuitRut;
-
-    @NotBlank(message = "Debe ingresar el telefono del proveedor")
-    @Size(min = 6, max = 20, message = "El telefono debe tener entre 6 a 20 caracteres")
-    @Pattern(regexp = "^[0-9+\\-\\s()]+$", message = "El telefono contiene caracteres no validos")
-    @Column(name = "telefono", nullable = false)
+    @Column(name = "telefono", length = 30)
     private String telefono;
 
-    @NotBlank(message = "Debe ingresar el correo de contacto del proveedor")
-    @Email(message = "Debe ingresar un correo electronico valido")
-    @Column(name = "correo", nullable = false)
-    private String correo;
+    @Column(name = "email", length = 150)
+    private String email;
 
-    @NotBlank(message = "Debe ingresar la direccion del proveedor")
-    @Size(min = 2, max = 200, message = "La direccion debe tener entre 2 a 200 caracteres")
-    @Column(name = "direccion", nullable = false)
+    @Column(name = "direccion", length = 255)
     private String direccion;
 
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private LocalDateTime fechaCreacion;
+    @Column(name = "ciudad", length = 100)
+    private String ciudad;
 
-    @Column(name = "fecha_ultima_modificacion")
-    private LocalDateTime fechaUltimaModificacion;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean activo = true;
 
-    @Column(name = "usuario_alta")
-    private String usuarioAlta;
+    @Column(name = "fecha_creacion")
+    @Builder.Default
+    private Instant fechaCreacion = Instant.now();
 
-    @Column(name = "usuario_ultima_modificacion")
-    private String usuarioUltimaModificacion;
+    // Columnas legacy para compatibilidad con DB vieja (se mantienen para no romper NOT NULL)
+    @Column(name = "correo", length = 150)
+    private String correo;
+
+    @Column(name = "razon_social", length = 150)
+    private String razonSocial;
+
+    @Column(name = "cuit_rut", length = 30)
+    private String cuitRut;
+
+    @Column(name = "fecha_alta")
+    private Instant fechaAlta;
+
+    @PrePersist
+    public void prePersist() {
+        if (fechaCreacion == null) {
+            fechaCreacion = Instant.now();
+        }
+        if (nombre == null) {
+            nombre = "Proveedor " + (idProveedor != null ? idProveedor : "");
+        }
+        // Backfill columnas legacy para satisfacer NOT NULL viejos + evitar duplicado unique
+        if (correo == null) correo = email != null && !email.isBlank() ? email : "prov_" + System.nanoTime() + "@tmp.local";
+        if (razonSocial == null) razonSocial = nombre != null ? nombre : "";
+        if (cuitRut == null) cuitRut = String.valueOf(System.nanoTime()) + (int)(Math.random()*1000);
+        if (fechaAlta == null) fechaAlta = fechaCreacion != null ? fechaCreacion : Instant.now();
+        if (ciudad == null) ciudad = "Sin ciudad";
+        if (telefono == null) telefono = "";
+        if (email == null) email = correo != null ? correo : "";
+        if (direccion == null) direccion = "";
+    }
 
     public Long getIdProveedor() { return idProveedor; }
     public void setIdProveedor(Long idProveedor) { this.idProveedor = idProveedor; }
-    public String getRazonSocial() { return razonSocial; }
-    public void setRazonSocial(String razonSocial) { this.razonSocial = razonSocial; }
-    public String getCuitRut() { return cuitRut; }
-    public void setCuitRut(String cuitRut) { this.cuitRut = cuitRut; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
-    public String getCorreo() { return correo; }
-    public void setCorreo(String correo) { this.correo = correo; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
-    public LocalDateTime getFechaUltimaModificacion() { return fechaUltimaModificacion; }
-    public void setFechaUltimaModificacion(LocalDateTime fechaUltimaModificacion) { this.fechaUltimaModificacion = fechaUltimaModificacion; }
-    public String getUsuarioAlta() { return usuarioAlta; }
-    public void setUsuarioAlta(String usuarioAlta) { this.usuarioAlta = usuarioAlta; }
-    public String getUsuarioUltimaModificacion() { return usuarioUltimaModificacion; }
-    public void setUsuarioUltimaModificacion(String usuarioUltimaModificacion) { this.usuarioUltimaModificacion = usuarioUltimaModificacion; }
-
-    @PrePersist
-    protected void onCreate() {
-        if (fechaCreacion == null) {
-            fechaCreacion = LocalDateTime.now();
-        }
-    }
+    public String getCiudad() { return ciudad; }
+    public void setCiudad(String ciudad) { this.ciudad = ciudad; }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+    public Instant getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(Instant fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 }

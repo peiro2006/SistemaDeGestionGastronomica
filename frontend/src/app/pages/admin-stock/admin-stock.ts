@@ -1,7 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Producto } from '../../models/producto.models';
 import { Insumo } from '../../models/insumo.models';
 import { StockMovimiento, TipoMovimientoStock } from '../../models/stock.models';
@@ -11,7 +12,7 @@ import { StockService } from '../../services/stock.service';
 
 @Component({
   selector: 'app-admin-stock',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe],
+  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, DatePipe, AdminSidebarComponent],
   templateUrl: './admin-stock.html',
   styleUrl: './admin-stock.css'
 })

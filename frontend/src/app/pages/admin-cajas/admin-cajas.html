@@ -1,17 +1,10 @@
-<div class="admin-shell">
+<div class="admin-layout">`n  <app-admin-sidebar />`n  <div class="admin-main">`n    <div class="admin-shell">
   <header class="admin-header">
     <div>
       <p class="eyebrow">Panel administrativo</p>
       <h1>Gestión de Cajas</h1>
     </div>
-    <nav class="nav-actions">
-      <a routerLink="/admin/productos">Productos</a>
-      <a routerLink="/admin/stock">Stock</a>
-      <a routerLink="/admin/proveedores">Proveedores</a>
-      <a routerLink="/admin/reportes">Reportes</a>
-      <a routerLink="/admin/feedback">Feedback</a>
-      <a routerLink="/home">Inicio</a>
-    </nav>
+    
   </header>
 
   @if (mensaje()) {
@@ -233,4 +226,6 @@
       </div>
     </div>
   }
+</div>
+  </div>
 </div>

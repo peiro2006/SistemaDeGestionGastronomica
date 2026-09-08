@@ -49,7 +49,9 @@ public class ProductoMapper {
                 producto.getStockActual(),
                 producto.getStockMinimo(),
                 producto.getReceta() != null ? producto.getReceta().getIdReceta() : null,
-                producto.getReceta() != null ? producto.getReceta().getNombreReceta() : null
+                producto.getReceta() != null ? producto.getReceta().getNombreReceta() : null,
+                producto.getProveedor() != null ? producto.getProveedor().getIdProveedor() : null,
+                producto.getProveedor() != null ? producto.getProveedor().getNombre() : null
         );
     }
 

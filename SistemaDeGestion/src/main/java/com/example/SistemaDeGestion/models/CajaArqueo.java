@@ -54,6 +54,19 @@ public class CajaArqueo {
     @Column(name = "cerrado_por")
     private Long cerradoPor;
 
+    public Long getIdArqueo() { return idArqueo; }
+    public Caja getCaja() { return caja; }
+    public BigDecimal getMontoInicial() { return montoInicial; }
+    public BigDecimal getMontoFinal() { return montoFinal; }
+    public BigDecimal getTotalEfectivo() { return totalEfectivo; }
+    public BigDecimal getTotalDebito() { return totalDebito; }
+    public BigDecimal getTotalCredito() { return totalCredito; }
+    public BigDecimal getTotalTransferencia() { return totalTransferencia; }
+    public Integer getCantidadPedidos() { return cantidadPedidos; }
+    public Instant getFechaApertura() { return fechaApertura; }
+    public Instant getFechaCierre() { return fechaCierre; }
+    public Long getCerradoPor() { return cerradoPor; }
+
     @PrePersist
     public void prePersist() {
         if (fechaCierre == null) {
