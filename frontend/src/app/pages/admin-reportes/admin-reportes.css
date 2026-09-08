@@ -228,6 +228,149 @@
   padding: 2rem;
 }
 
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.7rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.85rem;
+}
+
+th {
+  font-weight: 700;
+  color: #495057;
+  background: #f8f9fa;
+}
+
+td strong {
+  color: #16212f;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.status-pendiente {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+.status-en_preparacion {
+  background: #cff4fc;
+  color: #055160;
+}
+
+.status-enviado {
+  background: #cfe2ff;
+  color: #084298;
+}
+
+.status-entregado {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.status-cancelado {
+  background: #f8d7da;
+  color: #842029;
+}
+
+/* Modal movimientos */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 24, 40, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-movimientos {
+  max-width: 720px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.modal-close {
+  background: transparent;
+  border: 0;
+  font-size: 1.6rem;
+  color: #6c757d;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #212529;
+}
+
+.modal-body-movimientos {
+  padding: 1.25rem;
+}
+
+.movimientos-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.btn-light {
+  background: #e9ecef;
+  color: #212529;
+}
+
 @media (max-width: 840px) {
   .admin-header {
     flex-direction: column;

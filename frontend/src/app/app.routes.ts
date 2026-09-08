@@ -9,6 +9,7 @@ import { AdminCajasComponent } from './pages/admin-cajas/admin-cajas';
 import { DetalleCajaComponent } from './pages/detalle-caja/detalle-caja';
 import { AdminProveedoresComponent } from './pages/admin-proveedores/admin-proveedores';
 import { AdminReportesComponent } from './pages/admin-reportes/admin-reportes';
+import { AdminFeedbackComponent } from './pages/admin-feedback/admin-feedback';
 import { MisPedidosComponent } from './pages/mis-pedidos/mis-pedidos';
 import { EmpleadoPedidosComponent } from './pages/empleado-pedidos/gestion-pedidos';
 import { AccesoDenegadoComponent } from './pages/acceso-denegado/acceso-denegado';
@@ -31,5 +32,6 @@ export const routes: Routes = [
   { path: 'admin/cajas/:id', component: DetalleCajaComponent, canActivate: [authGuard, adminGuard] },
   { path: 'admin/proveedores', component: AdminProveedoresComponent, canActivate: [authGuard, adminGuard] },
   { path: 'admin/reportes', component: AdminReportesComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'admin/feedback', component: AdminFeedbackComponent, canActivate: [authGuard, adminGuard] },
   { path: '**', redirectTo: '/catalogo' }
 ];

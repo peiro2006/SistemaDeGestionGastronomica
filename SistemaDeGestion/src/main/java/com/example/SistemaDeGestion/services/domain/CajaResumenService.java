@@ -24,10 +24,23 @@ public class CajaResumenService {
         Caja caja = cajaRepository.findById(idCaja)
                 .orElseThrow(() -> new NotFoundException("No existe una caja con el id " + idCaja));
 
-        BigDecimal efectivo = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.EFECTIVO);
-        BigDecimal debito = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.DEBITO);
-        BigDecimal credito = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.TARJETA_CREDITO);
-        BigDecimal transferencia = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.TRANSFERENCIA);
+        BigDecimal efectivo;
+        BigDecimal debito;
+        BigDecimal credito;
+        BigDecimal transferencia;
+
+        // Si tiene fechaApertura, filtrar solo los pedidos de la sesion actual
+        if (caja.getFechaApertura() != null) {
+            efectivo = pedidoRepository.sumTotalByCajaAndMetDePagoYFecha(caja, MetodoPago.EFECTIVO, caja.getFechaApertura());
+            debito = pedidoRepository.sumTotalByCajaAndMetDePagoYFecha(caja, MetodoPago.DEBITO, caja.getFechaApertura());
+            credito = pedidoRepository.sumTotalByCajaAndMetDePagoYFecha(caja, MetodoPago.TARJETA_CREDITO, caja.getFechaApertura());
+            transferencia = pedidoRepository.sumTotalByCajaAndMetDePagoYFecha(caja, MetodoPago.TRANSFERENCIA, caja.getFechaApertura());
+        } else {
+            efectivo = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.EFECTIVO);
+            debito = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.DEBITO);
+            credito = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.TARJETA_CREDITO);
+            transferencia = pedidoRepository.sumTotalByCajaAndMetDePago(caja, MetodoPago.TRANSFERENCIA);
+        }
 
         BigDecimal noEfectivo = debito.add(credito).add(transferencia);
 

@@ -9,6 +9,7 @@
       <a routerLink="/admin/stock">Stock</a>
       <a routerLink="/admin/cajas">Cajas</a>
       <a routerLink="/admin/proveedores">Proveedores</a>
+      <a routerLink="/admin/feedback">Feedback</a>
       <a routerLink="/home">Inicio</a>
     </nav>
   </header>
@@ -108,5 +109,116 @@
         }
       </div>
     </section>
+  }
+
+  <section class="card">
+    <div class="section-heading">
+      <h2>Arqueos de caja</h2>
+      @if (cargandoArqueos()) {
+        <span class="muted">Cargando...</span>
+      }
+    </div>
+
+    @if (arqueos().length === 0) {
+      <div class="empty">No hay arqueos registrados.</div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Caja</th>
+              <th>Apertura</th>
+              <th>Cierre</th>
+              <th>Monto Inicial</th>
+              <th>Monto Final</th>
+              <th>Efectivo</th>
+              <th>Debito</th>
+              <th>Credito</th>
+              <th>Transferencia</th>
+              <th>Pedidos</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (arqueo of arqueos(); track arqueo.idArqueo) {
+              <tr>
+                <td><strong>{{ arqueo.nombreCaja }}</strong></td>
+                <td>{{ arqueo.fechaApertura | date: 'dd/MM/yy' }}</td>
+                <td>{{ arqueo.fechaCierre | date: 'dd/MM/yy HH:mm' }}</td>
+                <td>{{ arqueo.montoInicial | currency }}</td>
+                <td>{{ arqueo.montoFinal | currency }}</td>
+                <td>{{ arqueo.totalEfectivo | currency }}</td>
+                <td>{{ arqueo.totalDebito | currency }}</td>
+                <td>{{ arqueo.totalCredito | currency }}</td>
+                <td>{{ arqueo.totalTransferencia | currency }}</td>
+                <td>{{ arqueo.cantidadPedidos }}</td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-outline" (click)="verMovimientos(arqueo)">
+                    Ver
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+
+  @if (modalMovimientosAbierto()) {
+    <div class="modal-overlay" (click)="cerrarModalMovimientos()">
+      <div class="modal-card modal-movimientos" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Movimientos - {{ arqueoSeleccionado()?.nombreCaja }}</h2>
+          <button type="button" class="modal-close" (click)="cerrarModalMovimientos()">×</button>
+        </div>
+
+        <div class="modal-body-movimientos">
+          <div class="movimientos-info">
+            <span>{{ formatearFecha(arqueoSeleccionado()?.fechaApertura ?? '') }} - {{ formatearFecha(arqueoSeleccionado()?.fechaCierre ?? '') }}</span>
+            <span class="muted">{{ movimientosArqueo().length }} pedidos</span>
+          </div>
+
+          @if (cargandoMovimientos()) {
+            <div class="empty">Cargando movimientos...</div>
+          } @else if (movimientosArqueo().length === 0) {
+            <div class="empty">No hay movimientos en este periodo.</div>
+          } @else {
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Metodo de pago</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (pedido of movimientosArqueo(); track pedido.idPedido) {
+                    <tr>
+                      <td>{{ pedido.idPedido }}</td>
+                      <td>{{ pedido.fechaCreacion | date: 'dd/MM/yy HH:mm' }}</td>
+                      <td>
+                        <span class="status-badge" [class]="'status-' + pedido.estado">
+                          {{ etiquetaEstado(pedido.estado) }}
+                        </span>
+                      </td>
+                      <td>{{ etiquetasMetodoPago[pedido.metDePago] ?? pedido.metDePago }}</td>
+                      <td>{{ pedido.total | currency }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="cerrarModalMovimientos()">Cerrar</button>
+        </div>
+      </div>
+    </div>
   }
 </div>

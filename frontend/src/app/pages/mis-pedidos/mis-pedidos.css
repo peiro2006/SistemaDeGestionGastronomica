@@ -141,13 +141,37 @@
   font-size: 0.85rem;
 }
 
-.resena-estrellas {
-  color: #ffc107;
-  font-size: 1.1rem;
+.resena-estrellas-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
 }
 
-.resena-estrellas span.activa {
+.resena-calificacion-num {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #6c757d;
+  margin-left: 0.3rem;
+}
+
+.estrella {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.estrella.llena {
   color: #ffc107;
+}
+
+.estrella.vacia {
+  color: #dee2e6;
+}
+
+.estrella.media {
+  background: linear-gradient(90deg, #ffc107 50%, #dee2e6 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .resena-comentario {
@@ -172,24 +196,66 @@
   color: #16212f;
 }
 
-.estrellas-input {
+.rating-section {
   display: flex;
-  gap: 0.2rem;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
 }
 
-.star-btn {
-  background: none;
-  border: 0;
-  font-size: 1.4rem;
-  color: #dee2e6;
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.estrellas-rating {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.estrellas-rating .estrella {
+  font-size: 1.5rem;
+}
+
+.rating-valor {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #16212f;
+  min-width: 2rem;
+}
+
+.rating-controles {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.ctrl-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #dee2e6;
+  background: #ffffff;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 800;
   cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
 }
 
-.star-btn.activa {
-  color: #ffc107;
+.ctrl-btn:hover:not(:disabled) {
+  border-color: #0d6efd;
+  color: #0d6efd;
+  background: #e7f1ff;
+}
+
+.ctrl-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 textarea {
@@ -271,6 +337,11 @@ textarea {
   }
 
   .pedido-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rating-section {
     flex-direction: column;
     align-items: flex-start;
   }

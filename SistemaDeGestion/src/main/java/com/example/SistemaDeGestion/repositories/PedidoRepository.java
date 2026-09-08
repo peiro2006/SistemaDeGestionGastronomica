@@ -28,6 +28,15 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecif
 
     List<Pedido> findByCajaOrderByFechaCreacionDesc(Caja caja);
 
+    @Query("SELECT p FROM Pedido p WHERE p.caja = :caja AND p.fechaCreacion >= :desde ORDER BY p.fechaCreacion DESC")
+    List<Pedido> findByCajaAndFechaCreacionAfter(@Param("caja") Caja caja, @Param("desde") Instant desde);
+
+    @Query("SELECT p FROM Pedido p WHERE p.caja.idCaja = :idCaja AND p.fechaCreacion >= :fechaApertura AND p.fechaCreacion <= :fechaCierre ORDER BY p.fechaCreacion DESC")
+    List<Pedido> findByCajaIdAndRangoFechas(@Param("idCaja") Long idCaja, @Param("fechaApertura") Instant fechaApertura, @Param("fechaCierre") Instant fechaCierre);
+
     @Query("SELECT COALESCE(SUM(p.total), 0) FROM Pedido p WHERE p.caja = :caja AND p.metDePago = :metodo AND p.estado != 'cancelado'")
     BigDecimal sumTotalByCajaAndMetDePago(@Param("caja") Caja caja, @Param("metodo") MetodoPago metodo);
+
+    @Query("SELECT COALESCE(SUM(p.total), 0) FROM Pedido p WHERE p.caja = :caja AND p.metDePago = :metodo AND p.estado != 'cancelado' AND p.fechaCreacion >= :desde")
+    BigDecimal sumTotalByCajaAndMetDePagoYFecha(@Param("caja") Caja caja, @Param("metodo") MetodoPago metodo, @Param("desde") Instant desde);
 }

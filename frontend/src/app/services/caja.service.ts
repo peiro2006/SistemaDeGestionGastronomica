@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseResponse } from '../models/auth.models';
-import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest, CajaLoginRequest, CajaLoginResponse, CajaResumen } from '../models/caja.models';
+import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest, CajaLoginRequest, CajaLoginResponse, CajaResumen, CajaArqueo } from '../models/caja.models';
 import { Pedido } from '../models/pedido.models';
 
 @Injectable({ providedIn: 'root' })
@@ -44,6 +44,18 @@ export class CajaService {
 
   obtenerResumen(idCaja: number): Observable<BaseResponse<CajaResumen>> {
     return this.http.get<BaseResponse<CajaResumen>>(`${this.apiUrl}/caja/${idCaja}/resumen`);
+  }
+
+  listarArqueos(): Observable<BaseResponse<CajaArqueo[]>> {
+    return this.http.get<BaseResponse<CajaArqueo[]>>(`${this.apiUrl}/caja/arqueos`);
+  }
+
+  obtenerArqueos(idCaja: number): Observable<BaseResponse<CajaArqueo[]>> {
+    return this.http.get<BaseResponse<CajaArqueo[]>>(`${this.apiUrl}/caja/${idCaja}/arqueos`);
+  }
+
+  obtenerArqueo(idArqueo: number): Observable<BaseResponse<CajaArqueo>> {
+    return this.http.get<BaseResponse<CajaArqueo>>(`${this.apiUrl}/caja/arqueos/${idArqueo}`);
   }
 
   etiquetaEstado(estado: string): string {

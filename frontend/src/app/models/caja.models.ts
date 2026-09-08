@@ -28,6 +28,7 @@ export interface CajaUpdateRequest {
 
 export interface CajaEstadoRequest {
   estado: 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE';
+  montoInicial?: number;
 }
 
 export interface CajaLoginRequest {
@@ -49,4 +50,20 @@ export interface CajaResumen {
   totalTransferencia: number;
   totalNoEfectivo: number;
   montoActual: number;
+}
+
+export interface CajaArqueo {
+  idArqueo: number;
+  idCaja: number;
+  nombreCaja: string;
+  montoInicial: number;
+  montoFinal: number;
+  totalEfectivo: number;
+  totalDebito: number;
+  totalCredito: number;
+  totalTransferencia: number;
+  cantidadPedidos: number;
+  fechaApertura: string;
+  fechaCierre: string;
+  movimientos?: import('./pedido.models').Pedido[];
 }

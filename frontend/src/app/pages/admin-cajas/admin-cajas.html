@@ -9,6 +9,7 @@
       <a routerLink="/admin/stock">Stock</a>
       <a routerLink="/admin/proveedores">Proveedores</a>
       <a routerLink="/admin/reportes">Reportes</a>
+      <a routerLink="/admin/feedback">Feedback</a>
       <a routerLink="/home">Inicio</a>
     </nav>
   </header>
@@ -102,16 +103,16 @@
               <td class="actions-cell">
                 <button type="button" class="btn btn-light" (click)="editarCaja(caja)">Editar</button>
                 <button type="button" class="btn btn-light" [routerLink]="['/admin/cajas', caja.idCaja]">Ver movimientos</button>
-                <select
-                  class="estado-select"
-                  [value]="caja.estado"
-                  (change)="onEstadoChange(caja, $event)"
-                  [disabled]="!tieneFondos(caja)"
-                >
-                  <option value="INACTIVA">Inactiva</option>
-                  <option value="ACTIVA" [disabled]="!tieneFondos(caja)">Activa</option>
-                  <option value="NO_DISPONIBLE">No disponible</option>
-                </select>
+                @if (caja.estado === 'ACTIVA') {
+                  <button type="button" class="btn btn-cerrar" (click)="abrirModalCerrar(caja)">Cerrar</button>
+                } @else {
+                  <button type="button"
+                    class="btn btn-habilitar"
+                    [disabled]="hayCajaActiva() || !tieneFondos(caja)"
+                    (click)="habilitarCaja(caja)">
+                    Habilitar
+                  </button>
+                }
               </td>
             </tr>
           } @empty {
@@ -184,6 +185,51 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Cerrar Caja -->
+  @if (modalCerrarAbierto()) {
+    <div class="modal-overlay" (click)="cancelarCerrar()">
+      <div class="modal-card modal-cerrar-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Cerrar caja</h2>
+          <button type="button" class="modal-close" (click)="cancelarCerrar()">×</button>
+        </div>
+
+        @if (error()) {
+          <div class="alert alert-error">{{ error() }}</div>
+        }
+
+        <div class="modal-body-cerrar">
+          <p class="cerrar-info">Va a cerrar la caja <strong>{{ cajaACerrar()?.nombre }}</strong></p>
+
+          <div class="cerrar-monto-actual">
+            <span class="cerrar-label">Efectivo actual en caja:</span>
+            <span class="cerrar-valor">{{ cajaService.formatearMonto(cajaACerrar()?.montoActual ?? 0) }}</span>
+          </div>
+
+          <div class="cerrar-input-group">
+            <label for="montoInicialCerrar">Monto de efectivo que dejara en la caja:</label>
+            <input
+              id="montoInicialCerrar"
+              type="number"
+              min="0"
+              step="1"
+              [ngModel]="montoInicialCerrar()"
+              (ngModelChange)="montoInicialCerrar.set($event)"
+              placeholder="Ingrese el monto"
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="cancelarCerrar()">Cancelar</button>
+          <button type="button" class="btn btn-cerrar" (click)="confirmarCerrar()" [disabled]="montoInicialCerrar() < 0">
+            Confirmar cierre
+          </button>
+        </div>
       </div>
     </div>
   }

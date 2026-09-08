@@ -23,6 +23,10 @@ export class AdminCajasComponent implements OnInit {
   readonly modalAbierto = signal(false);
   readonly editando = signal<Caja | null>(null);
 
+  readonly modalCerrarAbierto = signal(false);
+  readonly cajaACerrar = signal<Caja | null>(null);
+  readonly montoInicialCerrar = signal<number>(0);
+
   readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(100)]],
     descripcion: [''],
@@ -121,12 +125,58 @@ export class AdminCajasComponent implements OnInit {
     }
   }
 
-  onEstadoChange(caja: Caja, event: Event): void {
-    const nuevoEstado = (event.target as HTMLSelectElement).value as 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE';
-    this.cambiarEstado(caja, nuevoEstado);
+  tieneFondos(caja: Caja): boolean {
+    return caja.montoActual > 0;
   }
 
-  cambiarEstado(caja: Caja, nuevoEstado: 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE'): void {
+  cajaActiva(): Caja | undefined {
+    return this.cajas().find(c => c.estado === 'ACTIVA');
+  }
+
+  hayCajaActiva(): boolean {
+    return this.cajas().some(c => c.estado === 'ACTIVA');
+  }
+
+  habilitarCaja(caja: Caja): void {
+    this.cambiarEstado(caja, 'ACTIVA');
+  }
+
+  abrirModalCerrar(caja: Caja): void {
+    this.cajaACerrar.set(caja);
+    this.montoInicialCerrar.set(caja.montoActual);
+    this.modalCerrarAbierto.set(true);
+    this.error.set(null);
+  }
+
+  cancelarCerrar(): void {
+    this.cajaACerrar.set(null);
+    this.montoInicialCerrar.set(0);
+    this.modalCerrarAbierto.set(false);
+  }
+
+  confirmarCerrar(): void {
+    const caja = this.cajaACerrar();
+    if (!caja) return;
+
+    const monto = this.montoInicialCerrar();
+    if (monto < 0) return;
+
+    const request: CajaEstadoRequest = {
+      estado: 'INACTIVA',
+      montoInicial: monto
+    };
+
+    this.cajaService.cambiarEstado(caja.idCaja, request).subscribe({
+      next: () => {
+        this.mensaje.set(`Caja "${caja.nombre}" cerrada correctamente`);
+        this.cancelarCerrar();
+        this.cargarCajas();
+      },
+      error: (err) => this.error.set(this.extraerError(err))
+    });
+  }
+
+  private cambiarEstado(caja: Caja, nuevoEstado: 'INACTIVA' | 'ACTIVA' | 'NO_DISPONIBLE'): void {
     if (caja.estado === nuevoEstado) return;
 
     const request: CajaEstadoRequest = { estado: nuevoEstado };
@@ -137,17 +187,6 @@ export class AdminCajasComponent implements OnInit {
       },
       error: (err) => this.error.set(this.extraerError(err))
     });
-  }
-
-  tieneFondos(caja: Caja): boolean {
-    return caja.montoActual > 0;
-  }
-
-  esEstadoInvalido(caja: Caja): boolean {
-    // Deshabilitar el select si la caja no tiene fondos y el usuario intenta poner ACTIVA
-    // Esto se evalúa en el momento del cambio, no en el disabled estático
-    // Para el disabled estático, solo deshabilitamos si no tiene fondos
-    return !this.tieneFondos(caja);
   }
 
   private extraerError(err: unknown): string {

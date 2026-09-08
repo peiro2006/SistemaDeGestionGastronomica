@@ -9,8 +9,12 @@ import com.example.SistemaDeGestion.dtos.request.CajaLoginReqDto;
 import com.example.SistemaDeGestion.dtos.request.CajaUpdateReqDto;
 import com.example.SistemaDeGestion.dtos.response.CajaLoginResDto;
 import com.example.SistemaDeGestion.dtos.response.CajaResDto;
+import com.example.SistemaDeGestion.dtos.response.CajaArqueoResDto;
 import com.example.SistemaDeGestion.dtos.response.CajaResumenDto;
 import com.example.SistemaDeGestion.dtos.response.PedidoResDto;
+import com.example.SistemaDeGestion.mappers.CajaArqueoMapper;
+import com.example.SistemaDeGestion.repositories.CajaArqueoRepository;
+import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.services.domain.CajaCreateService;
 import com.example.SistemaDeGestion.services.domain.CajaEstadoService;
 import com.example.SistemaDeGestion.services.domain.CajaListService;
@@ -39,6 +43,8 @@ public class CajaController {
     private final CajaLoginService cajaLoginService;
     private final CajaMovimientosService cajaMovimientosService;
     private final CajaResumenService cajaResumenService;
+    private final CajaArqueoRepository cajaArqueoRepository;
+    private final PedidoRepository pedidoRepository;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -119,6 +125,47 @@ public class CajaController {
     ) {
         return ResponseEntity.ok(
                 BaseResponse.ok(cajaLoginService.execute(request), "Caja abierta correctamente")
+        );
+    }
+
+    @GetMapping("/{idCaja}/arqueos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<List<CajaArqueoResDto>>> obtenerArqueos(@PathVariable Long idCaja) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        CajaArqueoMapper.toResponseDtoList(cajaArqueoRepository.findByCajaOrderByFechaCierreDesc(
+                                cajaListService.obtenerCajaModel(idCaja))),
+                        "Arqueos obtenidos correctamente")
+        );
+    }
+
+    @GetMapping("/arqueos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<List<CajaArqueoResDto>>> listarTodosArqueos() {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        CajaArqueoMapper.toResponseDtoList(cajaArqueoRepository.findAllByOrderByFechaCierreDesc()),
+                        "Arqueos obtenidos correctamente")
+        );
+    }
+
+    @GetMapping("/arqueos/{idArqueo}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<CajaArqueoResDto>> obtenerArqueoConMovimientos(@PathVariable Long idArqueo) {
+        com.example.SistemaDeGestion.models.CajaArqueo arqueo = cajaArqueoRepository.findById(idArqueo)
+                .orElseThrow(() -> new com.example.SistemaDeGestion.configs.exceptions.NotFoundException(
+                        "Arqueo no encontrado con id " + idArqueo));
+
+        java.util.List<com.example.SistemaDeGestion.models.Pedido> pedidos =
+                pedidoRepository.findByCajaIdAndRangoFechas(
+                        arqueo.getCaja().getIdCaja(),
+                        arqueo.getFechaApertura(),
+                        arqueo.getFechaCierre());
+
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        CajaArqueoMapper.toResponseDtoWithMovimientos(arqueo, pedidos),
+                        "Arqueo obtenido correctamente")
         );
     }
 }

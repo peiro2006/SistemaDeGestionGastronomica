@@ -28,7 +28,7 @@
               <strong>Pedido #{{ pedido.idPedido }}</strong>
               <span class="pedido-fecha">{{ pedido.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
             </div>
-            <span class="badge" [class.creado]="pedido.estado === 'CREADO'" [class.entregado]="pedido.estado === 'ENTREGADO'" [class.cancelado]="pedido.estado === 'CANCELADO'">
+            <span class="badge" [class.creado]="pedido.estado === 'pendiente'" [class.entregado]="pedido.estado === 'entregado'" [class.cancelado]="pedido.estado === 'cancelado'">
               {{ pedido.estado }}
             </span>
           </div>
@@ -47,11 +47,18 @@
 
             @if (resenasPorPedido().has(pedido.idPedido)) {
               <div class="resena-registrada">
-                <span class="resena-label">Tu resena:</span>
-                <span class="resena-estrellas">
-                  @for (estrella of estrellasArray(); track estrella) {
-                    <span [class.activa]="estrella <= (resenasPorPedido().get(pedido.idPedido)?.calificacion ?? 0)">&#9733;</span>
+                <span class="resena-label">Tu reseña:</span>
+                <span class="resena-estrellas-display">
+                  @for (estrella of [1,2,3,4,5]; track estrella) {
+                    @if (estrella <= estrellasDisplayCompletas(resenasPorPedido().get(pedido.idPedido)!.calificacion)) {
+                      <span class="estrella llena">&#9733;</span>
+                    } @else if (estrella === estrellasDisplayCompletas(resenasPorPedido().get(pedido.idPedido)!.calificacion) + 1 && tieneMediaEstrellaDisplay(resenasPorPedido().get(pedido.idPedido)!.calificacion)) {
+                      <span class="estrella media">&#9733;</span>
+                    } @else {
+                      <span class="estrella vacia">&#9733;</span>
+                    }
                   }
+                  <span class="resena-calificacion-num">{{ resenasPorPedido().get(pedido.idPedido)!.calificacion.toFixed(1) }}</span>
                 </span>
                 @if (resenasPorPedido().get(pedido.idPedido)?.comentario) {
                   <p class="resena-comentario">{{ resenasPorPedido().get(pedido.idPedido)?.comentario }}</p>
@@ -62,17 +69,40 @@
             @if (puedeResenar(pedido)) {
               @if (pedidoResenaAbierto() === pedido.idPedido) {
                 <div class="resena-form">
-                  <h3>Dejar resena</h3>
-                  <div class="estrellas-input">
-                    @for (estrella of estrellasArray(); track estrella) {
+                  <h3>Dejar reseña</h3>
+
+                  <div class="rating-section">
+                    <div class="rating-display">
+                      <div class="estrellas-rating">
+                        @for (estrella of [1,2,3,4,5]; track estrella) {
+                          @if (estrella <= estrellasCompletas()) {
+                            <span class="estrella llena">&#9733;</span>
+                          } @else if (estrella === estrellasCompletas() + 1 && tieneMediaEstrella()) {
+                            <span class="estrella media">&#9733;</span>
+                          } @else {
+                            <span class="estrella vacia">&#9733;</span>
+                          }
+                        }
+                      </div>
+                      <span class="rating-valor">{{ resenaForm.getRawValue().calificacion.toFixed(1) }}</span>
+                    </div>
+
+                    <div class="rating-controles">
                       <button
                         type="button"
-                        class="star-btn"
-                        [class.activa]="estrella <= resenaForm.getRawValue().calificacion"
-                        (click)="setCalificacion(estrella)"
-                      >&#9733;</button>
-                    }
+                        class="ctrl-btn"
+                        (click)="decrementarCalificacion()"
+                        [disabled]="resenaForm.getRawValue().calificacion <= 0.5"
+                      >&#8722;</button>
+                      <button
+                        type="button"
+                        class="ctrl-btn"
+                        (click)="incrementarCalificacion()"
+                        [disabled]="resenaForm.getRawValue().calificacion >= 5.0"
+                      >+</button>
+                    </div>
                   </div>
+
                   <textarea
                     rows="2"
                     placeholder="Comentario (opcional)"
@@ -84,7 +114,7 @@
                   </div>
                 </div>
               } @else {
-                <button type="button" class="btn btn-secondary btn-sm" (click)="abrirResena(pedido.idPedido)">Dejar resena</button>
+                <button type="button" class="btn btn-secondary btn-sm" (click)="abrirResena(pedido.idPedido)">Dejar reseña</button>
               }
             }
           </div>

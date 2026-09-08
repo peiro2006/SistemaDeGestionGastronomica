@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { EstadoPedido, ReporteRes } from '../../models/reporte.models';
 import { ReporteService } from '../../services/reporte.service';
+import { CajaService } from '../../services/caja.service';
+import { CajaArqueo } from '../../models/caja.models';
+import { Pedido } from '../../models/pedido.models';
 
 @Component({
   selector: 'app-admin-reportes',
@@ -13,6 +16,7 @@ import { ReporteService } from '../../services/reporte.service';
 })
 export class AdminReportesComponent implements OnInit {
   private readonly reporteService = inject(ReporteService);
+  private readonly cajaService = inject(CajaService);
 
   readonly reporte = signal<ReporteRes | null>(null);
   readonly cargando = signal(false);
@@ -20,6 +24,14 @@ export class AdminReportesComponent implements OnInit {
   readonly desde = signal<string>('');
   readonly hasta = signal<string>('');
   readonly preset = signal<string>('30');
+
+  readonly arqueos = signal<CajaArqueo[]>([]);
+  readonly cargandoArqueos = signal(false);
+
+  readonly modalMovimientosAbierto = signal(false);
+  readonly arqueoSeleccionado = signal<CajaArqueo | null>(null);
+  readonly movimientosArqueo = signal<Pedido[]>([]);
+  readonly cargandoMovimientos = signal(false);
 
   readonly estados: EstadoPedido[] = ['pendiente', 'en_preparacion', 'enviado', 'entregado', 'cancelado'];
   readonly etiquetasEstado: Record<EstadoPedido, string> = {
@@ -30,8 +42,16 @@ export class AdminReportesComponent implements OnInit {
     cancelado: 'Cancelado'
   };
 
+  readonly etiquetasMetodoPago: Record<string, string> = {
+    EFECTIVO: 'Efectivo',
+    DEBITO: 'Debito',
+    TARJETA_CREDITO: 'Credito',
+    TRANSFERENCIA: 'Transferencia'
+  };
+
   ngOnInit(): void {
     this.aplicarPreset('30');
+    this.cargarArqueos();
   }
 
   aplicarPreset(key: string): void {
@@ -77,6 +97,51 @@ export class AdminReportesComponent implements OnInit {
   estadoVisible(estado: EstadoPedido): boolean {
     return (this.reporte()?.pedidosPorEstado?.hasOwnProperty(estado) ?? false)
       || (this.reporte()?.pedidosPorEstado?.[estado] ?? 0) > 0;
+  }
+
+  cargarArqueos(): void {
+    this.cargandoArqueos.set(true);
+    this.cajaService.listarArqueos().subscribe({
+      next: (res) => {
+        this.arqueos.set(res.data ?? []);
+        this.cargandoArqueos.set(false);
+      },
+      error: () => {
+        this.cargandoArqueos.set(false);
+      }
+    });
+  }
+
+  verMovimientos(arqueo: CajaArqueo): void {
+    this.arqueoSeleccionado.set(arqueo);
+    this.cargandoMovimientos.set(true);
+    this.modalMovimientosAbierto.set(true);
+
+    this.cajaService.obtenerArqueo(arqueo.idArqueo).subscribe({
+      next: (res) => {
+        this.movimientosArqueo.set(res.data?.movimientos ?? []);
+        this.cargandoMovimientos.set(false);
+      },
+      error: () => {
+        this.movimientosArqueo.set([]);
+        this.cargandoMovimientos.set(false);
+      }
+    });
+  }
+
+  cerrarModalMovimientos(): void {
+    this.modalMovimientosAbierto.set(false);
+    this.arqueoSeleccionado.set(null);
+    this.movimientosArqueo.set([]);
+  }
+
+  formatearFecha(fecha: string): string {
+    const d = new Date(fecha);
+    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+  }
+
+  etiquetaEstado(estado: string): string {
+    return this.etiquetasEstado[estado as EstadoPedido] ?? estado;
   }
 
   private cargar(desde: number, hasta: number): void {

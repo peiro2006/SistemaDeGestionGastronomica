@@ -40,4 +40,10 @@ public class CajaListService implements ICajaListService {
                 .orElseThrow(() -> new NotFoundException("Caja no encontrada con id " + idCaja));
         return CajaMapper.toResponseDto(caja);
     }
+
+    @Transactional(readOnly = true)
+    public Caja obtenerCajaModel(Long idCaja) {
+        return cajaRepository.findById(idCaja)
+                .orElseThrow(() -> new NotFoundException("Caja no encontrada con id " + idCaja));
+    }
 }

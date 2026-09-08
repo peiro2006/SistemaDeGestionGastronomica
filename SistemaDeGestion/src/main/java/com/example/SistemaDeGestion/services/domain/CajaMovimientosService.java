@@ -25,7 +25,14 @@ public class CajaMovimientosService {
         Caja caja = cajaRepository.findById(idCaja)
                 .orElseThrow(() -> new NotFoundException("No existe una caja con el id " + idCaja));
 
-        List<Pedido> pedidos = pedidoRepository.findByCajaOrderByFechaCreacionDesc(caja);
+        // Solo mostrar movimientos de la sesion actual (desde la fecha de apertura)
+        List<Pedido> pedidos;
+        if (caja.getFechaApertura() != null) {
+            pedidos = pedidoRepository.findByCajaAndFechaCreacionAfter(caja, caja.getFechaApertura());
+        } else {
+            pedidos = pedidoRepository.findByCajaOrderByFechaCreacionDesc(caja);
+        }
+
         return PedidoMapper.toResponseDtoList(pedidos);
     }
 }

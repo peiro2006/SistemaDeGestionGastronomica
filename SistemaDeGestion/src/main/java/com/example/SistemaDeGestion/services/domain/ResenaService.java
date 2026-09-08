@@ -69,6 +69,22 @@ public class ResenaService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<ResenaResDto> listarTodas() {
+        return ResenaMapper.toResponseDtoList(resenasRepository.findAllByOrderByFechaCreacionDesc());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ResenaResDto> listarConFiltros(String producto, String fecha, String usuario) {
+        if (producto != null && !producto.isBlank()) {
+            return ResenaMapper.toResponseDtoList(resenasRepository.findByProductoNombre(producto.trim()));
+        }
+        if (usuario != null && !usuario.isBlank()) {
+            return ResenaMapper.toResponseDtoList(resenasRepository.findByUsuarioTexto(usuario.trim()));
+        }
+        return listarTodas();
+    }
+
     private Usuario obtenerUsuarioAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {

@@ -170,15 +170,6 @@ td span {
   flex-wrap: wrap;
 }
 
-.estado-select {
-  border: 1px solid #ced4da;
-  border-radius: 7px;
-  padding: 0.4rem 0.6rem;
-  font: inherit;
-  font-size: 0.82rem;
-  background: #ffffff;
-}
-
 .btn {
   border: 0;
   border-radius: 7px;
@@ -201,6 +192,22 @@ td span {
 .btn-light {
   background: #e9ecef;
   color: #212529;
+}
+
+.btn-habilitar {
+  background: #198754;
+  color: #ffffff;
+}
+
+.btn-habilitar:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-cerrar {
+  background: #dc3545;
+  color: #ffffff;
 }
 
 .alert {
@@ -331,4 +338,69 @@ td span {
   gap: 0.75rem;
   padding: 1rem 1.25rem;
   border-top: 1px solid #dee2e6;
+}
+
+/* Cerrar caja modal */
+.modal-cerrar-card {
+  max-width: 440px;
+}
+
+.modal-body-cerrar {
+  padding: 1.25rem;
+}
+
+.cerrar-info {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: #212529;
+}
+
+.cerrar-monto-actual {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cerrar-label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #495057;
+}
+
+.cerrar-valor {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #198754;
+}
+
+.cerrar-input-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.cerrar-input-group label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #495057;
+}
+
+.cerrar-input-group input {
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  font-size: 1rem;
+  color: #212529;
+  background: #ffffff;
+}
+
+.cerrar-input-group input:focus {
+  outline: none;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }

@@ -84,15 +84,13 @@ public class PedidoCreateService implements IPedidoCreateService {
             total = total.add(item.getSubtotal());
         }
 
-        pedido.setTotal(total);
-        Pedido guardado = pedidoRepository.save(pedido);
+        // Validar que exista una caja activa
+        Caja cajaActiva = cajaRepository.findFirstByEstadoOrderByFechaCreacionDesc(EstadoCaja.ACTIVA)
+                .orElseThrow(() -> new BadRequestException("Lo sentimos, no se ha podido procesar el pedido"));
 
-        // Asignar automáticamente la caja activa (solo puede haber una)
-        cajaRepository.findFirstByEstadoOrderByFechaCreacionDesc(EstadoCaja.ACTIVA)
-                .ifPresent(caja -> {
-                    guardado.setCaja(caja);
-                    pedidoRepository.save(guardado);
-                });
+        pedido.setTotal(total);
+        pedido.setCaja(cajaActiva);
+        Pedido guardado = pedidoRepository.save(pedido);
 
         return PedidoMapper.toResponseDto(guardado);
     }

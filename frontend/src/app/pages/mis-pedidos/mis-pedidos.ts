@@ -26,7 +26,7 @@ export class MisPedidosComponent implements OnInit {
   readonly pedidoResenaAbierto = signal<number | null>(null);
 
   readonly resenaForm = this.fb.nonNullable.group({
-    calificacion: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
+    calificacion: [0.5, [Validators.required, Validators.min(0.5), Validators.max(5.0)]],
     comentario: ['']
   });
 
@@ -69,14 +69,14 @@ export class MisPedidosComponent implements OnInit {
 
   puedeResenar(pedido: Pedido): boolean {
     return (
-      pedido.estado === 'ENTREGADO' &&
+      pedido.estado === 'entregado' &&
       !this.resenasPorPedido().has(pedido.idPedido)
     );
   }
 
   abrirResena(idPedido: number): void {
     this.pedidoResenaAbierto.set(idPedido);
-    this.resenaForm.reset({ calificacion: 5, comentario: '' });
+    this.resenaForm.reset({ calificacion: 0.5, comentario: '' });
   }
 
   cerrarResena(): void {
@@ -97,7 +97,7 @@ export class MisPedidosComponent implements OnInit {
 
     this.resenasService.crear(idPedido, request).subscribe({
       next: () => {
-        this.mensaje.set('Resena enviada correctamente');
+        this.mensaje.set('Reseña enviada correctamente');
         this.cerrarResena();
         this.cargarResenas();
       },
@@ -107,12 +107,43 @@ export class MisPedidosComponent implements OnInit {
     });
   }
 
-  estrellasArray(): number[] {
-    return [1, 2, 3, 4, 5];
+  incrementarCalificacion(): void {
+    const actual = this.resenaForm.getRawValue().calificacion;
+    if (actual < 5.0) {
+      this.resenaForm.patchValue({ calificacion: Math.min(5.0, +(actual + 0.5).toFixed(1)) });
+    }
   }
 
-  setCalificacion(valor: number): void {
-    this.resenaForm.patchValue({ calificacion: valor });
+  decrementarCalificacion(): void {
+    const actual = this.resenaForm.getRawValue().calificacion;
+    if (actual > 0.5) {
+      this.resenaForm.patchValue({ calificacion: Math.max(0.5, +(actual - 0.5).toFixed(1)) });
+    }
+  }
+
+  estrellasCompletas(): number {
+    return Math.floor(this.resenaForm.getRawValue().calificacion);
+  }
+
+  tieneMediaEstrella(): boolean {
+    return this.resenaForm.getRawValue().calificacion % 1 !== 0;
+  }
+
+  estrellasVacias(): number {
+    const cal = this.resenaForm.getRawValue().calificacion;
+    return 5 - Math.ceil(cal);
+  }
+
+  estrellasDisplayCompletas(calificacion: number): number {
+    return Math.floor(calificacion);
+  }
+
+  tieneMediaEstrellaDisplay(calificacion: number): boolean {
+    return calificacion % 1 !== 0;
+  }
+
+  estrellasDisplayVacias(calificacion: number): number {
+    return 5 - Math.ceil(calificacion);
   }
 
   private extraerError(err: unknown): string {

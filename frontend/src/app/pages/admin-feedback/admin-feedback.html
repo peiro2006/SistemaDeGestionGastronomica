@@ -1,0 +1,110 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow">Panel administrativo</p>
+      <h1>Feedback</h1>
+    </div>
+    <nav class="nav-actions">
+      <a routerLink="/admin/productos">Productos</a>
+      <a routerLink="/admin/stock">Stock</a>
+      <a routerLink="/admin/cajas">Cajas</a>
+      <a routerLink="/admin/proveedores">Proveedores</a>
+      <a routerLink="/admin/reportes">Reportes</a>
+      <a routerLink="/home">Inicio</a>
+    </nav>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <section class="card filtros-card">
+    <h2>Filtros</h2>
+    <div class="filtros-grid">
+      <label>
+        Producto
+        <input type="text" placeholder="Nombre del producto..." [ngModel]="filtroProducto()" (ngModelChange)="filtroProducto.set($event)" />
+      </label>
+      <label>
+        Fecha
+        <input type="date" [ngModel]="filtroFecha()" (ngModelChange)="filtroFecha.set($event)" />
+      </label>
+      <label>
+        Usuario
+        <input type="text" placeholder="Nombre o email..." [ngModel]="filtroUsuario()" (ngModelChange)="filtroUsuario.set($event)" />
+      </label>
+      <div class="filtros-botones">
+        <button type="button" class="btn btn-primary" (click)="aplicarFiltros()">Buscar</button>
+        <button type="button" class="btn btn-light" (click)="limpiarFiltros()">Limpiar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card stats-card">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">Total reseñas</span>
+        <span class="stat-valor">{{ resenas().length }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Promedio calificacion</span>
+        <span class="stat-valor promedio">{{ promedioCalificacion() }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card table-card">
+    <div class="section-heading">
+      <h2>Reseñas</h2>
+      @if (cargando()) {
+        <span class="muted">Cargando...</span>
+      }
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Usuario</th>
+            <th>Producto</th>
+            <th>Calificacion</th>
+            <th>Comentario</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (resena of resenas(); track resena.idResena) {
+            <tr>
+              <td><strong>#{{ resena.idPedido }}</strong></td>
+              <td>{{ resena.nombreUsuario }}</td>
+              <td>{{ resena.nombreProducto || '-' }}</td>
+              <td>
+                <div class="calificacion-celda">
+                  <span class="resena-estrellas">
+                    @for (estrella of [1,2,3,4,5]; track estrella) {
+                      @if (estrella <= estrellasCompletas(resena.calificacion)) {
+                        <span class="estrella llena">&#9733;</span>
+                      } @else if (estrella === estrellasCompletas(resena.calificacion) + 1 && tieneMediaEstrella(resena.calificacion)) {
+                        <span class="estrella media">&#9733;</span>
+                      } @else {
+                        <span class="estrella vacia">&#9733;</span>
+                      }
+                    }
+                  </span>
+                  <span class="calificacion-num">{{ resena.calificacion.toFixed(1) }}</span>
+                </div>
+              </td>
+              <td class="comentario-cell">{{ resena.comentario || '-' }}</td>
+              <td>{{ resena.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty">No hay reseñas registradas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

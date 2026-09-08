@@ -72,10 +72,6 @@ public class Caja {
     @PreUpdate
     public void preUpdate() {
         fechaActualizacion = Instant.now();
-        // Auto: si monto actual es 0, no disponible
-        if (montoActual != null && montoActual.compareTo(BigDecimal.ZERO) == 0) {
-            estado = EstadoCaja.NO_DISPONIBLE;
-        }
     }
 
     public boolean estaDisponible() {

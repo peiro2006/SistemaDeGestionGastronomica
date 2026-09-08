@@ -79,4 +79,23 @@ public class PedidoController {
                 )
         );
     }
+
+    @PostMapping("/{idPedido}/resena")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BaseResponse<ResenaResDto>> crearResena(
+            @PathVariable Long idPedido,
+            @Valid @RequestBody ResenaCreateReqDto request
+    ) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(resenaService.crear(idPedido, request), "Reseña creada correctamente")
+        );
+    }
+
+    @GetMapping("/{idPedido}/resena")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<List<ResenaResDto>>> obtenerResena(@PathVariable Long idPedido) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(resenaService.listarPorPedido(idPedido), "Reseña obtenida correctamente")
+        );
+    }
 }
