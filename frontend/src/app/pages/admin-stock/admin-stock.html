@@ -1,4 +1,7 @@
-<div class="admin-layout">`n  <app-admin-sidebar />`n  <div class="admin-main">`n    <div class="admin-shell">
+<div class="admin-layout">
+  <app-admin-sidebar />
+  <div class="admin-main">
+    <div class="admin-shell">
   <header class="admin-header">
     <div>
       <p class="eyebrow">Panel administrativo</p>
@@ -93,8 +96,116 @@
     </section>
   </div>
 
+  <div class="list-grid">
+    <section class="card table-card" id="lista-productos">
+      <h2>Lista de productos</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoria</th>
+              <th>Precio</th>
+              <th>Stock actual</th>
+              <th>Stock minimo</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (producto of productos(); track producto.idProducto) {
+              <tr>
+                <td>{{ producto.nombreProducto }}</td>
+                <td>{{ producto.categoria ?? 'Sin categoria' }}</td>
+                <td>${{ producto.precio }}</td>
+                <td>{{ producto.stockActual ?? 0 }}</td>
+                <td>{{ producto.stockMinimo ?? 0 }}</td>
+                <td>
+                  <span class="badge" [class.bajo]="stockBajoProducto(producto)" [class.ok]="!stockBajoProducto(producto)">
+                    {{ stockBajoProducto(producto) ? 'BAJO' : 'OK' }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="empty">No hay productos.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card table-card" id="lista-insumos">
+      <h2>Lista de insumos</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Unidad de medida</th>
+              <th>Stock actual</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (insumo of insumos(); track insumo.idInsumo) {
+              <tr>
+                <td>{{ insumo.nombreInsumo }}</td>
+                <td>{{ insumo.unidadMedida }}</td>
+                <td>{{ insumo.stockActual }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="empty">No hay insumos.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
   <section class="card table-card">
-    <h2>Historial de movimientos</h2>
+    <div class="section-head">
+      <h2>Historial de movimientos</h2>
+      <div class="filtros">
+        <label>
+          Recurso
+          <select [value]="filtroRecurso()" (change)="cambiarFiltroRecurso($event)">
+            <option value="todos">Todos</option>
+            <option value="producto">Productos</option>
+            <option value="insumo">Insumos</option>
+          </select>
+        </label>
+
+        @if (filtroRecurso() === 'producto') {
+          <label>
+            Producto
+            <select [value]="filtroIdProducto()" (change)="cambiarFiltroProducto($event)">
+              <option [value]="0">Todos los productos</option>
+              @for (producto of productos(); track producto.idProducto) {
+                <option [value]="producto.idProducto">{{ producto.nombreProducto }}</option>
+              }
+            </select>
+          </label>
+        }
+
+        @if (filtroRecurso() === 'insumo') {
+          <label>
+            Insumo
+            <select [value]="filtroIdInsumo()" (change)="cambiarFiltroInsumo($event)">
+              <option [value]="0">Todos los insumos</option>
+              @for (insumo of insumos(); track insumo.idInsumo) {
+                <option [value]="insumo.idInsumo">{{ insumo.nombreInsumo }} ({{ insumo.unidadMedida }})</option>
+              }
+            </select>
+          </label>
+        }
+
+        @if (filtroRecurso() !== 'todos') {
+          <button type="button" class="btn btn-ghost" (click)="limpiarFiltros()">Quitar filtro</button>
+        }
+      </div>
+    </div>
     <div class="table-wrap">
       <table>
         <thead>

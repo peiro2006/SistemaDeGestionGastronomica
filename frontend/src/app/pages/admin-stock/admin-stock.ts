@@ -25,6 +25,9 @@ export class AdminStockComponent implements OnInit {
   readonly productos = signal<Producto[]>([]);
   readonly insumos = signal<Insumo[]>([]);
   readonly movimientos = signal<StockMovimiento[]>([]);
+  readonly filtroRecurso = signal<'todos' | 'producto' | 'insumo'>('todos');
+  readonly filtroIdProducto = signal(0);
+  readonly filtroIdInsumo = signal(0);
   readonly cargando = signal(false);
   readonly guardando = signal(false);
   readonly mensaje = signal<string | null>(null);
@@ -63,10 +66,50 @@ export class AdminStockComponent implements OnInit {
   }
 
   cargarMovimientos(): void {
-    this.stockService.listar().subscribe({
-      next: (res) => this.movimientos.set(res.data ?? []),
-      error: (err) => this.error.set(this.extraerError(err))
-    });
+    this.stockService
+      .listar(this.filtrosMovimientos())
+      .subscribe({
+        next: (res) => this.movimientos.set(res.data ?? []),
+        error: (err) => this.error.set(this.extraerError(err))
+      });
+  }
+
+  cambiarFiltroRecurso(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.filtroRecurso.set(select.value as 'todos' | 'producto' | 'insumo');
+    this.filtroIdProducto.set(0);
+    this.filtroIdInsumo.set(0);
+    this.cargarMovimientos();
+  }
+
+  cambiarFiltroProducto(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.filtroIdProducto.set(Number(select.value));
+    this.cargarMovimientos();
+  }
+
+  cambiarFiltroInsumo(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.filtroIdInsumo.set(Number(select.value));
+    this.cargarMovimientos();
+  }
+
+  limpiarFiltros(): void {
+    this.filtroRecurso.set('todos');
+    this.filtroIdProducto.set(0);
+    this.filtroIdInsumo.set(0);
+    this.cargarMovimientos();
+  }
+
+  private filtrosMovimientos(): { idProducto?: number; idInsumo?: number } {
+    const filtros: { idProducto?: number; idInsumo?: number } = {};
+    if (this.filtroRecurso() === 'producto' && this.filtroIdProducto()) {
+      filtros.idProducto = this.filtroIdProducto();
+    }
+    if (this.filtroRecurso() === 'insumo' && this.filtroIdInsumo()) {
+      filtros.idInsumo = this.filtroIdInsumo();
+    }
+    return filtros;
   }
 
   ajustar(): void {
@@ -114,6 +157,10 @@ export class AdminStockComponent implements OnInit {
   actualizarDestino(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.form.patchValue({ idProducto: 0, idInsumo: 0 });
+  }
+
+  stockBajoProducto(producto: Producto): boolean {
+    return producto.stockActual !== null && producto.stockMinimo !== null && producto.stockActual < producto.stockMinimo;
   }
 
   private extraerError(err: unknown): string {
