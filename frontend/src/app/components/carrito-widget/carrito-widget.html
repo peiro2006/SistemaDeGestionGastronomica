@@ -50,40 +50,24 @@
             }
           </div>
 
-          @if (metodoPago() === 'DEBITO') {
-            <div class="pago-subtabs">
-              <button
-                type="button"
-                class="pago-subtab"
-                [class.pago-subtab-activo]="modoDebito() === 'qr'"
-                (click)="seleccionarModoDebito('qr')"
-              >QR</button>
-              <button
-                type="button"
-                class="pago-subtab"
-                [class.pago-subtab-activo]="modoDebito() === 'tarjeta'"
-                (click)="seleccionarModoDebito('tarjeta')"
-              >Tarjeta</button>
-            </div>
-
-            @if (modoDebito() === 'qr') {
-              <div class="qr-box">
-                <div class="qr-grid">
-                  @for (fila of matrizQr(); track $index) {
-                    <div class="qr-fila">
-                      @for (modulo of fila; track $index) {
-                        <i [class.encendido]="modulo === 1"></i>
-                      }
-                    </div>
-                  }
-                </div>
-                <p class="qr-codigo">{{ codigoPago() }}</p>
-                <p class="qr-aviso muted">Escanea el QR con la app de tu banco. Si no puede, carga los datos de tu tarjeta.</p>
+          @if (metodoPago() === 'TRANSFERENCIA') {
+            <div class="qr-box">
+              <div class="qr-grid">
+                @for (fila of matrizQr(); track $index) {
+                  <div class="qr-fila">
+                    @for (modulo of fila; track $index) {
+                      <i [class.encendido]="modulo === 1"></i>
+                    }
+                  </div>
+                }
               </div>
-            }
+              <p class="qr-codigo">{{ codigoPago() }}</p>
+              <p class="qr-aviso muted">Escanea el QR para realizar la transferencia bancaria.</p>
+              <p class="qr-alias"><strong>Alias: AquiSuAlias</strong></p>
+            </div>
           }
 
-          @if (metodoPago() === 'DEBITO' && modoDebito() === 'tarjeta' || metodoPago() === 'TARJETA_CREDITO') {
+          @if (metodoPago() === 'DEBITO' || metodoPago() === 'TARJETA_CREDITO') {
             <form class="card-form" novalidate>
               <div class="card-grid">
                 <div class="campo">

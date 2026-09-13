@@ -44,11 +44,10 @@ export class CarritoWidgetComponent {
   readonly metodosPago: OpcionMetodoPago[] = [
     { valor: 'EFECTIVO', label: 'Efectivo', icono: 'E' },
     { valor: 'DEBITO', label: 'Debito', icono: 'D' },
-    { valor: 'TARJETA_CREDITO', label: 'Credito', icono: 'C' }
+    { valor: 'TARJETA_CREDITO', label: 'Credito', icono: 'C' },
+    { valor: 'TRANSFERENCIA', label: 'Transferencia', icono: 'T' }
   ];
 
-  // Para debito se puede pagar escaneando un QR o cargando los datos de la tarjeta
-  readonly modoDebito = signal<'qr' | 'tarjeta'>('qr');
 
   // Codigo de pago simulado (genera un QR determinista a partir de el)
   readonly codigoPago = signal(this.generarCodigoPago());
@@ -65,15 +64,10 @@ export class CarritoWidgetComponent {
 
   readonly puedeConfirmar = computed(() => {
     const metodo = this.metodoPago();
-    if (metodo === 'EFECTIVO') {
-      return true;
-    }
-    if (metodo === 'DEBITO') {
-      return this.modoDebito() === 'qr' || this.esTarjetaValida();
-    }
-    if (metodo === 'TARJETA_CREDITO') {
-      return this.esTarjetaValida();
-    }
+    if (metodo === 'EFECTIVO') { return true; }
+    if (metodo === 'DEBITO') { return this.esTarjetaValida(); }
+    if (metodo === 'TARJETA_CREDITO') { return this.esTarjetaValida(); }
+    if (metodo === 'TRANSFERENCIA') { return true; }
     return false;
   });
 
@@ -105,9 +99,6 @@ export class CarritoWidgetComponent {
     this.carritoService.setMetodoPago(metodo);
   }
 
-  seleccionarModoDebito(modo: 'qr' | 'tarjeta'): void {
-    this.modoDebito.set(modo);
-  }
 
   actualizarCampo(campo: CampoTarjeta, evento: Event): void {
     const valor = (evento.target as HTMLInputElement).value;
