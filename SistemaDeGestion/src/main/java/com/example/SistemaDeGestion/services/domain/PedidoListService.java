@@ -8,7 +8,6 @@ import com.example.SistemaDeGestion.models.EstadoPedido;
 import com.example.SistemaDeGestion.models.Usuario;
 import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.UsuarioRepository;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class PedidoListService implements IPedidoListService {
     @Override
     public List<PedidoResDto> misPedidos() {
         Usuario usuario = getUsuarioAutenticado();
-        return PedidoMapper.toResponseDtoList(pedidoRepository.findByUsuarioOrderByFechaCreacionDesc(usuario));
+        return PedidoMapper.toResponseDtoList(pedidoRepository.findByUsuarioConUsuario(usuario));
     }
 
     @Override
@@ -48,7 +47,6 @@ public class PedidoListService implements IPedidoListService {
 
     @Override
     public List<PedidoResDto> listarTodos() {
-        return PedidoMapper.toResponseDtoList(
-                pedidoRepository.findAll(Sort.by(Sort.Direction.DESC, "fechaCreacion")));
+        return PedidoMapper.toResponseDtoList(pedidoRepository.findAllConUsuario());
     }
 }

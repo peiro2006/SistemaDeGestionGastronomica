@@ -8,6 +8,7 @@ public record PedidoResDto (
 
         Long idPedido,
         Long idUsuario,
+        String nombreUsuario,
         Long idCaja,
         String estado,
         String metDePago,

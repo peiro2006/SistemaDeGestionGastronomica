@@ -22,6 +22,7 @@ export interface PedidoItem {
 export interface Pedido {
   idPedido: number;
   idUsuario: number;
+  nombreUsuario: string;
   idCaja: number | null;
   estado: string;
   metDePago: string;

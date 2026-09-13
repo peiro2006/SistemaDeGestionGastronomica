@@ -19,7 +19,10 @@
 
   <main class="pedidos-main">
     @if (cargando()) {
-      <div class="empty">Cargando pedidos...</div>
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <span>Cargando pedidos...</span>
+      </div>
     } @else if (pedidos().length) {
       @for (pedido of pedidos(); track pedido.idPedido) {
         <article class="pedido-card">

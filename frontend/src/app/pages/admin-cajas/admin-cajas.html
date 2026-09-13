@@ -1,4 +1,7 @@
-<div class="admin-layout">`n  <app-admin-sidebar />`n  <div class="admin-main">`n    <div class="admin-shell">
+<div class="admin-layout">
+  <app-admin-sidebar />
+  <div class="admin-main">
+    <div class="admin-shell">
   <header class="admin-header">
     <div>
       <p class="eyebrow">Panel administrativo</p>
@@ -60,7 +63,7 @@
     <div class="section-heading">
       <h2>Listado de cajas</h2>
       @if (cargando()) {
-        <span class="muted">Cargando...</span>
+        <div class="loading-box"><div class="spinner spinner-sm"></div><span>Cargando...</span></div>
       }
     </div>
 

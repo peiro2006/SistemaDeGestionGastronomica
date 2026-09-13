@@ -18,7 +18,13 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecificationExecutor<Pedido> {
 
+    @Query("SELECT p FROM Pedido p LEFT JOIN FETCH p.usuario ORDER BY p.fechaCreacion DESC")
+    List<Pedido> findAllConUsuario();
+
     List<Pedido> findByUsuarioOrderByFechaCreacionDesc(Usuario usuario);
+
+    @Query("SELECT p FROM Pedido p LEFT JOIN FETCH p.usuario WHERE p.usuario = :usuario ORDER BY p.fechaCreacion DESC")
+    List<Pedido> findByUsuarioConUsuario(@Param("usuario") Usuario usuario);
 
     List<Pedido> findByEstadoOrderByFechaCreacionAsc(EstadoPedido estado);
 

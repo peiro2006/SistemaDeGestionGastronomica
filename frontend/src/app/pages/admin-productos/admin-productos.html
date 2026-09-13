@@ -78,7 +78,7 @@
       </main>
 
       <section class="card table-card">
-        <div class="section-heading"><h2>Listado de productos</h2>@if (cargando()) {<span class="muted">Cargando...</span>}</div>
+        <div class="section-heading"><h2>Listado de productos</h2>@if (cargando()) {<div class="loading-box" style="padding:0.5rem 0"><div class="spinner spinner-sm"></div></div>}</div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Producto</th><th>Categoria</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Receta</th><th>Proveedor</th><th>Acciones</th></tr></thead>

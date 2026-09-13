@@ -375,3 +375,21 @@ Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u
 Hibernate: select c1_0.id_caja,c1_0.abierta_por,c1_0.descripcion,c1_0.estado,c1_0.fecha_actualizacion,c1_0.fecha_apertura,c1_0.fecha_creacion,c1_0.moneda,c1_0.monto_actual,c1_0.monto_inicial,c1_0.nombre_caja,c1_0.password_hash from caja c1_0 order by c1_0.fecha_creacion desc
 Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
 Hibernate: select c1_0.id_caja,c1_0.abierta_por,c1_0.descripcion,c1_0.estado,c1_0.fecha_actualizacion,c1_0.fecha_apertura,c1_0.fecha_creacion,c1_0.moneda,c1_0.monto_actual,c1_0.monto_inicial,c1_0.nombre_caja,c1_0.password_hash from caja c1_0 order by c1_0.fecha_creacion desc
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select r1_0.id_resena,r1_0.calificacion,r1_0.comentario,r1_0.fecha_creacion,r1_0.id_pedido,r1_0.id_usuario from resena r1_0 order by r1_0.fecha_creacion desc
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where u1_0.id_usuario=?
+Hibernate: select p1_0.id_pedido,p1_0.id_caja,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.met_de_pago,p1_0.total,p1_0.id_usuario from pedido p1_0 where p1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_proveedor,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select r1_0.id_resena,r1_0.calificacion,r1_0.comentario,r1_0.fecha_creacion,r1_0.id_pedido,r1_0.id_usuario from resena r1_0 order by r1_0.fecha_creacion desc
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where u1_0.id_usuario=?
+Hibernate: select p1_0.id_pedido,p1_0.id_caja,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.met_de_pago,p1_0.total,p1_0.id_usuario from pedido p1_0 where p1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_proveedor,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where upper(u1_0.email)=upper(?)
+Hibernate: select r1_0.id_resena,r1_0.calificacion,r1_0.comentario,r1_0.fecha_creacion,r1_0.id_pedido,r1_0.id_usuario from resena r1_0 order by r1_0.fecha_creacion desc
+Hibernate: select u1_0.id_usuario,u1_0.apellido,u1_0.email,u1_0.fecha_creacion,u1_0.nombre,u1_0.password,u1_0.rol from usuario u1_0 where u1_0.id_usuario=?
+Hibernate: select p1_0.id_pedido,p1_0.id_caja,p1_0.estado,p1_0.fecha_actualizacion,p1_0.fecha_creacion,p1_0.met_de_pago,p1_0.total,p1_0.id_usuario from pedido p1_0 where p1_0.id_pedido=?
+Hibernate: select i1_0.id_pedido,i1_0.id_pedido_item,i1_0.cantidad,i1_0.precio_unitario,i1_0.id_producto,i1_0.subtotal from pedido_item i1_0 where i1_0.id_pedido=?
+Hibernate: select p1_0.id_producto,p1_0.activo,p1_0.categoria_producto,p1_0.descripcion_producto,p1_0.imagen_url,p1_0.nombre_producto,p1_0.precio_producto,p1_0.id_proveedor,p1_0.id_receta,p1_0.stock_actual,p1_0.stock_minimo from producto p1_0 where p1_0.id_producto=?

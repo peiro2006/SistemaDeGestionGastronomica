@@ -42,9 +42,20 @@ public class PedidoMapper {
                 .map(PedidoMapper::toItemResponseDto)
                 .toList();
 
+        String nombreUsuario = "";
+        if (pedido.getUsuario() != null) {
+            String nombre = pedido.getUsuario().getNombre() != null ? pedido.getUsuario().getNombre() : "";
+            String apellido = pedido.getUsuario().getApellido() != null ? pedido.getUsuario().getApellido() : "";
+            nombreUsuario = (nombre + " " + apellido).trim();
+            if (nombreUsuario.isEmpty()) {
+                nombreUsuario = pedido.getUsuario().getEmail();
+            }
+        }
+
         return new PedidoResDto(
                 pedido.getIdPedido(),
                 pedido.getUsuario().getIdUsuario(),
+                nombreUsuario,
                 pedido.getCaja() != null ? pedido.getCaja().getIdCaja() : null,
                 pedido.getEstado().name(),
                 pedido.getMetDePago() != null ? pedido.getMetDePago().name() : "EFECTIVO",
