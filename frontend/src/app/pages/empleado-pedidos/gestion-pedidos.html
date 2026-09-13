@@ -1,7 +1,10 @@
 <div class="empleado-shell">
   <header class="empleado-header">
     <h1>Gestión de pedidos</h1>
-    <button class="btn-recetas" (click)="toggleRecetas()">Recetas</button>
+    <div class="header-actions">
+      <a routerLink="/cocina" class="btn-link">Cocina</a>
+      <button class="btn-recetas" (click)="toggleRecetas()">Recetas</button>
+    </div>
   </header>
 
   @if (cargando()) {

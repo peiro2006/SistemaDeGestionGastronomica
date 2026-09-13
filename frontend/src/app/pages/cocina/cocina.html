@@ -1,0 +1,27 @@
+<div class="cocina-shell">
+  <header class="cocina-header">
+    <h1>Pedidos pendientes</h1>
+    <span class="cocina-reloj">{{ ultimaActualizacion() | date:'HH:mm:ss' }}</span>
+  </header>
+
+  @if (cargando()) {
+    <div class="cocina-loading">
+      <div class="cocina-spinner"></div>
+    </div>
+  } @else if (pedidos().length) {
+    <div class="cocina-lista">
+      @for (pedido of pedidos(); track pedido.idPedido) {
+        <div class="cocina-card">
+          <div class="card-num">#{{ pedido.idPedido }}</div>
+          <ul class="card-items">
+            @for (item of pedido.items; track item.idPedidoItem) {
+              <li>{{ item.cantidad }}x {{ item.nombreProducto }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="cocina-vacio">Sin pedidos pendientes</div>
+  }
+</div>

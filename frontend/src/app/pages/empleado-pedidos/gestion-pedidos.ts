@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Pedido } from '../../models/pedido.models';
 import { PedidosService } from '../../services/pedidos.service';
 import { RecetasService } from '../../services/recetas.service';
@@ -7,7 +8,7 @@ import { Receta } from '../../models/receta.models';
 
 @Component({
   selector: 'app-empleado-pedidos',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './gestion-pedidos.html',
   styleUrl: './gestion-pedidos.css'
 })
