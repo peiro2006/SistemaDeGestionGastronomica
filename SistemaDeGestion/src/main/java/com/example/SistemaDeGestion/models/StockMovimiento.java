@@ -45,6 +45,9 @@ public class StockMovimiento {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "monto_compra", precision = 12, scale = 2)
+    private java.math.BigDecimal montoCompra;
+
     @Column(name = "fecha", nullable = false, updatable = false)
     private Instant fecha;
 
@@ -64,6 +67,8 @@ public class StockMovimiento {
     public void setSaldoPosterior(Integer saldoPosterior) { this.saldoPosterior = saldoPosterior; }
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public java.math.BigDecimal getMontoCompra() { return montoCompra; }
+    public void setMontoCompra(java.math.BigDecimal montoCompra) { this.montoCompra = montoCompra; }
     public Instant getFecha() { return fecha; }
     public void setFecha(Instant fecha) { this.fecha = fecha; }
 

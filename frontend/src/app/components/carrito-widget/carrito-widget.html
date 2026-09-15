@@ -1,4 +1,4 @@
-@if (carrito().length > 0 || mostrar()) {
+@if (visible() && (carrito().length > 0 || mostrar())) {
   <div class="carrito-flotante">
     <button type="button" class="carrito-fab" (click)="toggle()" [attr.aria-label]="mostrar() ? 'Cerrar carrito' : 'Abrir carrito'">
       <span class="carrito-icono">&#128722;</span>

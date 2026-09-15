@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { Pedido } from '../../models/pedido.models';
 import { PedidosService } from '../../services/pedidos.service';
 
@@ -11,6 +12,7 @@ import { PedidosService } from '../../services/pedidos.service';
 })
 export class CocinaComponent implements OnInit, OnDestroy {
   private readonly pedidosService = inject(PedidosService);
+  private readonly router = inject(Router);
   private refreshTimer: ReturnType<typeof setInterval> | null = null;
 
   readonly pedidos = signal<Pedido[]>([]);
@@ -27,13 +29,17 @@ export class CocinaComponent implements OnInit, OnDestroy {
   }
 
   cargarPedidos(): void {
-    this.pedidosService.listarTodos().subscribe({
+    this.pedidosService.listarEnPreparacion().subscribe({
       next: (res) => {
-        this.pedidos.set((res.data ?? []).filter(p => p.estado === 'pendiente'));
+        this.pedidos.set(res.data ?? []);
         this.ultimaActualizacion.set(new Date());
         this.cargando.set(false);
       },
       error: () => this.cargando.set(false)
     });
+  }
+
+  volver(): void {
+    this.router.navigate(['/empleado/pedidos']);
   }
 }

@@ -17,7 +17,9 @@ public record StockAjusteReqDto(
         Integer cantidad,
 
         @NotBlank(message = "Debe ingresar un motivo")
-        String motivo
+        String motivo,
+
+        java.math.BigDecimal montoCompra
 
 ) {
 }

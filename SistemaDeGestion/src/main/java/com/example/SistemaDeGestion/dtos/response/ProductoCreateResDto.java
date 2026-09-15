@@ -14,7 +14,8 @@ public record ProductoCreateResDto (
         Long idReceta,
         String nombreReceta,
         Long idProveedor,
-        String nombreProveedor
+        String nombreProveedor,
+        Integer stockMaximo
 
 ) {
 }

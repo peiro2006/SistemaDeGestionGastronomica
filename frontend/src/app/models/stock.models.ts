@@ -6,6 +6,7 @@ export interface StockAjusteRequest {
   tipo: TipoMovimientoStock;
   cantidad: number;
   motivo: string;
+  montoCompra?: number | null;
 }
 
 export interface StockMovimiento {
@@ -20,5 +21,6 @@ export interface StockMovimiento {
   saldoPosterior: number;
   idUsuario: number;
   usuarioEmail: string;
+  montoCompra: number | null;
   fecha: string;
 }

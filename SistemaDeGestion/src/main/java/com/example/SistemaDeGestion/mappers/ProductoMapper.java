@@ -51,7 +51,8 @@ public class ProductoMapper {
                 producto.getReceta() != null ? producto.getReceta().getIdReceta() : null,
                 producto.getReceta() != null ? producto.getReceta().getNombreReceta() : null,
                 producto.getProveedor() != null ? producto.getProveedor().getIdProveedor() : null,
-                producto.getProveedor() != null ? producto.getProveedor().getNombre() : null
+                producto.getProveedor() != null ? producto.getProveedor().getNombre() : null,
+                null
         );
     }
 

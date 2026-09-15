@@ -15,6 +15,7 @@ public record StockMovimientoResDto(
         Integer saldoPosterior,
         Long idUsuario,
         String usuarioEmail,
+        java.math.BigDecimal montoCompra,
         Instant fecha
 
 ) {

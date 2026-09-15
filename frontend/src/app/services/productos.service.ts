@@ -35,6 +35,18 @@ export class ProductosService {
     return this.http.get<BaseResponse<Producto[]>>(`${this.apiUrl}/Producto`, { params });
   }
 
+  obtenerStockMaximoTodos(): Observable<BaseResponse<Record<number, number>>> {
+    return this.http.get<BaseResponse<Record<number, number>>>(`${this.apiUrl}/Producto/stock-maximo`);
+  }
+
+  obtenerStockMaximo(idProducto: number): Observable<BaseResponse<{ stockMaximo: number }>> {
+    return this.http.get<BaseResponse<{ stockMaximo: number }>>(`${this.apiUrl}/Producto/${idProducto}/stock-maximo`);
+  }
+
+  obtenerStockMaximoPorReceta(idReceta: number): Observable<BaseResponse<{ stockMaximo: number }>> {
+    return this.http.get<BaseResponse<{ stockMaximo: number }>>(`${this.apiUrl}/Producto/receta/${idReceta}/stock-maximo`);
+  }
+
   private buildParams(values: { nombre?: string; categoria?: string }): HttpParams {
     let params = new HttpParams();
     if (values.nombre) {

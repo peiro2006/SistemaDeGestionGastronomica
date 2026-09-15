@@ -49,25 +49,32 @@
             <label>Categoria <input type="text" formControlName="categoria" placeholder="Hamburguesas" /></label>
             <label>Imagen URL <input type="url" formControlName="imagenUrl" placeholder="https://..." /></label>
             <label class="span-2">Descripcion <textarea rows="3" formControlName="descripcion"></textarea></label>
-            <label>Receta <select formControlName="idReceta"><option [ngValue]="0">Seleccione una receta</option>@for (receta of recetas(); track receta.idReceta) {<option [ngValue]="receta.idReceta">{{ receta.nombreReceta }}</option>}</select></label>
-            <label>Proveedor <select formControlName="idProveedor"><option [ngValue]="0">Seleccione un proveedor</option>@for (proveedor of proveedores(); track proveedor.idProveedor) {<option [ngValue]="proveedor.idProveedor">{{ proveedor.nombre }}</option>}</select></label>
+            <label>Receta <select formControlName="idReceta" (change)="onRecetaChange($event)"><option [ngValue]="0">Seleccione una receta</option>@for (receta of recetas(); track receta.idReceta) {<option [ngValue]="receta.idReceta">{{ receta.nombreReceta }}</option>}</select></label>
+            @if (stockMaximoForm() > 0) { <p class="hint span-2">Stock maximo segun receta: {{ stockMaximoForm() }}</p> }
             <label>Stock minimo <input type="number" formControlName="stockMinimo" min="0" /></label>
-            <label>Stock inicial <input type="number" formControlName="stockActual" min="0" [readonly]="!!productoEditando()" /></label>
-            @if (productoEditando()) { <p class="hint span-2">El stock actual se modifica desde la pantalla de stock para mantener historial.</p> }
+            <label>Stock para vender <input type="number" formControlName="stockActual" min="0" [max]="stockMaximoForm() || null" [readonly]="!!productoEditando()" /></label>
+            @if (productoEditando()) { <p class="hint span-2">El stock para vender se modifica desde la pantalla de stock para mantener historial.</p> }
             <button class="btn btn-primary span-2" type="submit" [disabled]="guardandoProducto()">{{ guardandoProducto() ? 'Guardando...' : productoEditando() ? 'Actualizar producto' : 'Crear producto' }}</button>
           </form>
         </section>
         <section class="card">
-          <h2>Crear receta con insumos</h2>
+          <div class="section-heading">
+            <h2>Crear receta con insumos</h2>
+          </div>
           <form [formGroup]="recetaForm" (ngSubmit)="guardarReceta()" class="recipe-form">
             <label>Nombre de receta <input type="text" formControlName="nombreReceta" /></label>
             <label>Descripcion <textarea rows="2" formControlName="descripcionReceta"></textarea></label>
             <div class="ingredients-title"><strong>Ingredientes por unidad</strong><button type="button" class="btn btn-light" (click)="agregarIngrediente()">Agregar</button></div>
             @for (ingrediente of ingredientes(); track $index) {
               <div class="ingredient-row">
-                <input type="text" placeholder="Insumo" [value]="ingrediente.nombreInsumo" (input)="actualizarIngrediente($index, 'nombreInsumo', $event)" />
+                <select (change)="seleccionarInsumo($index, $event)">
+                  <option value="0">Seleccione insumo</option>
+                  @for (insumo of insumos(); track insumo.idInsumo) {
+                    <option [value]="insumo.idInsumo" [selected]="ingrediente.idInsumo === insumo.idInsumo">{{ insumo.nombreInsumo }}</option>
+                  }
+                </select>
                 <input type="number" min="0.01" step="0.01" placeholder="Cantidad" [value]="ingrediente.cantidad" (input)="actualizarIngrediente($index, 'cantidad', $event)" />
-                <input type="text" placeholder="Unidad" [value]="ingrediente.unidadMedida" (input)="actualizarIngrediente($index, 'unidadMedida', $event)" />
+                <span class="unidad-display">{{ ingrediente.unidadMedida || 'Unidad' }}</span>
                 <button type="button" class="btn btn-danger" (click)="quitarIngrediente($index)" [disabled]="ingredientes().length === 1">Quitar</button>
               </div>
             }
@@ -75,13 +82,29 @@
             <button class="btn btn-secondary" type="submit" [disabled]="guardandoReceta()">{{ guardandoReceta() ? 'Creando...' : 'Crear receta' }}</button>
           </form>
         </section>
+        <section class="card">
+          <h2>Recetas existentes</h2>
+          <div class="recipe-list">
+            @for (receta of recetas(); track receta.idReceta) {
+              <div class="recipe-item">
+                <div class="recipe-info">
+                  <strong>{{ receta.nombreReceta }}</strong>
+                  <span>{{ receta.ingredientesReceta || receta.descripcionReceta }}</span>
+                </div>
+                <button type="button" class="btn btn-light" (click)="editarReceta(receta)">Editar</button>
+              </div>
+            } @empty {
+              <p class="empty">No hay recetas creadas.</p>
+            }
+          </div>
+        </section>
       </main>
 
       <section class="card table-card">
         <div class="section-heading"><h2>Listado de productos</h2>@if (cargando()) {<div class="loading-box" style="padding:0.5rem 0"><div class="spinner spinner-sm"></div></div>}</div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Producto</th><th>Categoria</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Receta</th><th>Proveedor</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>Producto</th><th>Categoria</th><th>Precio</th><th>Stock para vender</th><th>Stock maximo</th><th>Estado</th><th>Receta</th><th>Acciones</th></tr></thead>
             <tbody>
               @for (producto of productos(); track producto.idProducto) {
                 <tr>
@@ -89,9 +112,9 @@
                   <td>{{ producto.categoria || '-' }}</td>
                   <td>${{ producto.precio }}</td>
                   <td>{{ producto.stockActual ?? 0 }}</td>
+                  <td>{{ stockMaximoMap()[producto.idProducto] ?? 0 }}</td>
                   <td><span class="status" [class.inactive]="!producto.activo">{{ producto.activo ? 'Activo' : 'Inactivo' }}</span></td>
                   <td>{{ producto.nombreReceta || producto.idReceta || '-' }}</td>
-                  <td>{{ producto.nombreProveedor || producto.idProveedor || '-' }}</td>
                   <td class="actions-cell"><button type="button" class="btn btn-light" (click)="editar(producto)">Editar</button><button type="button" class="btn" [class.btn-danger]="producto.activo" [class.btn-secondary]="!producto.activo" (click)="cambiarEstado(producto)">{{ producto.activo ? 'Desactivar' : 'Activar' }}</button></td>
                 </tr>
               } @empty {<tr><td colspan="8" class="empty">No hay productos cargados.</td></tr>}
@@ -102,3 +125,37 @@
     </div>
   </div>
 </div>
+
+@if (mostrarModalReceta()) {
+  <div class="modal-overlay" (click)="cerrarModalReceta()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Editar receta</h2>
+        <button type="button" class="btn-close" (click)="cerrarModalReceta()">&times;</button>
+      </div>
+      <form [formGroup]="recetaForm" (ngSubmit)="guardarEdicionReceta()" class="recipe-form">
+        <label>Nombre de receta <input type="text" formControlName="nombreReceta" /></label>
+        <label>Descripcion <textarea rows="2" formControlName="descripcionReceta"></textarea></label>
+        <div class="ingredients-title"><strong>Ingredientes por unidad</strong><button type="button" class="btn btn-light" (click)="agregarIngredienteModal()">Agregar</button></div>
+        @for (ingrediente of ingredientesModal(); track $index) {
+          <div class="ingredient-row">
+            <select (change)="seleccionarInsumoModal($index, $event)">
+              <option value="0">Seleccione insumo</option>
+              @for (insumo of insumos(); track insumo.idInsumo) {
+                <option [value]="insumo.idInsumo" [selected]="ingrediente.idInsumo === insumo.idInsumo">{{ insumo.nombreInsumo }}</option>
+              }
+            </select>
+            <input type="number" min="0.01" step="0.01" placeholder="Cantidad" [value]="ingrediente.cantidad" (input)="actualizarIngredienteModal($index, 'cantidad', $event)" />
+            <span class="unidad-display">{{ ingrediente.unidadMedida || 'Unidad' }}</span>
+            <button type="button" class="btn btn-danger" (click)="quitarIngredienteModal($index)" [disabled]="ingredientesModal().length === 1">Quitar</button>
+          </div>
+        }
+        @if (recetaError()) { <div class="alert alert-error">{{ recetaError() }}</div> }
+        <div class="modal-actions">
+          <button type="button" class="btn btn-light" (click)="cerrarModalReceta()">Cancelar</button>
+          <button class="btn btn-primary" type="submit" [disabled]="guardandoReceta()">{{ guardandoReceta() ? 'Guardando...' : 'Guardar cambios' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

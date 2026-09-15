@@ -63,8 +63,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
 }
 
 .field-error {
@@ -98,16 +98,16 @@
 }
 
 .btn-primary {
-  background: #0d6efd;
+  background: #c0392b;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: #0b5ed7;
+  background: #a93226;
 }
 
 .btn-primary:disabled {
-  background: #86b7fe;
+  background: #e74c3c;
   cursor: not-allowed;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .auth-footer a {
-  color: #0d6efd;
+  color: #c0392b;
   text-decoration: none;
 }
 

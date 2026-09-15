@@ -1,9 +1,11 @@
-import { Component, inject, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { CarritoService } from '../../services/carrito.service';
 import { AuthService } from '../../services/auth.service';
 import { PedidosService } from '../../services/pedidos.service';
 import { MetodoPago } from '../../models/pedido.models';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 interface OpcionMetodoPago {
   valor: MetodoPago;
@@ -25,11 +27,33 @@ type CampoTarjeta = 'numero' | 'nombre' | 'vencimiento' | 'cvv';
   templateUrl: './carrito-widget.html',
   styleUrl: './carrito-widget.css'
 })
-export class CarritoWidgetComponent {
+export class CarritoWidgetComponent implements OnInit, OnDestroy {
   private readonly carritoService = inject(CarritoService);
   private readonly authService = inject(AuthService);
   private readonly pedidosService = inject(PedidosService);
   private readonly router = inject(Router);
+
+  private readonly rutaActual = signal(this.router.url);
+  readonly visible = computed(() => this.rutaActual() === '/catalogo');
+
+  private sub?: Subscription;
+
+  ngOnInit(): void {
+    this.sub = this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd)
+    ).subscribe(e => {
+      const url = e.urlAfterRedirects || e.url;
+      this.rutaActual.set(url);
+      if (url !== '/catalogo') {
+        this.carritoService.limpiar();
+        this.mostrar.set(false);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+  }
 
   readonly carrito = this.carritoService.items;
   readonly total = this.carritoService.total;

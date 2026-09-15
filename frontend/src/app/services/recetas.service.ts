@@ -20,4 +20,8 @@ export class RecetasService {
   crear(data: RecetaCreateRequest): Observable<BaseResponse<Receta>> {
     return this.http.post<BaseResponse<Receta>>(`${this.apiUrl}/Receta`, data);
   }
+
+  actualizar(idReceta: number, data: RecetaCreateRequest): Observable<BaseResponse<Receta>> {
+    return this.http.put<BaseResponse<Receta>>(`${this.apiUrl}/Receta/${idReceta}`, data);
+  }
 }

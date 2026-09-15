@@ -140,6 +140,165 @@
   grid-column: 1 / -1;
 }
 
+.insumo-select-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.insumo-select-row select {
+  flex: 1;
+}
+
+.insumo-select-row .btn {
+  white-space: nowrap;
+  padding: 0.65rem 1rem;
+  background: #e9ecef;
+  color: #212529;
+  font-weight: 700;
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+}
+
+.insumo-select-row .btn:hover {
+  background: #dee2e6;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fade-in 0.15s ease;
+}
+
+.modal-panel {
+  background: #fff;
+  border-radius: 12px;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: modal-in 0.2s ease;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.modal-body {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1rem 1.25rem;
+}
+
+.modal-body label {
+  display: grid;
+  gap: 0.3rem;
+  color: #495057;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.modal-body input {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  color: #212529;
+  background: #fff;
+}
+
+.unidad-btn-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.unidad-btn {
+  flex: 1;
+  padding: 0.55rem 0;
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.unidad-btn:hover {
+  background: #f1f3f5;
+}
+
+.unidad-btn.active {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+
+.modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.modal-foot .btn-light {
+  background: #e9ecef;
+  color: #212529;
+  border: 0;
+  border-radius: 7px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-foot .btn-light:hover {
+  background: #dee2e6;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 label {
   display: grid;
   gap: 0.35rem;

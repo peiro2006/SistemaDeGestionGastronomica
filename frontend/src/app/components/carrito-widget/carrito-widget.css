@@ -75,7 +75,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.9rem 1.1rem;
-  background: linear-gradient(120deg, #1a2230, #2b3a55);
+  background: linear-gradient(120deg, #c0392b, #e74c3c);
   color: #fff;
 }
 
@@ -202,7 +202,7 @@
 
 .pago-opciones {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.4rem;
 }
 
@@ -451,4 +451,33 @@
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-primary-dark);
+}
+
+.carrito-btn-pagar {
+  width: 100% !important;
+  height: auto !important;
+  padding: 0.75rem !important;
+  border: 2px solid #c0392b;
+  border-radius: 999px !important;
+  background: #c0392b;
+  color: #ffffff;
+  font-size: 1rem !important;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: center;
+  justify-content: center;
+}
+
+.carrito-btn-pagar:hover:not(:disabled) {
+  background: #ffffff;
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+.carrito-btn-pagar:disabled {
+  background: #e0e0e0;
+  border-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
 }

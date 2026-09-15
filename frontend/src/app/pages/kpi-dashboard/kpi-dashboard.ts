@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { BaseResponse } from '../../models/auth.models';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
@@ -20,6 +20,7 @@ interface KpiData {
   tasaConversion: number; cac: number; cac30: number;
   traficoWeb30: number; traficoWeb7: number; ctr: number; ctr7: number;
   margenBeneficio: number; margen30: number; roi: number;
+  inversionTotal: number;
   ingresosPorMetodoPago: Record<string, number>; pedidosPorMetodoPago: Record<string, number>;
   stockPorCategoria: Record<string, number>; productosPorCategoria: Record<string, number>;
   productosPorProveedor: Record<string, number>; stockPorProveedor: Record<string, number>;
@@ -31,7 +32,7 @@ interface KpiData {
 
 @Component({
   selector: 'app-kpi-dashboard',
-  imports: [CommonModule, RouterLink, RouterLinkActive, AdminSidebarComponent],
+  imports: [CommonModule, RouterLink, AdminSidebarComponent],
   templateUrl: './kpi-dashboard.html',
   styleUrl: './kpi-dashboard.css'
 })
@@ -45,7 +46,6 @@ export class KpiDashboardComponent implements OnInit {
   @ViewChild('metodoPagoChart') metodoPagoChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('stockCatChart') stockCatChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('topProdChart') topProdChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('proveedorChart') proveedorChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('usuariosChart') usuariosChartRef!: ElementRef<HTMLCanvasElement>;
 
   private charts: Chart[] = [];
@@ -53,6 +53,9 @@ export class KpiDashboardComponent implements OnInit {
   readonly kpis = signal<KpiData | null>(null);
   readonly cargando = signal(true);
   readonly error = signal<string | null>(null);
+  readonly editandoMeta = signal(false);
+  readonly metaMensualEdit = signal(0);
+  readonly guardandoMeta = signal(false);
   estados: { estado:string; count:number }[] = [];
 
   ngOnInit(): void { this.cargarKPIs(); }
@@ -82,7 +85,7 @@ export class KpiDashboardComponent implements OnInit {
     this.charts.forEach(c=>c.destroy()); this.charts=[];
     this.crearEstadoChart(); this.crearIngresosChart(); this.crearTendenciaChart();
     this.crearMetodoPagoChart(); this.crearStockCatChart(); this.crearTopProdChart();
-    this.crearProveedorChart(); this.crearUsuariosChart();
+    this.crearUsuariosChart();
   }
 
   private crearEstadoChart(): void {
@@ -121,13 +124,6 @@ export class KpiDashboardComponent implements OnInit {
     const labels=top.map(t=>t.nombre.length>18? t.nombre.slice(0,18)+'…':t.nombre); const values=top.map(t=>t.cantidad);
     const c=new Chart(ctx,{ type:'bar', data:{ labels, datasets:[{ label:'Unidades vendidas', data:values, backgroundColor:'#f59e0b', borderRadius:6 }]}, options:{ indexAxis:'y' as any, responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false }}, scales:{ x:{ beginAtZero:true }}}} as ChartConfiguration); this.charts.push(c);
   }
-  private crearProveedorChart(): void {
-    const ctx=this.proveedorChartRef?.nativeElement.getContext('2d'); if (!ctx||!this.kpis()) return;
-    const k=this.kpis()!; const entries=Object.entries(k.productosPorProveedor||{}); if (!entries.length) return;
-    const labels=entries.map(([n])=>n.length>14? n.slice(0,14)+'…':n); const values=entries.map(([,v])=>v as number);
-    const colors=['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#14b8a6'];
-    const c=new Chart(ctx,{ type:'pie', data:{ labels, datasets:[{ data:values, backgroundColor:colors.slice(0,labels.length)}]}, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom'}}}} as ChartConfiguration); this.charts.push(c);
-  }
   private crearUsuariosChart(): void {
     const ctx=this.usuariosChartRef?.nativeElement.getContext('2d'); if (!ctx||!this.kpis()) return;
     const k=this.kpis()!; const entries=Object.entries(k.usuariosPorRol||{}); if (!entries.length) return;
@@ -142,4 +138,32 @@ export class KpiDashboardComponent implements OnInit {
   maxBarWidth(c:number){ const max=Math.max(...this.estados.map(e=>e.count),1); return (c/max)*100; }
   fmt(n:number){ return new Intl.NumberFormat('es-AR').format(n); }
   fmtARS(n:number){ return '$ '+ new Intl.NumberFormat('es-AR',{ minimumFractionDigits:2 }).format(n); }
+
+  iniciarEdicionMeta(): void {
+    const k = this.kpis();
+    if (k) {
+      this.metaMensualEdit.set(k.metaMensual);
+      this.editandoMeta.set(true);
+    }
+  }
+
+  cancelarMeta(): void {
+    this.editandoMeta.set(false);
+  }
+
+  guardarMeta(): void {
+    const valor = this.metaMensualEdit();
+    if (!valor || valor <= 0) return;
+    this.guardandoMeta.set(true);
+    this.http.put<{ data: any }>(`${this.apiUrl}/configuracion/META_MENSUAL`, { valor }).subscribe({
+      next: () => {
+        this.guardandoMeta.set(false);
+        this.editandoMeta.set(false);
+        this.cargarKPIs();
+      },
+      error: () => {
+        this.guardandoMeta.set(false);
+      }
+    });
+  }
 }

@@ -65,7 +65,7 @@ public class StockMovimientoService {
             producto.setStockActual(saldoPosterior);
             notificacionService.verificarStockBajo(producto.getIdProducto());
             return StockMovimientoMapper.toResponseDto(stockMovimientosRepository.save(
-                    crearStockMovimiento(producto, null, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario)
+                    crearStockMovimiento(producto, null, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario, request.montoCompra())
             ));
         }
 
@@ -74,12 +74,13 @@ public class StockMovimientoService {
         Integer saldoPosterior = calcularSaldo(insumo.getStockActual(), request.cantidad(), tipo);
         insumo.setStockActual(saldoPosterior);
         return StockMovimientoMapper.toResponseDto(stockMovimientosRepository.save(
-                crearStockMovimiento(null, insumo, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario)
+                crearStockMovimiento(null, insumo, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario, request.montoCompra())
         ));
     }
 
     private StockMovimiento crearStockMovimiento(Producto producto, Insumo insumo, String tipo,
-            Integer cantidad, String motivo, Integer saldoPosterior, Usuario usuario) {
+            Integer cantidad, String motivo, Integer saldoPosterior, Usuario usuario,
+            java.math.BigDecimal montoCompra) {
         StockMovimiento sm = new StockMovimiento();
         sm.setProducto(producto);
         sm.setInsumo(insumo);
@@ -88,6 +89,7 @@ public class StockMovimientoService {
         sm.setMotivo(motivo);
         sm.setSaldoPosterior(saldoPosterior);
         sm.setUsuario(usuario);
+        sm.setMontoCompra(montoCompra);
         return sm;
     }
 

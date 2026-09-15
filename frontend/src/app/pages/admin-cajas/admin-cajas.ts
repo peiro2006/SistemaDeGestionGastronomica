@@ -1,14 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { CajaService } from '../../services/caja.service';
 import { Caja, CajaCreateRequest, CajaUpdateRequest, CajaEstadoRequest } from '../../models/caja.models';
 
 @Component({
   selector: 'app-admin-cajas',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, RouterLinkActive, AdminSidebarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, AdminSidebarComponent],
   templateUrl: './admin-cajas.html',
   styleUrl: './admin-cajas.css'
 })

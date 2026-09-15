@@ -1,14 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Resena } from '../../services/resenas.service';
 import { ResenasService } from '../../services/resenas.service';
 
 @Component({
   selector: 'app-admin-feedback',
-  imports: [DatePipe, FormsModule, RouterLink, RouterLinkActive, AdminSidebarComponent],
+  imports: [DatePipe, FormsModule, RouterLink, AdminSidebarComponent],
   templateUrl: './admin-feedback.html',
   styleUrl: './admin-feedback.css'
 })

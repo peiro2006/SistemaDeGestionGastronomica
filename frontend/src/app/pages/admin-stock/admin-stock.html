@@ -44,12 +44,15 @@
         @if (form.getRawValue().destino === 'insumo') {
           <label>
             Insumo
-            <select formControlName="idInsumo">
-              <option [ngValue]="0">Seleccione un insumo</option>
-              @for (insumo of insumos(); track insumo.idInsumo) {
-                <option [ngValue]="insumo.idInsumo">{{ insumo.nombreInsumo }} (stock: {{ insumo.stockActual }})</option>
-              }
-            </select>
+            <div class="insumo-select-row">
+              <select formControlName="idInsumo">
+                <option [ngValue]="0">Seleccione un insumo</option>
+                @for (insumo of insumos(); track insumo.idInsumo) {
+                  <option [ngValue]="insumo.idInsumo">{{ insumo.nombreInsumo }} (stock: {{ insumo.stockActual }})</option>
+                }
+              </select>
+              <button type="button" class="btn btn-light" (click)="toggleFormInsumo()">Crear</button>
+            </div>
           </label>
         }
 
@@ -65,6 +68,13 @@
           Cantidad
           <input type="number" formControlName="cantidad" min="1" />
         </label>
+
+        @if (form.getRawValue().tipo === 'INGRESO') {
+          <label>
+            Monto total de compra (ARS)
+            <input type="number" formControlName="montoCompra" min="0" step="0.01" placeholder="0.00" />
+          </label>
+        }
 
         <label class="span-2">
           Motivo
@@ -208,37 +218,39 @@
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Tipo</th>
-            <th>Recurso</th>
-            <th>Cantidad</th>
-            <th>Motivo</th>
-            <th>Saldo posterior</th>
-            <th>Usuario</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (mov of movimientos(); track mov.idStockMovimiento) {
+          <thead>
             <tr>
-              <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td>
-                <span class="badge" [class.ingreso]="mov.tipo === 'INGRESO'" [class.egreso]="mov.tipo === 'EGRESO'">
-                  {{ mov.tipo }}
-                </span>
-              </td>
-              <td>{{ mov.nombreProducto || mov.nombreInsumo }}</td>
-              <td>{{ mov.cantidad }}</td>
-              <td>{{ mov.motivo }}</td>
-              <td>{{ mov.saldoPosterior }}</td>
-              <td>{{ mov.usuarioEmail }}</td>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Recurso</th>
+              <th>Cantidad</th>
+              <th>Costo</th>
+              <th>Motivo</th>
+              <th>Saldo posterior</th>
+              <th>Usuario</th>
             </tr>
-          } @empty {
-            <tr>
-              <td colspan="7" class="empty">No hay movimientos registrados.</td>
-            </tr>
-          }
+          </thead>
+          <tbody>
+            @for (mov of movimientos(); track mov.idStockMovimiento) {
+              <tr>
+                <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <span class="badge" [class.ingreso]="mov.tipo === 'INGRESO'" [class.egreso]="mov.tipo === 'EGRESO'">
+                    {{ mov.tipo }}
+                  </span>
+                </td>
+                <td>{{ mov.nombreProducto || mov.nombreInsumo }}</td>
+                <td>{{ mov.cantidad }}</td>
+                <td>{{ mov.montoCompra ? '$' + mov.montoCompra : '-' }}</td>
+                <td>{{ mov.motivo }}</td>
+                <td>{{ mov.saldoPosterior }}</td>
+                <td>{{ mov.usuarioEmail }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="8" class="empty">No hay movimientos registrados.</td>
+              </tr>
+            }
         </tbody>
       </table>
     </div>
@@ -246,3 +258,28 @@
 </div>
   </div>
 </div>
+
+@if (mostrarFormInsumo()) {
+  <div class="modal-overlay" (click)="toggleFormInsumo()">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3>Nuevo insumo</h3>
+        <button type="button" class="modal-close" (click)="toggleFormInsumo()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label>Nombre <input type="text" (input)="nombreInsumo.set($any($event.target).value)" placeholder="Ej: Pan, Tomate..." /></label>
+        <label>Unidad de medida</label>
+        <div class="unidad-btn-group">
+          <button type="button" class="unidad-btn" [class.active]="unidadMedida() === 'gramos'" (click)="unidadMedida.set('gramos')">gramos</button>
+          <button type="button" class="unidad-btn" [class.active]="unidadMedida() === 'mililitros'" (click)="unidadMedida.set('mililitros')">mililitros</button>
+          <button type="button" class="unidad-btn" [class.active]="unidadMedida() === 'unidad'" (click)="unidadMedida.set('unidad')">unidad</button>
+        </div>
+        <label>Stock inicial <input type="number" (input)="stockInicial.set($any($event.target).valueAsNumber || 0)" min="0" placeholder="0" /></label>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-light" (click)="toggleFormInsumo()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarInsumo()" [disabled]="guardandoInsumo()">{{ guardandoInsumo() ? 'Guardando...' : 'Guardar insumo' }}</button>
+      </div>
+    </div>
+  </div>
+}

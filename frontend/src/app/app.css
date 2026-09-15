@@ -4,7 +4,7 @@
   --color-primary: #e63946;
   --color-primary-dark: #c92a37;
   --color-primary-soft: #fdecee;
-  --color-accent: #1f6feb;
+  --color-accent: #c0392b;
   --color-ink: #1a2230;
   --color-ink-soft: #5b6675;
   --color-muted: #8a94a6;
@@ -67,13 +67,14 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: #c0392b;
   color: #fff;
-  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
+  box-shadow: 0 6px 16px rgba(192, 57, 43, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
-  box-shadow: 0 10px 22px rgba(230, 57, 70, 0.45);
+  background: #a93226;
+  box-shadow: 0 10px 22px rgba(192, 57, 43, 0.45);
 }
 
 .btn-light {

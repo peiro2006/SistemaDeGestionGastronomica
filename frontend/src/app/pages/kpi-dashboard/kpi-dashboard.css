@@ -2,11 +2,6 @@
 .admin-header{ display:flex; justify-content:space-between; gap:1.25rem; align-items:center; max-width:1280px; margin:0 auto 1.25rem; background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; box-shadow:0 4px 20px rgba(15,23,42,.06); position:sticky; top:14px; z-index:20}
 .admin-header h1{ margin:0; color:#0f172a; letter-spacing:-.015em; font-size:1.35rem}
 .eyebrow{ margin:0 0 0.3rem; text-transform:uppercase; letter-spacing:.1em; font-size:.68rem; color:#64748b; font-weight:800}
-.nav-actions{ display:flex; flex-wrap:wrap; gap:4px; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:999px; padding:4px}
-.nav-actions a{ padding:8px 14px; border-radius:999px; font-size:.8rem; font-weight:700; color:#475569; text-decoration:none; transition:all .18s; letter-spacing:.02em; white-space:nowrap}
-.nav-actions a:hover{ background:#fff; color:#0f172a; box-shadow:0 2px 8px rgba(15,23,42,.08)}
-.nav-actions a.active{ background:#0f172a; color:#fff; box-shadow:0 2px 10px rgba(15,23,42,.18)}
-.kpi-shell{ --ventas:#1e3a5f; --marketing:#3b3f6b; --finanzas:#0f4a3f; --rrhh:#5a3a1a; --stock:#3f3f46; --bg:#f8fafc; --line:#e2e8f0 }
 .subtitle{ font-size:.84rem; color:#64748b; margin-top:6px; letter-spacing:.01em}
 .hero{ background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:22px 24px; display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:20px; box-shadow:0 1px 2px rgba(15,23,42,.05)}
 .hero h1{ font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin:0; color:#0f172a}
@@ -35,9 +30,7 @@
 .kpi-trend{ font-size:.70rem; font-weight:700; padding:3px 8px; border-radius:999px; background:#f1f5f9; color:#475569; border:1px solid #e2e8f0}
 .kpi-trend.up{ background:#f0fdf4; color:#166534; border-color:#bbf7d0} .kpi-trend.down{ background:#fef2f2; color:#991b1b; border-color:#fecaca}
 .kpi-value{ font-size:1.5rem; font-weight:800; color:#0f172a; line-height:1.1; letter-spacing:-.02em}
-.kpi-value.highlight{ color:#0f172a}
 .kpi-sub{ font-size:.72rem; color:#94a3b8; margin-top:4px; line-height:1.4}
-.kpi-card.wide{ grid-column:span 6}
 .charts-grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:16px; margin-bottom:18px}
 .chart-card{ grid-column:span 6; background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:18px; box-shadow:0 1px 2px rgba(15,23,42,.04)}
 .chart-card.span4{ grid-column:span 4} .chart-card.span8{ grid-column:span 8} .chart-card.span12{ grid-column:span 12}
@@ -64,5 +57,13 @@
 .explain-card h3{ font-size:.84rem; font-weight:700; margin:0 0 4px; color:#0f172a} .explain-card p{ font-size:.78rem; color:#475569; margin:0; line-height:1.45}
 .hint{ font-size:.72rem; color:#94a3b8; margin-top:8px; text-align:center}
 .empty{ color:#94a3b8; text-align:center; padding:14px; background:#f8fafc; border-radius:10px; border:1px dashed #e2e8f0; font-size:.84rem}
+.meta-editable{ cursor:pointer; border-bottom:1px dashed #64748b; transition:all .15s}
+.meta-editable:hover{ color:#0f172a; border-bottom-color:#0f172a}
+.meta-edit-inline{ display:inline-flex; align-items:center; gap:6px}
+.meta-input{ width:140px; border:1px solid #cbd5e1; border-radius:6px; padding:4px 8px; font:inherit; font-weight:700; color:#0f172a}
+.meta-btn-save{ background:#10b981; color:#fff; border:none; border-radius:6px; padding:4px 10px; font-weight:700; cursor:pointer; font-size:.85rem}
+.meta-btn-save:hover{ background:#059669}
+.meta-btn-cancel{ background:#e9ecef; color:#495057; border:none; border-radius:6px; padding:4px 10px; font-weight:700; cursor:pointer; font-size:.85rem}
+.meta-btn-cancel:hover{ background:#dee2e6}
 @media(max-width:1100px){ .kpi-card{ grid-column:span 6} .chart-card{ grid-column:span 12} .chart-card.span4,.chart-card.span8{ grid-column:span 12} .explain-grid{ grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){ .kpi-grid{ grid-template-columns:repeat(2,1fr)} .kpi-card{ grid-column:span 1} .kpi-card.wide{ grid-column:span 2} .hero{ padding:18px} .chart-container.large{ height:280px}}

@@ -9,6 +9,7 @@ import com.example.SistemaDeGestion.interfaces.ICreateProductoService;
 import com.example.SistemaDeGestion.services.domain.CatalogoProductosService;
 import com.example.SistemaDeGestion.services.domain.ProductoEstadoService;
 import com.example.SistemaDeGestion.services.domain.ProductoGetService;
+import com.example.SistemaDeGestion.services.domain.ProductoStockMaximoService;
 import com.example.SistemaDeGestion.services.domain.ProductoUpdateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/Producto")
@@ -29,6 +31,7 @@ public class ProductoController {
     private final ProductoGetService productoGetService;
     private final ProductoUpdateService productoUpdateService;
     private final ProductoEstadoService productoEstadoService;
+    private final ProductoStockMaximoService productoStockMaximoService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -94,6 +97,41 @@ public class ProductoController {
                 BaseResponse.ok(
                         productoEstadoService.execute(idProducto, request.activo()),
                         "Estado del producto actualizado correctamente"
+                )
+        );
+    }
+
+    @GetMapping("/stock-maximo")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<Map<Long, Integer>>> stockMaximoTodos() {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        productoStockMaximoService.calcularStockMaximoTodos(),
+                        "Stock maximo calculado correctamente"
+                )
+        );
+    }
+
+    @GetMapping("/receta/{idReceta}/stock-maximo")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<Map<String, Integer>>> stockMaximoPorReceta(@PathVariable Long idReceta) {
+        int stockMaximo = productoStockMaximoService.calcularStockMaximoPorReceta(idReceta);
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        Map.of("stockMaximo", stockMaximo),
+                        "Stock maximo calculado correctamente"
+                )
+        );
+    }
+
+    @GetMapping("/{idProducto}/stock-maximo")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<Map<String, Integer>>> stockMaximo(@PathVariable Long idProducto) {
+        int stockMaximo = productoStockMaximoService.calcularStockMaximo(idProducto);
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        Map.of("stockMaximo", stockMaximo),
+                        "Stock maximo calculado correctamente"
                 )
         );
     }

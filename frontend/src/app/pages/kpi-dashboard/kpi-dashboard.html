@@ -1,4 +1,7 @@
-<div class="admin-layout">`n  <app-admin-sidebar />`n  <div class="admin-main">`n    <div class="admin-shell">
+<div class="admin-layout">
+  <app-admin-sidebar />
+  <div class="admin-main">
+    <div class="admin-shell">
   <header class="admin-header">
     <div>
       <p class="eyebrow">Panel de análisis — Tiempo definido · Datos medibles · Control</p>
@@ -16,7 +19,18 @@
     <div class="hero">
       <div>
         <h1>Objetivos estratégicos — Cumplimiento {{k.cumplimientoMeta}}%</h1>
-        <p>Meta mensual {{fmtARS(k.metaMensual)}} · Ingresos 30d {{fmtARS(k.ingresos30Dias)}} · {{k.tasaExito}}% pedidos entregados</p>
+        <p>
+          @if (editandoMeta()) {
+            <span class="meta-edit-inline">
+              Meta mensual <input type="number" [value]="metaMensualEdit()" (input)="metaMensualEdit.set($any($event.target).valueAsNumber)" min="0" step="1000" class="meta-input" /> ARS
+              <button class="meta-btn-save" (click)="guardarMeta()">✓</button>
+              <button class="meta-btn-cancel" (click)="cancelarMeta()">✗</button>
+            </span>
+          } @else {
+            <span class="meta-editable" (click)="iniciarEdicionMeta()">Meta mensual {{fmtARS(k.metaMensual)}} ✎</span>
+          }
+          · Ingresos 30d {{fmtARS(k.ingresos30Dias)}} · {{k.tasaExito}}% pedidos entregados
+        </p>
       </div>
       <div class="hero-badge"><strong>{{k.cumplimientoMeta}}%</strong><span>cumplimiento meta</span></div>
       <div class="hero-badge"><strong>{{fmt(k.totalPedidos)}}</strong><span>pedidos totales</span></div>
@@ -35,7 +49,6 @@
       <div class="kpi-grid">
         <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Total pedidos</span><span class="kpi-trend" [class.up]="k.tasaExito>=70" [class.down]="k.tasaExito<50">{{k.tasaExito}}% éxito</span></div><span class="kpi-value">{{fmt(k.totalPedidos)}}</span><span class="kpi-sub">7d {{k.pedidos7Dias}} · 30d {{k.pedidos30Dias}} · 90d {{k.pedidos90Dias}}</span></div>
         <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Ingresos totales</span><span class="kpi-trend up">{{fmtARS(k.promedioPedido)}} prom.</span></div><span class="kpi-value highlight">{{fmtARS(k.ingresosTotales)}}</span><span class="kpi-sub">7d {{fmtARS(k.ingresos7Dias)}} · 30d {{fmtARS(k.ingresos30Dias)}} · 90d {{fmtARS(k.ingresos90Dias)}}</span></div>
-        <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Tasa conversión</span><span class="kpi-trend">{{k.tasaConversion}}% conv.</span></div><span class="kpi-value">{{k.tasaConversion}}%</span><span class="kpi-sub">CAC {{fmtARS(k.cac)}} · 30d {{fmtARS(k.cac30)}}</span></div>
         <div class="kpi-card ventas"><div class="kpi-top"><span class="kpi-label">Tasa cancelación</span><span class="kpi-trend down">{{k.tasaCancelacion}}% canc.</span></div><span class="kpi-value">{{k.tasaCancelacion}}%</span><span class="kpi-sub">Éxito {{k.tasaExito}}% — control operativo</span></div>
       </div>
     </div>
@@ -45,18 +58,17 @@
       <div class="area-head"><span class="area-dot" style="background:var(--marketing)"></span><span class="area-title">Marketing</span><span class="area-line"></span><span class="area-dot" style="background:var(--finanzas)"></span><span class="area-title">Finanzas</span><span class="area-line"></span><span class="area-dot" style="background:var(--rrhh)"></span><span class="area-title">RRHH</span><span class="area-line"></span></div>
       <div class="kpi-grid">
         <div class="kpi-card marketing"><div class="kpi-top"><span class="kpi-label">Tráfico web 30d</span><span class="kpi-trend">CTR {{k.ctr}}%</span></div><span class="kpi-value">{{fmt(k.traficoWeb30)}}</span><span class="kpi-sub">7d {{k.traficoWeb7}} · CTR 7d {{k.ctr7}}%</span></div>
-        <div class="kpi-card marketing"><div class="kpi-top"><span class="kpi-label">CTR — % clics</span><span class="kpi-trend up">{{k.ctr}}%</span></div><span class="kpi-value">{{k.ctr}}%</span><span class="kpi-sub">Pedidos / visitas · medible</span></div>
-        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">ROI — Retorno inversión</span><span class="kpi-trend up">ROI {{k.roi}}</span></div><span class="kpi-value highlight">{{k.roi}}</span><span class="kpi-sub">Ingresos / stock</span></div>
-        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">Margen beneficio neto</span><span class="kpi-trend">Margen {{k.margenBeneficio}}</span></div><span class="kpi-value">{{k.margenBeneficio}}</span><span class="kpi-sub">30d {{k.margen30}} ARS/pedido</span></div>
+        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">Inversión total stock</span><span class="kpi-trend">Compra</span></div><span class="kpi-value">{{fmtARS(k.inversionTotal)}}</span><span class="kpi-sub">Suma de costos de compra de stock</span></div>
+        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">ROI — Retorno inversión</span><span class="kpi-trend" [class.up]="k.roi >= 0" [class.down]="k.roi < 0">{{k.roi}}%</span></div><span class="kpi-value highlight">{{k.roi}}%</span><span class="kpi-sub">(Ingresos - Inversión) / Inversión</span></div>
+        <div class="kpi-card finanzas"><div class="kpi-top"><span class="kpi-label">Margen beneficio neto</span><span class="kpi-trend">{{k.margenBeneficio}}%</span></div><span class="kpi-value">{{k.margenBeneficio}}%</span><span class="kpi-sub">(Ingresos - Inversión) / Ingresos</span></div>
         <div class="kpi-card rrhh"><div class="kpi-top"><span class="kpi-label">Retención empleados</span><span class="kpi-trend" [class.up]="k.tasaRetencion>=60">{{k.tasaRetencion}}% ret.</span></div><span class="kpi-value">{{k.tasaRetencion}}%</span><span class="kpi-sub">Rotación {{k.tasaRotacion}}% · {{k.totalUsuarios}} usuarios</span></div>
         <div class="kpi-card stock"><div class="kpi-top"><span class="kpi-label">Stock total</span><span class="kpi-trend" [class.down]="k.stockBajo>0">{{k.stockBajo}} bajo</span></div><span class="kpi-value">{{fmt(k.stockTotal)}}</span><span class="kpi-sub">Activos {{k.productosActivos}}/{{k.totalProductos}} · Inactivos {{k.productosInactivos}}</span></div>
-        <div class="kpi-card stock wide"><div class="kpi-top"><span class="kpi-label">Proveedores</span><span class="kpi-trend">{{k.proveedoresActivos}}/{{k.totalProveedores}} act.</span></div><span class="kpi-value">{{k.proveedoresActivos}}/{{k.totalProveedores}}</span><span class="kpi-sub">Productos con proveedor vs sin proveedor — control</span></div>
       </div>
     </div>
 
     <!-- GRÁFICOS FILA 1 -->
     <div class="charts-grid">
-      <div class="card chart-card"><div class="chart-head"><h2>Pedidos por estado</h2><span class="chart-meta">Control operativo</span></div><div class="chart-container compact"><canvas #estadoChart></canvas></div>
+      <div class="card chart-card"><div class="chart-head"><h2>Historial total de pedidos</h2><span class="chart-meta">Control operativo</span></div><div class="chart-container compact"><canvas #estadoChart></canvas></div>
         <div class="breakdown-list">@for (est of estados; track est.estado) {<div class="breakdown-item"><span class="badge" [style.background]="estadoColor(est.estado)">{{etiquetaEstado(est.estado)}}</span><span class="breakdown-count">{{est.count}}</span><div class="breakdown-bar"><div class="breakdown-fill" [style.width.%]="maxBarWidth(est.count)" [style.background]="estadoColor(est.estado)"></div></div></div>}</div>
       </div>
       <div class="card chart-card"><div class="chart-head"><h2>Ingresos por método de pago</h2><span class="chart-meta">Finanzas</span></div><div class="chart-container compact"><canvas #metodoPagoChart></canvas></div>
@@ -75,8 +87,7 @@
     <div class="charts-grid">
       <div class="card chart-card"><div class="chart-head"><h2>Ingresos 7 / 30 / 90 días</h2><span class="chart-meta">Objetivos estratégicos</span></div><div class="chart-container"><canvas #ingresosChart></canvas></div><p class="hint">Comparativa vs meta mensual</p></div>
       <div class="card chart-card"><div class="chart-head"><h2>Stock por categoría</h2><span class="chart-meta">Stock</span></div><div class="chart-container"><canvas #stockCatChart></canvas></div></div>
-      <div class="card chart-card span4"><div class="chart-head"><h2>Productos por proveedor</h2><span class="chart-meta">Proveedores</span></div><div class="chart-container compact"><canvas #proveedorChart></canvas></div></div>
-      <div class="card chart-card span4"><div class="chart-head"><h2>Usuarios por rol</h2><span class="chart-meta">RRHH</span></div><div class="chart-container compact"><canvas #usuariosChart></canvas></div><p class="hint">Retención {{k.tasaRetencion}}%</p></div>
+      <div class="card chart-card"><div class="chart-head"><h2>Usuarios por rol</h2><span class="chart-meta">RRHH</span></div><div class="chart-container compact"><canvas #usuariosChart></canvas></div><p class="hint">Retención {{k.tasaRetencion}}%</p></div>
     </div>
 
     <section class="kpi-explain">

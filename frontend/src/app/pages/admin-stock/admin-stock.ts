@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Producto } from '../../models/producto.models';
 import { Insumo } from '../../models/insumo.models';
@@ -12,7 +12,7 @@ import { StockService } from '../../services/stock.service';
 
 @Component({
   selector: 'app-admin-stock',
-  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, DatePipe, AdminSidebarComponent],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, AdminSidebarComponent],
   templateUrl: './admin-stock.html',
   styleUrl: './admin-stock.css'
 })
@@ -30,6 +30,11 @@ export class AdminStockComponent implements OnInit {
   readonly filtroIdInsumo = signal(0);
   readonly cargando = signal(false);
   readonly guardando = signal(false);
+  readonly guardandoInsumo = signal(false);
+  readonly mostrarFormInsumo = signal(false);
+  readonly nombreInsumo = signal('');
+  readonly unidadMedida = signal('');
+  readonly stockInicial = signal(0);
   readonly mensaje = signal<string | null>(null);
   readonly error = signal<string | null>(null);
 
@@ -39,7 +44,8 @@ export class AdminStockComponent implements OnInit {
     idInsumo: [0],
     tipo: ['INGRESO' as TipoMovimientoStock, [Validators.required]],
     cantidad: [1, [Validators.required, Validators.min(1)]],
-    motivo: ['', [Validators.required]]
+    motivo: ['', [Validators.required]],
+    montoCompra: [0]
   });
 
   ngOnInit(): void {
@@ -138,13 +144,14 @@ export class AdminStockComponent implements OnInit {
         idInsumo: value.destino === 'insumo' ? value.idInsumo : null,
         tipo: value.tipo,
         cantidad: value.cantidad,
-        motivo: value.motivo.trim()
+        motivo: value.motivo.trim(),
+        montoCompra: value.tipo === 'INGRESO' && value.montoCompra > 0 ? value.montoCompra : null
       })
       .subscribe({
         next: () => {
           this.guardando.set(false);
           this.mensaje.set('Stock actualizado correctamente');
-          this.form.patchValue({ cantidad: 1, motivo: '' });
+          this.form.patchValue({ cantidad: 1, motivo: '', montoCompra: 0 });
           this.cargarDatos();
         },
         error: (err) => {
@@ -157,6 +164,47 @@ export class AdminStockComponent implements OnInit {
   actualizarDestino(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.form.patchValue({ idProducto: 0, idInsumo: 0 });
+  }
+
+  toggleFormInsumo(): void {
+    this.mostrarFormInsumo.update(v => !v);
+    if (!this.mostrarFormInsumo()) {
+      this.nombreInsumo.set('');
+      this.unidadMedida.set('');
+      this.stockInicial.set(0);
+    }
+  }
+
+  guardarInsumo(): void {
+    if (!this.nombreInsumo().trim() || !this.unidadMedida().trim()) {
+      this.error.set('Complete nombre y unidad de medida.');
+      return;
+    }
+
+    this.guardandoInsumo.set(true);
+    this.error.set(null);
+
+    this.insumosService
+      .crear({
+        nombreInsumo: this.nombreInsumo().trim(),
+        unidadMedida: this.unidadMedida().trim(),
+        stockActual: this.stockInicial()
+      })
+      .subscribe({
+        next: () => {
+          this.guardandoInsumo.set(false);
+          this.mostrarFormInsumo.set(false);
+          this.nombreInsumo.set('');
+          this.unidadMedida.set('');
+          this.stockInicial.set(0);
+          this.mensaje.set('Insumo creado correctamente');
+          this.cargarDatos();
+        },
+        error: (err) => {
+          this.guardandoInsumo.set(false);
+          this.error.set(this.extraerError(err));
+        }
+      });
   }
 
   stockBajoProducto(producto: Producto): boolean {

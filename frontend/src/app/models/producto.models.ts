@@ -12,6 +12,7 @@ export interface Producto {
   nombreReceta?: string | null;
   idProveedor?: number;
   nombreProveedor?: string | null;
+  stockMaximo?: number | null;
 }
 
 export interface ProductoCreateRequest {

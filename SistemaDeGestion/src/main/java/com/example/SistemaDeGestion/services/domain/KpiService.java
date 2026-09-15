@@ -3,11 +3,13 @@ package com.example.SistemaDeGestion.services.domain;
 import com.example.SistemaDeGestion.models.Pedido;
 import com.example.SistemaDeGestion.models.PedidoItem;
 import com.example.SistemaDeGestion.models.Producto;
+import com.example.SistemaDeGestion.models.StockMovimiento;
 import com.example.SistemaDeGestion.models.Usuario;
 import com.example.SistemaDeGestion.repositories.PedidoItemRepository;
 import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import com.example.SistemaDeGestion.repositories.ProveedorRepository;
+import com.example.SistemaDeGestion.repositories.StockMovimientosRepository;
 import com.example.SistemaDeGestion.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class KpiService {
     private final PedidoItemRepository pedidoItemRepository;
     private final ProveedorRepository proveedorRepository;
     private final UsuarioRepository usuarioRepository;
+    private final StockMovimientosRepository stockMovimientosRepository;
+    private final ConfiguracionService configuracionService;
 
     @Transactional(readOnly = true)
     public Map<String, Object> obtenerKPIs() {
@@ -115,11 +119,24 @@ public class KpiService {
         kpis.put("ctr", Math.round(ctr * 100.0) / 100.0);
         kpis.put("ctr7", Math.round(ctr7 * 100.0) / 100.0);
 
-        // === FINANZAS: ROI, Margen ===
-        double margen = productosActivos > 0 ? ingresosTotales.doubleValue() / productosActivos.doubleValue() : 0;
-        kpis.put("margenBeneficio", Math.round(margen * 100.0) / 100.0);
-        double roi = stockTotal.compareTo(BigDecimal.ZERO) > 0 ? ingresosTotales.doubleValue() / stockTotal.doubleValue() : 0;
-        kpis.put("roi", Math.round(roi * 100.0) / 100.0);
+        // === FINANZAS: ROI, Margen (reales, basados en inversion de stock) ===
+        List<StockMovimiento> todosMovimientos = stockMovimientosRepository.findAll();
+        BigDecimal inversionTotal = todosMovimientos.stream()
+                .filter(m -> "INGRESO".equals(m.getTipo()) && m.getMontoCompra() != null)
+                .map(StockMovimiento::getMontoCompra)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        kpis.put("inversionTotal", inversionTotal);
+
+        double roiReal = inversionTotal.compareTo(BigDecimal.ZERO) > 0
+                ? ingresosTotales.subtract(inversionTotal).doubleValue() / inversionTotal.doubleValue() * 100
+                : 0;
+        kpis.put("roi", Math.round(roiReal * 100.0) / 100.0);
+
+        double margenReal = ingresosTotales.compareTo(BigDecimal.ZERO) > 0
+                ? ingresosTotales.subtract(inversionTotal).doubleValue() / ingresosTotales.doubleValue() * 100
+                : 0;
+        kpis.put("margenBeneficio", Math.round(margenReal * 100.0) / 100.0);
+
         // Margen neto 30d
         double margen30 = pedidos30 > 0 ? ingresos30.doubleValue() / (double) pedidos30 : 0;
         kpis.put("margen30", Math.round(margen30 * 100.0) / 100.0);
@@ -170,7 +187,7 @@ public class KpiService {
         kpis.put("tasaRotacion", Math.round((100 - retencion) * 100.0) / 100.0);
 
         // === OBJETIVOS ESTRATÉGICOS: cumplimiento metas ===
-        BigDecimal metaMensual = new BigDecimal("100000");
+        BigDecimal metaMensual = configuracionService.obtenerMetaMensual();
         double cumplimiento = metaMensual.compareTo(BigDecimal.ZERO) > 0 ? ingresos30.doubleValue() / metaMensual.doubleValue() * 100 : 0;
         kpis.put("metaMensual", metaMensual);
         kpis.put("cumplimientoMeta", Math.round(cumplimiento * 100.0) / 100.0);

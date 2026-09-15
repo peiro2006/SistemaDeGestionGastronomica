@@ -56,9 +56,10 @@ public class PedidoCreateService implements IPedidoCreateService {
 
         Pedido pedido = PedidoMapper.toModel(request, usuario);
         BigDecimal total = BigDecimal.ZERO;
+        java.util.List<Producto> productosADescontar = new java.util.ArrayList<>();
 
         for (PedidoItemReqDto itemDto : request.items()) {
-            Producto producto = productosRepository.findById(itemDto.idProducto())
+            Producto producto = productosRepository.findByIdForUpdate(itemDto.idProducto())
                     .orElseThrow(() -> new NotFoundException("Producto no encontrado con id " + itemDto.idProducto()));
 
             if (producto.getActivo() != null && !producto.getActivo()) {
@@ -71,8 +72,10 @@ public class PedidoCreateService implements IPedidoCreateService {
                         ". Disponible: " + stockActual + ", solicitado: " + itemDto.cantidad());
             }
 
+            producto.setStockActual(stockActual - itemDto.cantidad());
+            productosADescontar.add(producto);
+
             PedidoItem item = PedidoMapper.toItemModel(itemDto, producto);
-            // Defensa: asegurar que precioUnitario y subtotal no sean null
             if (item.getPrecioUnitario() == null) {
                 BigDecimal precio = new BigDecimal(producto.getPrecio());
                 item.setPrecioUnitario(precio);
@@ -84,13 +87,13 @@ public class PedidoCreateService implements IPedidoCreateService {
             total = total.add(item.getSubtotal());
         }
 
-        // Validar que exista una caja activa
         Caja cajaActiva = cajaRepository.findFirstByEstadoOrderByFechaCreacionDesc(EstadoCaja.ACTIVA)
                 .orElseThrow(() -> new BadRequestException("Lo sentimos, no se ha podido procesar el pedido"));
 
         pedido.setTotal(total);
         pedido.setCaja(cajaActiva);
         Pedido guardado = pedidoRepository.save(pedido);
+        productosRepository.saveAll(productosADescontar);
 
         return PedidoMapper.toResponseDto(guardado);
     }

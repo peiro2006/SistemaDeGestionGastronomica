@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,4 +28,7 @@ public interface ProductosRepository extends JpaRepository<Producto, Long>, JpaS
 
     @Query("SELECT COUNT(p) FROM Producto p WHERE p.activo = true")
     Long countByActivoTrue();
+
+    @Query("SELECT p FROM Producto p LEFT JOIN FETCH p.receta r LEFT JOIN FETCH r.ingredientes ri LEFT JOIN FETCH ri.insumo")
+    List<Producto> findAllConRecetaEIngredientes();
 }

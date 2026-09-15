@@ -1,6 +1,9 @@
 <div class="cocina-shell">
   <header class="cocina-header">
-    <h1>Pedidos pendientes</h1>
+    <div class="cocina-header-left">
+      <button class="btn-volver" (click)="volver()">&#8592; Volver</button>
+      <h1>Pedidos en preparaci&oacute;n</h1>
+    </div>
     <span class="cocina-reloj">{{ ultimaActualizacion() | date:'HH:mm:ss' }}</span>
   </header>
 
@@ -22,6 +25,6 @@
       }
     </div>
   } @else {
-    <div class="cocina-vacio">Sin pedidos pendientes</div>
+    <div class="cocina-vacio">Sin pedidos en preparaci&oacute;n</div>
   }
 </div>

@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Pedido } from '../../models/pedido.models';
 import { PedidosService } from '../../services/pedidos.service';
+import { AuthService } from '../../services/auth.service';
 import { RecetasService } from '../../services/recetas.service';
 import { Receta } from '../../models/receta.models';
 
@@ -15,6 +16,8 @@ import { Receta } from '../../models/receta.models';
 export class EmpleadoPedidosComponent implements OnInit {
   private readonly pedidosService = inject(PedidosService);
   private readonly recetasService = inject(RecetasService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly pedidos = signal<Pedido[]>([]);
@@ -74,19 +77,29 @@ export class EmpleadoPedidosComponent implements OnInit {
       `Pedido #${idPedido} → ${this.etiquetaEstado(nuevoEstado)}`
     );
     this.pedidosService.cambiarEstado(idPedido, nuevoEstado).subscribe({
-      next: () => {
+      next: (res) => {
         this.guardando.set(null);
         this.mostrarToastExito(
           'Estado actualizado',
           `Pedido #${idPedido} → ${this.etiquetaEstado(nuevoEstado)}`
         );
-        this.cargarPedidos();
+        const actualizado = res.data;
+        if (actualizado) {
+          this.pedidos.update(pedidos =>
+            pedidos.map(p => p.idPedido === actualizado.idPedido ? actualizado : p)
+          );
+        }
       },
       error: (err) => {
         this.guardando.set(null);
         this.mostrarToastError('Error al actualizar', this.extraerError(err));
       }
     });
+  }
+
+  cerrarSesion(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   toggleRecetas(): void {

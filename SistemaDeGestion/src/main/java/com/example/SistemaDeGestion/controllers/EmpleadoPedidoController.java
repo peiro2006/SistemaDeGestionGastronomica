@@ -35,6 +35,17 @@ public class EmpleadoPedidoController {
         );
     }
 
+    @GetMapping("/en-preparacion")
+    @PreAuthorize("hasRole('EMPLEADO')")
+    public ResponseEntity<BaseResponse<List<PedidoResDto>>> pedidosEnPreparacion() {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        pedidoListService.pedidosPorEstado("EN_PREPARACION"),
+                        "Pedidos en preparación obtenidos correctamente"
+                )
+        );
+    }
+
     @PutMapping("/{id}/estado")
     @PreAuthorize("hasRole('EMPLEADO')")
     public ResponseEntity<BaseResponse<PedidoResDto>> cambiarEstado(

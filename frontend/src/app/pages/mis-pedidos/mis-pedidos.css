@@ -9,22 +9,39 @@
   gap: 1rem;
   align-items: center;
   padding: 0.9rem 1.5rem;
-  background: #1f2d3d;
+  background: linear-gradient(120deg, #c0392b 0%, #e74c3c 100%);
   color: #ffffff;
 }
 
 .pedidos-header h1 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  font-family: 'Lilita One', cursive;
 }
 
-.eyebrow {
-  margin: 0 0 0.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.slogan {
   font-size: 0.7rem;
-  color: #adb5bd;
-  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .nav-actions {
@@ -248,9 +265,9 @@
 }
 
 .ctrl-btn:hover:not(:disabled) {
-  border-color: #0d6efd;
-  color: #0d6efd;
-  background: #e7f1ff;
+  border-color: #c0392b;
+  color: #c0392b;
+  background: #fef2f2;
 }
 
 .ctrl-btn:disabled {
@@ -287,7 +304,7 @@ textarea {
 }
 
 .btn-primary {
-  background: #0d6efd;
+  background: #c0392b;
   color: #ffffff;
 }
 

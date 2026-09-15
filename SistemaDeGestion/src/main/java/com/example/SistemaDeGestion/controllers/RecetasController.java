@@ -5,6 +5,7 @@ import com.example.SistemaDeGestion.dtos.request.RecetaCreateReqDto;
 import com.example.SistemaDeGestion.dtos.response.RecetaCreateResDto;
 import com.example.SistemaDeGestion.interfaces.IRecetaCreateService;
 import com.example.SistemaDeGestion.interfaces.IRecetaListService;
+import com.example.SistemaDeGestion.interfaces.IRecetaUpdateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class RecetasController {
 
     private final IRecetaCreateService recetaCreateService;
     private final IRecetaListService recetaListService;
+    private final IRecetaUpdateService recetaUpdateService;
 
     @PostMapping
     public ResponseEntity<BaseResponse<RecetaCreateResDto>> createReceta(
@@ -28,6 +30,19 @@ public class RecetasController {
                 BaseResponse.ok(
                         recetaCreateService.execute(request),
                         "Receta creada correctamente"
+                )
+        );
+    }
+
+    @PutMapping("/{idReceta}")
+    public ResponseEntity<BaseResponse<RecetaCreateResDto>> updateReceta(
+            @PathVariable Long idReceta,
+            @Valid @RequestBody RecetaCreateReqDto request
+    ) {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        recetaUpdateService.execute(idReceta, request),
+                        "Receta actualizada correctamente"
                 )
         );
     }

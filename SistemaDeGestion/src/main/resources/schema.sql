@@ -32,6 +32,16 @@ UPDATE proveedor SET activo = true WHERE activo IS NULL;
 ALTER TABLE proveedor ALTER COLUMN correo DROP NOT NULL;
 ALTER TABLE proveedor ALTER COLUMN razon_social DROP NOT NULL;
 ALTER TABLE proveedor ALTER COLUMN cuit_rut DROP NOT NULL;
+
+ALTER TABLE stock_movimiento ADD COLUMN IF NOT EXISTS monto_compra NUMERIC(12,2);
+
+CREATE TABLE IF NOT EXISTS configuracion (
+    id BIGSERIAL PRIMARY KEY,
+    clave VARCHAR(100) NOT NULL UNIQUE,
+    valor NUMERIC(12,2) NOT NULL DEFAULT 0
+);
+
+INSERT INTO configuracion (clave, valor) VALUES ('META_MENSUAL', 100000.00) ON CONFLICT (clave) DO NOTHING;
 ALTER TABLE proveedor ALTER COLUMN fecha_alta DROP NOT NULL;
 ALTER TABLE proveedor DROP CONSTRAINT IF EXISTS uk5gqejexbar9nni42kh4vfusu0;
 ALTER TABLE proveedor DROP CONSTRAINT IF EXISTS uk_cuit_rut;

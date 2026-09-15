@@ -39,7 +39,7 @@ public class PedidoListService implements IPedidoListService {
     public List<PedidoResDto> pedidosPorEstado(String estado) {
         try {
             EstadoPedido estadoPedido = EstadoPedido.valueOf(estado.toLowerCase());
-            return PedidoMapper.toResponseDtoList(pedidoRepository.findByEstadoOrderByFechaCreacionAsc(estadoPedido));
+            return PedidoMapper.toResponseDtoList(pedidoRepository.findByEstadoConItemsYProducto(estadoPedido));
         } catch (IllegalArgumentException e) {
             throw new com.example.SistemaDeGestion.configs.exceptions.BadRequestException("Estado inválido: " + estado);
         }

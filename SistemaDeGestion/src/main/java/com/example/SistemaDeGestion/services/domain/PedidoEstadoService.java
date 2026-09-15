@@ -6,19 +6,19 @@ import com.example.SistemaDeGestion.dtos.request.EstadoPedidoReqDto;
 import com.example.SistemaDeGestion.dtos.response.PedidoResDto;
 import com.example.SistemaDeGestion.interfaces.IPedidoEstadoService;
 import com.example.SistemaDeGestion.mappers.PedidoMapper;
-import com.example.SistemaDeGestion.models.EstadoPedido;
-import com.example.SistemaDeGestion.models.MetodoPago;
-import com.example.SistemaDeGestion.models.Pedido;
-import com.example.SistemaDeGestion.models.PedidoItem;
-import com.example.SistemaDeGestion.models.Producto;
+import com.example.SistemaDeGestion.models.*;
 import com.example.SistemaDeGestion.repositories.CajaRepository;
+import com.example.SistemaDeGestion.repositories.InsumosRepository;
 import com.example.SistemaDeGestion.repositories.PedidoRepository;
 import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +27,7 @@ public class PedidoEstadoService implements IPedidoEstadoService {
     private final PedidoRepository pedidoRepository;
     private final ProductosRepository productosRepository;
     private final CajaRepository cajaRepository;
+    private final InsumosRepository insumosRepository;
 
     @Override
     @Transactional
@@ -62,12 +63,31 @@ public class PedidoEstadoService implements IPedidoEstadoService {
     }
 
     private void descontarStock(Pedido pedido) {
+        List<Insumo> insumosActualizar = new ArrayList<>();
+
         for (PedidoItem item : pedido.getItems()) {
             Producto producto = item.getProducto();
-            Integer stockActual = producto.getStockActual() != null ? producto.getStockActual() : 0;
-            int cantidad = item.getCantidad() != null ? item.getCantidad() : 0;
-            producto.setStockActual(stockActual - cantidad);
-            productosRepository.save(producto);
+            int cantidadPedido = item.getCantidad() != null ? item.getCantidad() : 0;
+
+            if (producto.getReceta() == null || producto.getReceta().getIngredientes() == null) {
+                continue;
+            }
+
+            for (RecetaInsumo recetaInsumo : producto.getReceta().getIngredientes()) {
+                Insumo insumo = insumosRepository.findByIdForUpdate(recetaInsumo.getInsumo().getIdInsumo())
+                        .orElse(null);
+                if (insumo == null) continue;
+
+                BigDecimal cantidadNecesaria = recetaInsumo.getCantidad().multiply(BigDecimal.valueOf(cantidadPedido));
+                int stockActual = insumo.getStockActual() != null ? insumo.getStockActual() : 0;
+                int nuevoStock = stockActual - cantidadNecesaria.intValue();
+                insumo.setStockActual(Math.max(0, nuevoStock));
+                insumosActualizar.add(insumo);
+            }
+        }
+
+        if (!insumosActualizar.isEmpty()) {
+            insumosRepository.saveAll(insumosActualizar);
         }
     }
 

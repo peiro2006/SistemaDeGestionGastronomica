@@ -23,6 +23,7 @@ public class StockMovimientoMapper {
                 movimiento.getSaldoPosterior(),
                 movimiento.getUsuario() != null ? movimiento.getUsuario().getIdUsuario() : null,
                 movimiento.getUsuario() != null ? movimiento.getUsuario().getEmail() : null,
+                movimiento.getMontoCompra(),
                 movimiento.getFecha()
         );
     }

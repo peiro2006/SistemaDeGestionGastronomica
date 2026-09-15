@@ -27,7 +27,6 @@ export class AdminSidebarComponent {
       items: [
         { label: 'Productos', route: '/admin/productos' },
         { label: 'Stock', route: '/admin/stock' },
-        { label: 'Pedidos', route: '/empleado/pedidos' },
       ]
     },
     {

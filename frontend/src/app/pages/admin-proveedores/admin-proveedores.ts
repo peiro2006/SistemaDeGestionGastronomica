@@ -1,14 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Proveedor } from '../../models/proveedor.models';
 import { ProveedoresService } from '../../services/proveedores.service';
 
 @Component({
   selector: 'app-admin-proveedores',
-  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, DatePipe, AdminSidebarComponent],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, AdminSidebarComponent],
   templateUrl: './admin-proveedores.html',
   styleUrl: './admin-proveedores.css'
 })

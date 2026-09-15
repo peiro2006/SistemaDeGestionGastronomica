@@ -21,6 +21,10 @@ export class PedidosService {
     return this.http.get<BaseResponse<Pedido[]>>(`${this.apiUrl}/pedido`);
   }
 
+  listarEnPreparacion(): Observable<BaseResponse<Pedido[]>> {
+    return this.http.get<BaseResponse<Pedido[]>>(`${this.apiUrl}/empleado/pedido/en-preparacion`);
+  }
+
   obtenerPorId(idPedido: number): Observable<BaseResponse<Pedido>> {
     return this.http.get<BaseResponse<Pedido>>(`${this.apiUrl}/pedido/${idPedido}`);
   }

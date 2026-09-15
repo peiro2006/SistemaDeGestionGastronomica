@@ -134,7 +134,7 @@
           <div class="alert alert-error">{{ error() }}</div>
         }
 
-        <form [formGroup]="form" (ngSubmit)="guardar()">
+        <form [formGroup]="form" (ngSubmit)="guardar()" class="modal-form">
           <div class="form-group">
             <label>Nombre *</label>
             <input type="text" formControlName="nombre" placeholder="Ej: Caja Principal" />

@@ -60,6 +60,23 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+.btn-logout {
+  background: rgba(220, 38, 38, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-logout:hover {
+  background: rgba(220, 38, 38, 0.35);
+  color: #fff;
+}
+
 .pedidos-seccion {
   max-width: 1200px;
   margin: 0 auto;
