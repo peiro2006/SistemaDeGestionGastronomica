@@ -154,6 +154,7 @@
               <th>Nombre</th>
               <th>Unidad de medida</th>
               <th>Stock actual</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -162,10 +163,13 @@
                 <td>{{ insumo.nombreInsumo }}</td>
                 <td>{{ insumo.unidadMedida }}</td>
                 <td>{{ insumo.stockActual }}</td>
+                <td>
+                  <button type="button" class="btn btn-light btn-sm" (click)="editarInsumo(insumo)">Editar</button>
+                </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="3" class="empty">No hay insumos.</td>
+                <td colspan="4" class="empty">No hay insumos.</td>
               </tr>
             }
           </tbody>
@@ -263,22 +267,22 @@
   <div class="modal-overlay" (click)="toggleFormInsumo()">
     <div class="modal-panel" (click)="$event.stopPropagation()">
       <div class="modal-head">
-        <h3>Nuevo insumo</h3>
+        <h3>{{ editandoInsumo() ? 'Editar insumo' : 'Nuevo insumo' }}</h3>
         <button type="button" class="modal-close" (click)="toggleFormInsumo()">&times;</button>
       </div>
       <div class="modal-body">
-        <label>Nombre <input type="text" (input)="nombreInsumo.set($any($event.target).value)" placeholder="Ej: Pan, Tomate..." /></label>
+        <label>Nombre <input #inputNombreInsumo type="text" (input)="nombreInsumo.set($any($event.target).value)" placeholder="Ej: Pan, Tomate..." /></label>
         <label>Unidad de medida</label>
         <div class="unidad-btn-group">
           <button type="button" class="unidad-btn" [class.active]="unidadMedida() === 'gramos'" (click)="unidadMedida.set('gramos')">gramos</button>
           <button type="button" class="unidad-btn" [class.active]="unidadMedida() === 'mililitros'" (click)="unidadMedida.set('mililitros')">mililitros</button>
           <button type="button" class="unidad-btn" [class.active]="unidadMedida() === 'unidad'" (click)="unidadMedida.set('unidad')">unidad</button>
         </div>
-        <label>Stock inicial <input type="number" (input)="stockInicial.set($any($event.target).valueAsNumber || 0)" min="0" placeholder="0" /></label>
+        <label>Stock actual <input #inputStockInicial type="number" (input)="stockInicial.set($any($event.target).valueAsNumber || 0)" min="0" placeholder="0" /></label>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn btn-light" (click)="toggleFormInsumo()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="guardarInsumo()" [disabled]="guardandoInsumo()">{{ guardandoInsumo() ? 'Guardando...' : 'Guardar insumo' }}</button>
+        <button type="button" class="btn btn-primary" (click)="guardarInsumo()" [disabled]="guardandoInsumo()">{{ guardandoInsumo() ? 'Guardando...' : (editandoInsumo() ? 'Actualizar' : 'Guardar insumo') }}</button>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseResponse } from '../models/auth.models';
-import { Insumo, InsumoCreateRequest } from '../models/insumo.models';
+import { Insumo, InsumoCreateRequest, InsumoUpdateRequest } from '../models/insumo.models';
 
 @Injectable({ providedIn: 'root' })
 export class InsumosService {
@@ -15,5 +15,9 @@ export class InsumosService {
 
   crear(data: InsumoCreateRequest): Observable<BaseResponse<Insumo>> {
     return this.http.post<BaseResponse<Insumo>>(`${this.apiUrl}/admin/insumos`, data);
+  }
+
+  actualizar(id: number, data: InsumoUpdateRequest): Observable<BaseResponse<Insumo>> {
+    return this.http.put<BaseResponse<Insumo>>(`${this.apiUrl}/admin/insumos/${id}`, data);
   }
 }

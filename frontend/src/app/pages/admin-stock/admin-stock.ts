@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -32,11 +32,15 @@ export class AdminStockComponent implements OnInit {
   readonly guardando = signal(false);
   readonly guardandoInsumo = signal(false);
   readonly mostrarFormInsumo = signal(false);
+  readonly editandoInsumo = signal<Insumo | null>(null);
   readonly nombreInsumo = signal('');
   readonly unidadMedida = signal('');
   readonly stockInicial = signal(0);
   readonly mensaje = signal<string | null>(null);
   readonly error = signal<string | null>(null);
+
+  @ViewChild('inputNombreInsumo') inputNombreInsumo!: ElementRef<HTMLInputElement>;
+  @ViewChild('inputStockInicial') inputStockInicial!: ElementRef<HTMLInputElement>;
 
   readonly form = this.fb.nonNullable.group({
     destino: ['producto' as 'producto' | 'insumo', [Validators.required]],
@@ -169,10 +173,23 @@ export class AdminStockComponent implements OnInit {
   toggleFormInsumo(): void {
     this.mostrarFormInsumo.update(v => !v);
     if (!this.mostrarFormInsumo()) {
+      this.editandoInsumo.set(null);
       this.nombreInsumo.set('');
       this.unidadMedida.set('');
       this.stockInicial.set(0);
     }
+  }
+
+  editarInsumo(insumo: Insumo): void {
+    this.editandoInsumo.set(insumo);
+    this.nombreInsumo.set(insumo.nombreInsumo);
+    this.unidadMedida.set(insumo.unidadMedida);
+    this.stockInicial.set(insumo.stockActual);
+    this.mostrarFormInsumo.set(true);
+    setTimeout(() => {
+      if (this.inputNombreInsumo) this.inputNombreInsumo.nativeElement.value = insumo.nombreInsumo;
+      if (this.inputStockInicial) this.inputStockInicial.nativeElement.value = String(insumo.stockActual);
+    });
   }
 
   guardarInsumo(): void {
@@ -184,27 +201,34 @@ export class AdminStockComponent implements OnInit {
     this.guardandoInsumo.set(true);
     this.error.set(null);
 
-    this.insumosService
-      .crear({
-        nombreInsumo: this.nombreInsumo().trim(),
-        unidadMedida: this.unidadMedida().trim(),
-        stockActual: this.stockInicial()
-      })
-      .subscribe({
-        next: () => {
-          this.guardandoInsumo.set(false);
-          this.mostrarFormInsumo.set(false);
-          this.nombreInsumo.set('');
-          this.unidadMedida.set('');
-          this.stockInicial.set(0);
-          this.mensaje.set('Insumo creado correctamente');
-          this.cargarDatos();
-        },
-        error: (err) => {
-          this.guardandoInsumo.set(false);
-          this.error.set(this.extraerError(err));
-        }
-      });
+    const data = {
+      nombreInsumo: this.nombreInsumo().trim(),
+      unidadMedida: this.unidadMedida().trim(),
+      stockActual: this.stockInicial()
+    };
+
+    const editando = this.editandoInsumo();
+
+    const request$ = editando
+      ? this.insumosService.actualizar(editando.idInsumo, data)
+      : this.insumosService.crear(data);
+
+    request$.subscribe({
+      next: () => {
+        this.guardandoInsumo.set(false);
+        this.mostrarFormInsumo.set(false);
+        this.editandoInsumo.set(null);
+        this.nombreInsumo.set('');
+        this.unidadMedida.set('');
+        this.stockInicial.set(0);
+        this.mensaje.set(editando ? 'Insumo actualizado correctamente' : 'Insumo creado correctamente');
+        this.cargarDatos();
+      },
+      error: (err) => {
+        this.guardandoInsumo.set(false);
+        this.error.set(this.extraerError(err));
+      }
+    });
   }
 
   stockBajoProducto(producto: Producto): boolean {

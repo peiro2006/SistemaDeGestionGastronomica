@@ -10,3 +10,9 @@ export interface InsumoCreateRequest {
   unidadMedida: string;
   stockActual: number;
 }
+
+export interface InsumoUpdateRequest {
+  nombreInsumo: string;
+  unidadMedida: string;
+  stockActual: number;
+}

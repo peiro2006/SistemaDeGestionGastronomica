@@ -1,6 +1,7 @@
 package com.example.SistemaDeGestion.services.domain;
 
 import com.example.SistemaDeGestion.configs.exceptions.ConflictException;
+import com.example.SistemaDeGestion.configs.exceptions.NotFoundException;
 import com.example.SistemaDeGestion.dtos.request.InsumoCreateReqDto;
 import com.example.SistemaDeGestion.dtos.response.InsumoResDto;
 import com.example.SistemaDeGestion.mappers.InsumoMapper;
@@ -29,6 +30,24 @@ public class InsumoService {
             throw new ConflictException("Ya existe un insumo registrado con el nombre " + request.nombreInsumo());
         }
         Insumo insumo = InsumoMapper.toModel(request);
+        return InsumoMapper.toResponseDto(insumosRepository.save(insumo));
+    }
+
+    @Transactional
+    public InsumoResDto actualizar(Long idInsumo, InsumoCreateReqDto request) {
+        Insumo insumo = insumosRepository.findById(idInsumo)
+                .orElseThrow(() -> new NotFoundException("Insumo no encontrado con id " + idInsumo));
+
+        insumosRepository.findByNombreInsumoIgnoreCase(request.nombreInsumo())
+                .filter(existe -> !existe.getIdInsumo().equals(idInsumo))
+                .ifPresent(existe -> {
+                    throw new ConflictException("Ya existe otro insumo registrado con el nombre " + request.nombreInsumo());
+                });
+
+        insumo.setNombreInsumo(request.nombreInsumo());
+        insumo.setUnidadMedida(request.unidadMedida());
+        insumo.setStockActual(request.stockActual());
+
         return InsumoMapper.toResponseDto(insumosRepository.save(insumo));
     }
 
