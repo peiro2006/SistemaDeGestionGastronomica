@@ -1,0 +1,86 @@
+<div class="admin-layout">
+  <app-admin-sidebar />
+  <div class="admin-main">
+    <div class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="eyebrow">Sistema</p>
+          <h1>Gestion de usuarios</h1>
+        </div>
+      </header>
+
+      @if (mensaje()) { <div class="alert alert-ok">{{ mensaje() }}</div> }
+      @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+
+      <section class="card search-card">
+        <h2>Buscar usuario por email</h2>
+        <div class="search-row">
+          <label>
+            Email
+            <input
+              type="email"
+              placeholder="Ej: usuario@email.com"
+              [value]="emailBusqueda()"
+              (input)="emailBusqueda.set($any($event.target).value)"
+              (keyup.enter)="buscar()"
+            />
+          </label>
+          <button class="btn btn-primary" (click)="buscar()" [disabled]="cargando()">
+            {{ cargando() ? 'Buscando...' : 'Buscar' }}
+          </button>
+          <button class="btn btn-outline" (click)="limpiar()">Limpiar</button>
+        </div>
+      </section>
+
+      @if (usuarioEncontrado()) {
+        <section class="card profile-card">
+          <div class="profile-header">
+            <h2>Perfil del usuario</h2>
+            <span class="badge" [class.badge-user]="usuarioEncontrado()!.rol === 'ROLE_USER'" [class.badge-emp]="usuarioEncontrado()!.rol === 'ROLE_EMPLEADO'" [class.badge-admin]="usuarioEncontrado()!.rol === 'ROLE_ADMIN'">
+              {{ rolEtiqueta(usuarioEncontrado()!.rol) }}
+            </span>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-field">
+              <span class="field-label">Nombre</span>
+              <span class="field-value">{{ usuarioEncontrado()!.nombre }}</span>
+            </div>
+            <div class="profile-field">
+              <span class="field-label">Apellido</span>
+              <span class="field-value">{{ usuarioEncontrado()!.apellido }}</span>
+            </div>
+            <div class="profile-field">
+              <span class="field-label">Email</span>
+              <span class="field-value">{{ usuarioEncontrado()!.email }}</span>
+            </div>
+            <div class="profile-field">
+              <span class="field-label">Rol actual</span>
+              <span class="field-value">{{ rolEtiqueta(usuarioEncontrado()!.rol) }}</span>
+            </div>
+            <div class="profile-field">
+              <span class="field-label">Fecha de registro</span>
+              <span class="field-value">{{ usuarioEncontrado()!.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+
+          <div class="profile-actions">
+            @if (usuarioEncontrado()!.rol === 'ROLE_USER') {
+              <button class="btn btn-primary" (click)="promover()" [disabled]="procesando()">
+                {{ procesando() ? 'Procesando...' : 'Promover a empleado' }}
+              </button>
+            }
+            @if (usuarioEncontrado()!.rol === 'ROLE_EMPLEADO') {
+              <button class="btn btn-danger" (click)="desemplar()" [disabled]="procesando()">
+                {{ procesando() ? 'Procesando...' : 'Quitar rol de empleado' }}
+              </button>
+            }
+            @if (usuarioEncontrado()!.rol === 'ROLE_ADMIN') {
+              <p class="admin-note">Este usuario es administrador. No se puede modificar su rol desde aqui.</p>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  </div>
+</div>

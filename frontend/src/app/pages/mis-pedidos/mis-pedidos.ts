@@ -26,7 +26,7 @@ export class MisPedidosComponent implements OnInit {
   readonly pedidoResenaAbierto = signal<number | null>(null);
 
   readonly resenaForm = this.fb.nonNullable.group({
-    calificacion: [0.5, [Validators.required, Validators.min(0.5), Validators.max(5.0)]],
+    calificacion: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
     comentario: ['']
   });
 
@@ -76,7 +76,7 @@ export class MisPedidosComponent implements OnInit {
 
   abrirResena(idPedido: number): void {
     this.pedidoResenaAbierto.set(idPedido);
-    this.resenaForm.reset({ calificacion: 0.5, comentario: '' });
+    this.resenaForm.reset({ calificacion: 1, comentario: '' });
   }
 
   cerrarResena(): void {
@@ -109,29 +109,28 @@ export class MisPedidosComponent implements OnInit {
 
   incrementarCalificacion(): void {
     const actual = this.resenaForm.getRawValue().calificacion;
-    if (actual < 5.0) {
-      this.resenaForm.patchValue({ calificacion: Math.min(5.0, +(actual + 0.5).toFixed(1)) });
+    if (actual < 5) {
+      this.resenaForm.patchValue({ calificacion: actual + 1 });
     }
   }
 
   decrementarCalificacion(): void {
     const actual = this.resenaForm.getRawValue().calificacion;
-    if (actual > 0.5) {
-      this.resenaForm.patchValue({ calificacion: Math.max(0.5, +(actual - 0.5).toFixed(1)) });
+    if (actual > 1) {
+      this.resenaForm.patchValue({ calificacion: actual - 1 });
     }
   }
 
   estrellasCompletas(): number {
-    return Math.floor(this.resenaForm.getRawValue().calificacion);
+    return this.resenaForm.getRawValue().calificacion;
   }
 
   tieneMediaEstrella(): boolean {
-    return this.resenaForm.getRawValue().calificacion % 1 !== 0;
+    return false;
   }
 
   estrellasVacias(): number {
-    const cal = this.resenaForm.getRawValue().calificacion;
-    return 5 - Math.ceil(cal);
+    return 5 - this.resenaForm.getRawValue().calificacion;
   }
 
   estrellasDisplayCompletas(calificacion: number): number {

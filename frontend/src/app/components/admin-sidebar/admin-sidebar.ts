@@ -18,7 +18,8 @@ export class AdminSidebarComponent {
     'Carta y Cocina': true,
     'Finanzas / Libro Contable': true,
     'Abastecimiento': true,
-    'Inteligencia': true
+    'Inteligencia': true,
+    'Sistema': true
   });
 
   groups: NavGroup[] = [
@@ -47,6 +48,12 @@ export class AdminSidebarComponent {
         { label: 'KPI Dashboard', route: '/kpi' },
         { label: 'Reportes', route: '/admin/reportes' },
         { label: 'Feedback', route: '/admin/feedback' },
+      ]
+    },
+    {
+      label: 'Sistema',
+      items: [
+        { label: 'Usuarios', route: '/admin/usuarios' },
       ]
     }
   ];

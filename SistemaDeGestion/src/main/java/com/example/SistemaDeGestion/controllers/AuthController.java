@@ -63,4 +63,31 @@ public class AuthController {
         );
     }
 
+    @PutMapping("/desemplar-empleado/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<UsuarioCreateResDto>> desemplarEmpleado(@PathVariable String email) {
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new com.example.SistemaDeGestion.configs.exceptions.NotFoundException("Usuario no encontrado"));
+        usuario.setRol("ROLE_USER");
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        com.example.SistemaDeGestion.mappers.UsuarioMapper.toResponseDto(usuarioRepository.save(usuario)),
+                        "Rol de empleado removido correctamente"
+                )
+        );
+    }
+
+    @GetMapping("/usuarios/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<UsuarioCreateResDto>> buscarPorEmail(@PathVariable String email) {
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new com.example.SistemaDeGestion.configs.exceptions.NotFoundException("Usuario no encontrado con el email " + email));
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        com.example.SistemaDeGestion.mappers.UsuarioMapper.toResponseDto(usuario),
+                        "Usuario encontrado"
+                )
+        );
+    }
+
 }

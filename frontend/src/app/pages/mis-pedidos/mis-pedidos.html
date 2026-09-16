@@ -96,7 +96,7 @@
                           }
                         }
                       </div>
-                      <span class="rating-valor">{{ resenaForm.getRawValue().calificacion.toFixed(1) }}</span>
+                      <span class="rating-valor">{{ resenaForm.getRawValue().calificacion }}</span>
                     </div>
 
                     <div class="rating-controles">
@@ -104,13 +104,13 @@
                         type="button"
                         class="ctrl-btn"
                         (click)="decrementarCalificacion()"
-                        [disabled]="resenaForm.getRawValue().calificacion <= 0.5"
+                        [disabled]="resenaForm.getRawValue().calificacion <= 1"
                       >&#8722;</button>
                       <button
                         type="button"
                         class="ctrl-btn"
                         (click)="incrementarCalificacion()"
-                        [disabled]="resenaForm.getRawValue().calificacion >= 5.0"
+                        [disabled]="resenaForm.getRawValue().calificacion >= 5"
                       >+</button>
                     </div>
                   </div>

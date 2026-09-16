@@ -59,6 +59,11 @@ public class PedidoEstadoService implements IPedidoEstadoService {
             sumarAMontoCaja(pedido);
         }
 
+        // Restaurar stock de producto si se cancela el pedido
+        if (nuevoEstado == EstadoPedido.cancelado && estadoAnterior != EstadoPedido.cancelado) {
+            restaurarStockProducto(pedido);
+        }
+
         return PedidoMapper.toResponseDto(pedidoRepository.save(pedido));
     }
 
@@ -80,14 +85,40 @@ public class PedidoEstadoService implements IPedidoEstadoService {
 
                 BigDecimal cantidadNecesaria = recetaInsumo.getCantidad().multiply(BigDecimal.valueOf(cantidadPedido));
                 int stockActual = insumo.getStockActual() != null ? insumo.getStockActual() : 0;
+                if (stockActual < cantidadNecesaria.intValue()) {
+                    throw new BadRequestException(
+                            "Stock insuficiente de insumo " + insumo.getNombreInsumo() +
+                            ". Disponible: " + stockActual +
+                            ", requerido: " + cantidadNecesaria.stripTrailingZeros().toPlainString()
+                    );
+                }
                 int nuevoStock = stockActual - cantidadNecesaria.intValue();
-                insumo.setStockActual(Math.max(0, nuevoStock));
+                insumo.setStockActual(nuevoStock);
                 insumosActualizar.add(insumo);
             }
         }
 
         if (!insumosActualizar.isEmpty()) {
             insumosRepository.saveAll(insumosActualizar);
+        }
+    }
+
+    private void restaurarStockProducto(Pedido pedido) {
+        List<Producto> productosActualizar = new ArrayList<>();
+
+        for (PedidoItem item : pedido.getItems()) {
+            Producto producto = productosRepository.findByIdForUpdate(item.getProducto().getIdProducto())
+                    .orElse(null);
+            if (producto == null) continue;
+
+            int cantidad = item.getCantidad() != null ? item.getCantidad() : 0;
+            int stockActual = producto.getStockActual() != null ? producto.getStockActual() : 0;
+            producto.setStockActual(stockActual + cantidad);
+            productosActualizar.add(producto);
+        }
+
+        if (!productosActualizar.isEmpty()) {
+            productosRepository.saveAll(productosActualizar);
         }
     }
 
