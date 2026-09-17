@@ -21,6 +21,9 @@
               <li>{{ item.cantidad }}x {{ item.nombreProducto }}</li>
             }
           </ul>
+          @if (pedido.indicaciones) {
+            <div class="card-indicaciones">{{ pedido.indicaciones }}</div>
+          }
         </div>
       }
     </div>

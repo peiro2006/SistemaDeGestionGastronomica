@@ -74,6 +74,15 @@
             Monto total de compra (ARS)
             <input type="number" formControlName="montoCompra" min="0" step="0.01" placeholder="0.00" />
           </label>
+          <label>
+            Proveedor
+            <select formControlName="idProveedor">
+              <option [ngValue]="null">Sin proveedor</option>
+              @for (proveedor of proveedores(); track proveedor.idProveedor) {
+                <option [ngValue]="proveedor.idProveedor">{{ proveedor.nombre }}</option>
+              }
+            </select>
+          </label>
         }
 
         <label class="span-2">
@@ -116,9 +125,8 @@
               <th>Nombre</th>
               <th>Categoria</th>
               <th>Precio</th>
-              <th>Stock actual</th>
+              <th>Se pueden producir</th>
               <th>Stock minimo</th>
-              <th>Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -127,17 +135,12 @@
                 <td>{{ producto.nombreProducto }}</td>
                 <td>{{ producto.categoria ?? 'Sin categoria' }}</td>
                 <td>${{ producto.precio }}</td>
-                <td>{{ producto.stockActual ?? 0 }}</td>
+                <td>{{ stockMaximoMap()[producto.idProducto] ?? 0 }}</td>
                 <td>{{ producto.stockMinimo ?? 0 }}</td>
-                <td>
-                  <span class="badge" [class.bajo]="stockBajoProducto(producto)" [class.ok]="!stockBajoProducto(producto)">
-                    {{ stockBajoProducto(producto) ? 'BAJO' : 'OK' }}
-                  </span>
-                </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="6" class="empty">No hay productos.</td>
+                <td colspan="5" class="empty">No hay productos.</td>
               </tr>
             }
           </tbody>
@@ -229,6 +232,7 @@
               <th>Recurso</th>
               <th>Cantidad</th>
               <th>Costo</th>
+              <th>Proveedor</th>
               <th>Motivo</th>
               <th>Saldo posterior</th>
               <th>Usuario</th>
@@ -246,13 +250,14 @@
                 <td>{{ mov.nombreProducto || mov.nombreInsumo }}</td>
                 <td>{{ mov.cantidad }}</td>
                 <td>{{ mov.montoCompra ? '$' + mov.montoCompra : '-' }}</td>
+                <td>{{ mov.nombreProveedor || '-' }}</td>
                 <td>{{ mov.motivo }}</td>
                 <td>{{ mov.saldoPosterior }}</td>
                 <td>{{ mov.usuarioEmail }}</td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="8" class="empty">No hay movimientos registrados.</td>
+                <td colspan="9" class="empty">No hay movimientos registrados.</td>
               </tr>
             }
         </tbody>

@@ -38,6 +38,9 @@ public class Pedido {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private Instant fechaCreacion;
 
+    @Column(name = "indicaciones", length = 100)
+    private String indicaciones;
+
     @Column(name = "fecha_actualizacion")
     private Instant fechaActualizacion;
 
@@ -62,6 +65,8 @@ public class Pedido {
     public void setFechaActualizacion(Instant fechaActualizacion) { this.fechaActualizacion = fechaActualizacion; }
     public List<PedidoItem> getItems() { return items; }
     public void setItems(List<PedidoItem> items) { this.items = items; }
+    public String getIndicaciones() { return indicaciones; }
+    public void setIndicaciones(String indicaciones) { this.indicaciones = indicaciones; }
 
     @PrePersist
     protected void onCreate() {

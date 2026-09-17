@@ -11,6 +11,7 @@ export interface CarritoItem {
 export class CarritoService {
   readonly items = signal<CarritoItem[]>([]);
   readonly metodoPago = signal<MetodoPago>('EFECTIVO');
+  readonly indicaciones = signal<string>('');
   readonly total = computed(() =>
     this.items().reduce((total, item) => total + Number(item.producto.precio) * item.cantidad, 0)
   );
@@ -73,5 +74,6 @@ export class CarritoService {
   limpiar(): void {
     this.items.set([]);
     this.metodoPago.set('EFECTIVO');
+    this.indicaciones.set('');
   }
 }

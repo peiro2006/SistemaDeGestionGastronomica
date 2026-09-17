@@ -15,7 +15,8 @@ public record PedidoResDto (
         BigDecimal total,
         Instant fechaCreacion,
         Instant fechaActualizacion,
-        List<PedidoItemResDto> items
+        List<PedidoItemResDto> items,
+        String indicaciones
 
 ) {
 }

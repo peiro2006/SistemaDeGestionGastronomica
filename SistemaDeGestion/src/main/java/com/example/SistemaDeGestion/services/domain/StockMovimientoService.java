@@ -7,10 +7,12 @@ import com.example.SistemaDeGestion.dtos.response.StockMovimientoResDto;
 import com.example.SistemaDeGestion.mappers.StockMovimientoMapper;
 import com.example.SistemaDeGestion.models.Insumo;
 import com.example.SistemaDeGestion.models.Producto;
+import com.example.SistemaDeGestion.models.Proveedor;
 import com.example.SistemaDeGestion.models.StockMovimiento;
 import com.example.SistemaDeGestion.models.Usuario;
 import com.example.SistemaDeGestion.repositories.InsumosRepository;
 import com.example.SistemaDeGestion.repositories.ProductosRepository;
+import com.example.SistemaDeGestion.repositories.ProveedorRepository;
 import com.example.SistemaDeGestion.repositories.StockMovimientosRepository;
 import com.example.SistemaDeGestion.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,7 @@ public class StockMovimientoService {
 
     private final ProductosRepository productosRepository;
     private final InsumosRepository insumosRepository;
+    private final ProveedorRepository proveedorRepository;
     private final StockMovimientosRepository stockMovimientosRepository;
     private final UsuarioRepository usuarioRepository;
     private final NotificacionService notificacionService;
@@ -57,6 +60,11 @@ public class StockMovimientoService {
         validarDestino(request);
         String tipo = normalizarTipo(request.tipo());
         Usuario usuario = obtenerUsuarioAutenticado();
+        Proveedor proveedor = null;
+        if (request.idProveedor() != null) {
+            proveedor = proveedorRepository.findById(request.idProveedor())
+                    .orElseThrow(() -> new NotFoundException("No existe un proveedor con el id " + request.idProveedor()));
+        }
 
         if (request.idProducto() != null) {
             Producto producto = productosRepository.findByIdForUpdate(request.idProducto())
@@ -65,7 +73,7 @@ public class StockMovimientoService {
             producto.setStockActual(saldoPosterior);
             notificacionService.verificarStockBajo(producto.getIdProducto());
             return StockMovimientoMapper.toResponseDto(stockMovimientosRepository.save(
-                    crearStockMovimiento(producto, null, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario, request.montoCompra())
+                    crearStockMovimiento(producto, null, proveedor, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario, request.montoCompra())
             ));
         }
 
@@ -74,16 +82,17 @@ public class StockMovimientoService {
         Integer saldoPosterior = calcularSaldo(insumo.getStockActual(), request.cantidad(), tipo);
         insumo.setStockActual(saldoPosterior);
         return StockMovimientoMapper.toResponseDto(stockMovimientosRepository.save(
-                crearStockMovimiento(null, insumo, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario, request.montoCompra())
+                crearStockMovimiento(null, insumo, proveedor, tipo, request.cantidad(), request.motivo(), saldoPosterior, usuario, request.montoCompra())
         ));
     }
 
-    private StockMovimiento crearStockMovimiento(Producto producto, Insumo insumo, String tipo,
+    private StockMovimiento crearStockMovimiento(Producto producto, Insumo insumo, Proveedor proveedor, String tipo,
             Integer cantidad, String motivo, Integer saldoPosterior, Usuario usuario,
             java.math.BigDecimal montoCompra) {
         StockMovimiento sm = new StockMovimiento();
         sm.setProducto(producto);
         sm.setInsumo(insumo);
+        sm.setProveedor(proveedor);
         sm.setTipo(tipo);
         sm.setCantidad(cantidad);
         sm.setMotivo(motivo);

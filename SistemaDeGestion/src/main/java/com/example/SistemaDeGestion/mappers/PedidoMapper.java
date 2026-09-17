@@ -24,6 +24,7 @@ public class PedidoMapper {
         pedido.setEstado(EstadoPedido.pendiente);
         pedido.setMetDePago(request.metDePago());
         pedido.setTotal(BigDecimal.ZERO);
+        pedido.setIndicaciones(request.indicaciones());
         return pedido;
     }
 
@@ -62,7 +63,8 @@ public class PedidoMapper {
                 pedido.getTotal(),
                 pedido.getFechaCreacion(),
                 pedido.getFechaActualizacion(),
-                itemsDto
+                itemsDto,
+                pedido.getIndicaciones()
         );
     }
 

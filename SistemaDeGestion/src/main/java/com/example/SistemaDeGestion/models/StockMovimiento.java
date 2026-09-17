@@ -24,6 +24,10 @@ public class StockMovimiento {
     @JoinColumn(name = "id_insumo")
     private Insumo insumo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_proveedor")
+    private Proveedor proveedor;
+
     @NotBlank(message = "Debe ingresar el tipo de movimiento")
     @Column(name = "tipo", nullable = false)
     private String tipo;
@@ -57,6 +61,8 @@ public class StockMovimiento {
     public void setProducto(Producto producto) { this.producto = producto; }
     public Insumo getInsumo() { return insumo; }
     public void setInsumo(Insumo insumo) { this.insumo = insumo; }
+    public Proveedor getProveedor() { return proveedor; }
+    public void setProveedor(Proveedor proveedor) { this.proveedor = proveedor; }
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
     public Integer getCantidad() { return cantidad; }

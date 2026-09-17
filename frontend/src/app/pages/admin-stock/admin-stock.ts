@@ -5,9 +5,11 @@ import { RouterLink } from '@angular/router';
 import { AdminSidebarComponent } from '../../components/admin-sidebar/admin-sidebar';
 import { Producto } from '../../models/producto.models';
 import { Insumo } from '../../models/insumo.models';
+import { Proveedor } from '../../models/proveedor.models';
 import { StockMovimiento, TipoMovimientoStock } from '../../models/stock.models';
 import { ProductosService } from '../../services/productos.service';
 import { InsumosService } from '../../services/insumos.service';
+import { ProveedoresService } from '../../services/proveedores.service';
 import { StockService } from '../../services/stock.service';
 
 @Component({
@@ -20,11 +22,14 @@ export class AdminStockComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly productosService = inject(ProductosService);
   private readonly insumosService = inject(InsumosService);
+  private readonly proveedoresService = inject(ProveedoresService);
   private readonly stockService = inject(StockService);
 
   readonly productos = signal<Producto[]>([]);
   readonly insumos = signal<Insumo[]>([]);
+  readonly proveedores = signal<Proveedor[]>([]);
   readonly movimientos = signal<StockMovimiento[]>([]);
+  readonly stockMaximoMap = signal<Record<number, number>>({});
   readonly filtroRecurso = signal<'todos' | 'producto' | 'insumo'>('todos');
   readonly filtroIdProducto = signal(0);
   readonly filtroIdInsumo = signal(0);
@@ -46,6 +51,7 @@ export class AdminStockComponent implements OnInit {
     destino: ['producto' as 'producto' | 'insumo', [Validators.required]],
     idProducto: [0],
     idInsumo: [0],
+    idProveedor: [null as number | null],
     tipo: ['INGRESO' as TipoMovimientoStock, [Validators.required]],
     cantidad: [1, [Validators.required, Validators.min(1)]],
     motivo: ['', [Validators.required]],
@@ -61,6 +67,7 @@ export class AdminStockComponent implements OnInit {
     this.productosService.listar().subscribe({
       next: (res) => {
         this.productos.set(res.data ?? []);
+        this.cargarStockMaximo();
         this.cargando.set(false);
       },
       error: (err) => {
@@ -72,7 +79,18 @@ export class AdminStockComponent implements OnInit {
       next: (res) => this.insumos.set(res.data ?? []),
       error: (err) => this.error.set(this.extraerError(err))
     });
+    this.proveedoresService.listarActivos().subscribe({
+      next: (res) => this.proveedores.set(res.data ?? []),
+      error: (err) => this.error.set(this.extraerError(err))
+    });
     this.cargarMovimientos();
+  }
+
+  cargarStockMaximo(): void {
+    this.productosService.obtenerStockMaximoTodos().subscribe({
+      next: (res) => this.stockMaximoMap.set(res.data ?? {}),
+      error: () => {}
+    });
   }
 
   cargarMovimientos(): void {
@@ -146,6 +164,7 @@ export class AdminStockComponent implements OnInit {
       .ajustar({
         idProducto: value.destino === 'producto' ? value.idProducto : null,
         idInsumo: value.destino === 'insumo' ? value.idInsumo : null,
+        idProveedor: value.tipo === 'INGRESO' ? value.idProveedor : null,
         tipo: value.tipo,
         cantidad: value.cantidad,
         motivo: value.motivo.trim(),
@@ -155,7 +174,7 @@ export class AdminStockComponent implements OnInit {
         next: () => {
           this.guardando.set(false);
           this.mensaje.set('Stock actualizado correctamente');
-          this.form.patchValue({ cantidad: 1, motivo: '', montoCompra: 0 });
+          this.form.patchValue({ cantidad: 1, motivo: '', montoCompra: 0, idProveedor: null });
           this.cargarDatos();
         },
         error: (err) => {

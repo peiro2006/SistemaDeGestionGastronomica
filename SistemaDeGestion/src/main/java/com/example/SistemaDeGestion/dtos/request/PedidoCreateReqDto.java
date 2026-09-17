@@ -12,7 +12,10 @@ public record PedidoCreateReqDto (
         List<PedidoItemReqDto> items,
 
         @NotNull(message = "Debe seleccionar un metodo de pago")
-        MetodoPago metDePago
+        MetodoPago metDePago,
+
+        @Size(max = 100, message = "Las indicaciones no pueden superar los 100 caracteres")
+        String indicaciones
 
 ) {
 }

@@ -58,7 +58,6 @@ export class AdminProductosComponent implements OnInit {
     precio: ['', [Validators.required, Validators.pattern(/^(?!0+(\.0+)?$)\d+(\.\d{1,2})?$/)]],
     categoria: ['', [Validators.required]],
     imagenUrl: [''],
-    stockActual: [0, [Validators.required, Validators.min(0)]],
     stockMinimo: [0, [Validators.required, Validators.min(0)]],
     idReceta: [0, [Validators.required, Validators.min(1)]]
   });
@@ -109,11 +108,25 @@ export class AdminProductosComponent implements OnInit {
     const idReceta = Number(select.value);
     if (idReceta > 0) {
       this.productosService.obtenerStockMaximoPorReceta(idReceta).subscribe({
-        next: (res) => this.stockMaximoForm.set(res.data?.stockMaximo ?? 0),
-        error: () => this.stockMaximoForm.set(0)
+        next: (res) => {
+          const stockMax = res.data?.stockMaximo ?? 0;
+          this.stockMaximoForm.set(stockMax);
+          this.verificarStockMaximoVsMinimo(stockMax);
+        },
+        error: () => {
+          this.stockMaximoForm.set(0);
+          this.verificarStockMaximoVsMinimo(0);
+        }
       });
     } else {
       this.stockMaximoForm.set(0);
+    }
+  }
+
+  private verificarStockMaximoVsMinimo(stockMaximo: number): void {
+    const stockMinimo = this.productoForm.getRawValue().stockMinimo;
+    if (stockMaximo > 0 && stockMaximo <= stockMinimo) {
+      this.error.set(`El stock maximo calculado (${stockMaximo}) es igual o menor al stock minimo (${stockMinimo}). Ajuste la receta o el stock minimo.`);
     }
   }
 
@@ -131,11 +144,6 @@ export class AdminProductosComponent implements OnInit {
     }
 
     const value = this.productoForm.getRawValue();
-    const stockMax = this.stockMaximoForm();
-    if (stockMax > 0 && value.stockActual > stockMax) {
-      this.error.set(`El stock para vender (${value.stockActual}) no puede superar el stock maximo (${stockMax}) calculado segun la receta.`);
-      return;
-    }
 
     this.guardandoProducto.set(true);
     this.error.set(null);
@@ -165,7 +173,6 @@ export class AdminProductosComponent implements OnInit {
         precio: value.precio.trim(),
         categoria: value.categoria.trim(),
         imagenUrl: value.imagenUrl.trim() || null,
-        stockActual: value.stockActual,
         stockMinimo: value.stockMinimo,
         idReceta: value.idReceta
       })
@@ -180,14 +187,19 @@ export class AdminProductosComponent implements OnInit {
       precio: producto.precio,
       categoria: producto.categoria ?? '',
       imagenUrl: producto.imagenUrl ?? '',
-      stockActual: producto.stockActual ?? 0,
       stockMinimo: producto.stockMinimo ?? 0,
       idReceta: producto.idReceta ?? 0
     });
     if (producto.idReceta) {
       this.productosService.obtenerStockMaximo(producto.idReceta).subscribe({
-        next: (res) => this.stockMaximoForm.set(res.data?.stockMaximo ?? 0),
-        error: () => this.stockMaximoForm.set(0)
+        next: (res) => {
+          const stockMax = res.data?.stockMaximo ?? 0;
+          this.stockMaximoForm.set(stockMax);
+          this.verificarStockMaximoVsMinimo(stockMax);
+        },
+        error: () => {
+          this.stockMaximoForm.set(0);
+        }
       });
     }
     this.mensaje.set(null);
@@ -203,7 +215,6 @@ export class AdminProductosComponent implements OnInit {
       precio: '',
       categoria: '',
       imagenUrl: '',
-      stockActual: 0,
       stockMinimo: 0,
       idReceta: 0
     });

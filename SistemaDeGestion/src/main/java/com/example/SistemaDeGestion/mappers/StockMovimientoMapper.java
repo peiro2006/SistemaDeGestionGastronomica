@@ -17,6 +17,8 @@ public class StockMovimientoMapper {
                 movimiento.getProducto() != null ? movimiento.getProducto().getNombreProducto() : null,
                 movimiento.getInsumo() != null ? movimiento.getInsumo().getIdInsumo() : null,
                 movimiento.getInsumo() != null ? movimiento.getInsumo().getNombreInsumo() : null,
+                movimiento.getProveedor() != null ? movimiento.getProveedor().getIdProveedor() : null,
+                movimiento.getProveedor() != null ? movimiento.getProveedor().getNombre() : null,
                 movimiento.getTipo(),
                 movimiento.getCantidad(),
                 movimiento.getMotivo(),

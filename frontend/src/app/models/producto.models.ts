@@ -21,7 +21,6 @@ export interface ProductoCreateRequest {
   precio: string;
   categoria: string;
   imagenUrl?: string | null;
-  stockActual: number;
   stockMinimo: number;
   idReceta: number;
   idProveedor?: number;

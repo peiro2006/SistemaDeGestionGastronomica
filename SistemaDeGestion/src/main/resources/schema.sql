@@ -34,6 +34,7 @@ ALTER TABLE proveedor ALTER COLUMN razon_social DROP NOT NULL;
 ALTER TABLE proveedor ALTER COLUMN cuit_rut DROP NOT NULL;
 
 ALTER TABLE stock_movimiento ADD COLUMN IF NOT EXISTS monto_compra NUMERIC(12,2);
+ALTER TABLE stock_movimiento ADD COLUMN IF NOT EXISTS id_proveedor BIGINT REFERENCES proveedor(id_proveedor);
 
 CREATE TABLE IF NOT EXISTS configuracion (
     id BIGSERIAL PRIMARY KEY,
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS configuracion (
 );
 
 INSERT INTO configuracion (clave, valor) VALUES ('META_MENSUAL', 100000.00) ON CONFLICT (clave) DO NOTHING;
+ALTER TABLE pedido ADD COLUMN IF NOT EXISTS indicaciones VARCHAR(100);
 ALTER TABLE proveedor ALTER COLUMN fecha_alta DROP NOT NULL;
 ALTER TABLE proveedor DROP CONSTRAINT IF EXISTS uk5gqejexbar9nni42kh4vfusu0;
 ALTER TABLE proveedor DROP CONSTRAINT IF EXISTS uk_cuit_rut;

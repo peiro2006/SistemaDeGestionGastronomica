@@ -50,10 +50,8 @@
             <label>Imagen URL <input type="url" formControlName="imagenUrl" placeholder="https://..." /></label>
             <label class="span-2">Descripcion <textarea rows="3" formControlName="descripcion"></textarea></label>
             <label>Receta <select formControlName="idReceta" (change)="onRecetaChange($event)"><option [ngValue]="0">Seleccione una receta</option>@for (receta of recetas(); track receta.idReceta) {<option [ngValue]="receta.idReceta">{{ receta.nombreReceta }}</option>}</select></label>
-            @if (stockMaximoForm() > 0) { <p class="hint span-2">Stock maximo segun receta: {{ stockMaximoForm() }}</p> }
+            @if (stockMaximoForm() > 0) { <p class="hint span-2">Se pueden producir: {{ stockMaximoForm() }}</p> }
             <label>Stock minimo <input type="number" formControlName="stockMinimo" min="0" /></label>
-            <label>Stock para vender <input type="number" formControlName="stockActual" min="0" [max]="stockMaximoForm() || null" [readonly]="!!productoEditando()" /></label>
-            @if (productoEditando()) { <p class="hint span-2">El stock para vender se modifica desde la pantalla de stock para mantener historial.</p> }
             <button class="btn btn-primary span-2" type="submit" [disabled]="guardandoProducto()">{{ guardandoProducto() ? 'Guardando...' : productoEditando() ? 'Actualizar producto' : 'Crear producto' }}</button>
           </form>
         </section>
@@ -104,20 +102,19 @@
         <div class="section-heading"><h2>Listado de productos</h2>@if (cargando()) {<div class="loading-box" style="padding:0.5rem 0"><div class="spinner spinner-sm"></div></div>}</div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Producto</th><th>Categoria</th><th>Precio</th><th>Stock para vender</th><th>Stock maximo</th><th>Estado</th><th>Receta</th><th>Acciones</th></tr></thead>
+            <thead><tr><th>Producto</th><th>Categoria</th><th>Precio</th><th>Se pueden producir</th><th>Estado</th><th>Receta</th><th>Acciones</th></tr></thead>
             <tbody>
               @for (producto of productos(); track producto.idProducto) {
                 <tr>
                   <td><strong>{{ producto.nombreProducto }}</strong><span>{{ producto.descripcion }}</span></td>
                   <td>{{ producto.categoria || '-' }}</td>
                   <td>${{ producto.precio }}</td>
-                  <td>{{ producto.stockActual ?? 0 }}</td>
                   <td>{{ stockMaximoMap()[producto.idProducto] ?? 0 }}</td>
                   <td><span class="status" [class.inactive]="!producto.activo">{{ producto.activo ? 'Activo' : 'Inactivo' }}</span></td>
                   <td>{{ producto.nombreReceta || producto.idReceta || '-' }}</td>
                   <td class="actions-cell"><button type="button" class="btn btn-light" (click)="editar(producto)">Editar</button><button type="button" class="btn" [class.btn-danger]="producto.activo" [class.btn-secondary]="!producto.activo" (click)="cambiarEstado(producto)">{{ producto.activo ? 'Desactivar' : 'Activar' }}</button></td>
                 </tr>
-              } @empty {<tr><td colspan="8" class="empty">No hay productos cargados.</td></tr>}
+              } @empty {<tr><td colspan="7" class="empty">No hay productos cargados.</td></tr>}
             </tbody>
           </table>
         </div>

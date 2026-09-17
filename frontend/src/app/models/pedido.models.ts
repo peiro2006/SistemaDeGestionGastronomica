@@ -8,6 +8,7 @@ export interface PedidoItemCreateRequest {
 export interface PedidoCreateRequest {
   items: PedidoItemCreateRequest[];
   metDePago: MetodoPago;
+  indicaciones?: string;
 }
 
 export interface PedidoItem {
@@ -29,4 +30,5 @@ export interface Pedido {
   total: number;
   fechaCreacion: string;
   items: PedidoItem[];
+  indicaciones?: string;
 }

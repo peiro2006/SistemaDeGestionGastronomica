@@ -54,6 +54,10 @@
             }
           </div>
 
+          @if (pedido.indicaciones) {
+            <div class="pedido-indicaciones">{{ pedido.indicaciones }}</div>
+          }
+
           <div class="pedido-footer">
             <strong>Total: ${{ pedido.total }}</strong>
 

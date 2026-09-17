@@ -24,7 +24,6 @@ public record ProductoCreateReqDto (
 
         String imagenUrl,
 
-        @NotNull(message = "Debe ingresar el stock inicial del producto")
         @PositiveOrZero(message = "El stock inicial no puede ser negativo")
         Integer stockActual,
 

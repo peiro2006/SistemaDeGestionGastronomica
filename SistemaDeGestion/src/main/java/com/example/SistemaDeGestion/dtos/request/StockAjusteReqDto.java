@@ -8,6 +8,7 @@ public record StockAjusteReqDto(
 
         Long idProducto,
         Long idInsumo,
+        Long idProveedor,
 
         @NotBlank(message = "Debe ingresar el tipo de movimiento")
         String tipo,

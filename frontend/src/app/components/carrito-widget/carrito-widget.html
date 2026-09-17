@@ -136,6 +136,20 @@
           }
         </div>
 
+        <div class="carrito-indicaciones">
+          <label class="indicaciones-label" for="indicaciones">Indicaciones (opcional)</label>
+          <textarea
+            id="indicaciones"
+            class="indicaciones-input"
+            maxlength="100"
+            rows="2"
+            placeholder="Ej: sin cebolla, poco cocida..."
+            [value]="indicaciones()"
+            (input)="indicaciones.set($any($event.target).value)"
+          ></textarea>
+          <span class="indicaciones-counter">{{ indicaciones().length }}/100</span>
+        </div>
+
         <footer class="carrito-footer">
           <span class="muted">Total a pagar</span>
           <strong>${{ total() }}</strong>

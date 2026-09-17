@@ -58,6 +58,7 @@ export class CarritoWidgetComponent implements OnInit, OnDestroy {
   readonly carrito = this.carritoService.items;
   readonly total = this.carritoService.total;
   readonly metodoPago = this.carritoService.metodoPago;
+  readonly indicaciones = this.carritoService.indicaciones;
   readonly estaLogueado = this.authService.isAuthenticated;
 
   readonly mostrar = signal(false);
@@ -278,7 +279,8 @@ export class CarritoWidgetComponent implements OnInit, OnDestroy {
           idProducto: item.producto.idProducto,
           cantidad: item.cantidad
         })),
-        metDePago: this.metodoPago()
+        metDePago: this.metodoPago(),
+        indicaciones: this.indicaciones() || undefined
       })
       .subscribe({
         next: (res) => {

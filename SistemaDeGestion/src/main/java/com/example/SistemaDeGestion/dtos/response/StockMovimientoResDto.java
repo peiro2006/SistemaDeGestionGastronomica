@@ -9,6 +9,8 @@ public record StockMovimientoResDto(
         String nombreProducto,
         Long idInsumo,
         String nombreInsumo,
+        Long idProveedor,
+        String nombreProveedor,
         String tipo,
         Integer cantidad,
         String motivo,
