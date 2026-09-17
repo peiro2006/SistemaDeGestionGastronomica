@@ -15,6 +15,16 @@
       @if (mostrarNotificaciones()) {
         <section class="card notif-panel">
           <h2>Alertas de stock bajo</h2>
+          @if (alertasStock().length) {
+            @for (alerta of alertasStock(); track alerta.producto) {
+              <div class="notif-item notif-alerta">
+                <div>
+                  <strong>{{ alerta.producto }}</strong>
+                  <p>Se pueden producir {{ alerta.stockMaximo }} unidades, stock minimo {{ alerta.stockMinimo }}. Ajuste la receta o el stock minimo.</p>
+                </div>
+              </div>
+            }
+          }
           @if (notificaciones().length) {
             @for (notif of notificaciones(); track notif.idNotificacion) {
               <div class="notif-item" [class.leida]="notif.leida">
@@ -28,7 +38,8 @@
                 }
               </div>
             }
-          } @else {
+          }
+          @if (!alertasStock().length && !notificaciones().length) {
             <p class="empty">No hay alertas pendientes.</p>
           }
         </section>

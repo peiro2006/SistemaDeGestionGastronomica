@@ -51,6 +51,7 @@ export class AdminProductosComponent implements OnInit {
   readonly recetaEditando = signal<Receta | null>(null);
   readonly mostrarModalReceta = signal(false);
   readonly ingredientesModal = signal<IngredienteForm[]>([]);
+  readonly alertasStock = signal<{producto: string; stockMaximo: number; stockMinimo: number}[]>([]);
 
   readonly productoForm = this.fb.nonNullable.group({
     nombreProducto: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -91,9 +92,27 @@ export class AdminProductosComponent implements OnInit {
 
   cargarStockMaximo(): void {
     this.productosService.obtenerStockMaximoTodos().subscribe({
-      next: (res) => this.stockMaximoMap.set(res.data ?? {}),
+      next: (res) => {
+        this.stockMaximoMap.set(res.data ?? {});
+        this.calcularAlertasStock();
+      },
       error: () => {}
     });
+  }
+
+  calcularAlertasStock(): void {
+    const mapa = this.stockMaximoMap();
+    const productos = this.productos();
+    const alertas: {producto: string; stockMaximo: number; stockMinimo: number}[] = [];
+    for (const p of productos) {
+      const max = mapa[p.idProducto] ?? 0;
+      const min = p.stockMinimo ?? 0;
+      if (max > 0 && max <= min) {
+        alertas.push({ producto: p.nombreProducto, stockMaximo: max, stockMinimo: min });
+      }
+    }
+    this.alertasStock.set(alertas);
+    this.notificacionesNoLeidas.set(this.notificaciones().length + alertas.length);
   }
 
   cargarInsumos(): void {
@@ -437,7 +456,7 @@ export class AdminProductosComponent implements OnInit {
     this.notificacionesService.listar(true).subscribe({
       next: (res) => {
         this.notificaciones.set(res.data ?? []);
-        this.notificacionesNoLeidas.set((res.data ?? []).length);
+        this.notificacionesNoLeidas.set((res.data ?? []).length + this.alertasStock().length);
       },
       error: () => {}
     });
@@ -447,7 +466,10 @@ export class AdminProductosComponent implements OnInit {
     this.mostrarNotificaciones.update((v) => !v);
     if (this.mostrarNotificaciones()) {
       this.notificacionesService.listar().subscribe({
-        next: (res) => this.notificaciones.set(res.data ?? []),
+        next: (res) => {
+          this.notificaciones.set(res.data ?? []);
+          this.notificacionesNoLeidas.set((res.data ?? []).filter(n => !n.leida).length + this.alertasStock().length);
+        },
         error: () => {}
       });
     }
