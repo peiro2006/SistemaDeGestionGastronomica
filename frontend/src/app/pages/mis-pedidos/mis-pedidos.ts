@@ -24,6 +24,7 @@ export class MisPedidosComponent implements OnInit {
   readonly mensaje = signal<string | null>(null);
   readonly error = signal<string | null>(null);
   readonly pedidoResenaAbierto = signal<number | null>(null);
+  readonly enviandoResena = signal(false);
 
   readonly resenaForm = this.fb.nonNullable.group({
     calificacion: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
@@ -84,6 +85,9 @@ export class MisPedidosComponent implements OnInit {
   }
 
   enviarResena(idPedido: number): void {
+    if (this.enviandoResena()) {
+      return;
+    }
     if (this.resenaForm.invalid) {
       this.resenaForm.markAllAsTouched();
       return;
@@ -95,14 +99,45 @@ export class MisPedidosComponent implements OnInit {
       comentario: value.comentario.trim() || null
     };
 
+    this.enviandoResena.set(true);
+    this.error.set(null);
     this.resenasService.crear(idPedido, request).subscribe({
-      next: () => {
+      next: (res) => {
+        this.enviandoResena.set(false);
+        const creada = res.data;
+        if (creada) {
+          this.resenasPorPedido.update((map) => new Map(map).set(idPedido, creada));
+        }
         this.mensaje.set('Reseña enviada correctamente');
         this.cerrarResena();
-        this.cargarResenas();
       },
       error: (err) => {
+        this.enviandoResena.set(false);
+        if (this.esConflictoResenaExistente(err)) {
+          this.sincronizarResenaExistente(idPedido);
+          return;
+        }
         this.error.set(this.extraerError(err));
+      }
+    });
+  }
+
+  private esConflictoResenaExistente(err: unknown): boolean {
+    return (err as { status?: number })?.status === 409;
+  }
+
+  private sincronizarResenaExistente(idPedido: number): void {
+    this.resenasService.listarPorPedido(idPedido).subscribe({
+      next: (res) => {
+        const existente = res.data?.[0];
+        if (existente) {
+          this.resenasPorPedido.update((map) => new Map(map).set(idPedido, existente));
+        }
+        this.cerrarResena();
+        this.mensaje.set('Tu reseña ya estaba registrada');
+      },
+      error: () => {
+        this.error.set('Ya existe una reseña para este pedido');
       }
     });
   }

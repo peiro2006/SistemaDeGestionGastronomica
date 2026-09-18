@@ -10,7 +10,6 @@ import com.example.SistemaDeGestion.models.*;
 import com.example.SistemaDeGestion.repositories.CajaRepository;
 import com.example.SistemaDeGestion.repositories.InsumosRepository;
 import com.example.SistemaDeGestion.repositories.PedidoRepository;
-import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ import java.util.List;
 public class PedidoEstadoService implements IPedidoEstadoService {
 
     private final PedidoRepository pedidoRepository;
-    private final ProductosRepository productosRepository;
     private final CajaRepository cajaRepository;
     private final InsumosRepository insumosRepository;
 
@@ -57,11 +55,6 @@ public class PedidoEstadoService implements IPedidoEstadoService {
         if (nuevoEstado == EstadoPedido.entregado && estadoAnterior != EstadoPedido.entregado) {
             descontarStock(pedido);
             sumarAMontoCaja(pedido);
-        }
-
-        // Restaurar stock de producto si se cancela el pedido
-        if (nuevoEstado == EstadoPedido.cancelado && estadoAnterior != EstadoPedido.cancelado) {
-            restaurarStockProducto(pedido);
         }
 
         return PedidoMapper.toResponseDto(pedidoRepository.save(pedido));
@@ -100,25 +93,6 @@ public class PedidoEstadoService implements IPedidoEstadoService {
 
         if (!insumosActualizar.isEmpty()) {
             insumosRepository.saveAll(insumosActualizar);
-        }
-    }
-
-    private void restaurarStockProducto(Pedido pedido) {
-        List<Producto> productosActualizar = new ArrayList<>();
-
-        for (PedidoItem item : pedido.getItems()) {
-            Producto producto = productosRepository.findByIdForUpdate(item.getProducto().getIdProducto())
-                    .orElse(null);
-            if (producto == null) continue;
-
-            int cantidad = item.getCantidad() != null ? item.getCantidad() : 0;
-            int stockActual = producto.getStockActual() != null ? producto.getStockActual() : 0;
-            producto.setStockActual(stockActual + cantidad);
-            productosActualizar.add(producto);
-        }
-
-        if (!productosActualizar.isEmpty()) {
-            productosRepository.saveAll(productosActualizar);
         }
     }
 

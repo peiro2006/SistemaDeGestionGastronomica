@@ -9,9 +9,8 @@ export class ProductosService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:8080';
 
-  listar(nombre?: string): Observable<BaseResponse<Producto[]>> {
-    const params = this.buildParams({ nombre });
-    return this.http.get<BaseResponse<Producto[]>>(`${this.apiUrl}/Producto`, { params });
+  listar(): Observable<BaseResponse<Producto[]>> {
+    return this.http.get<BaseResponse<Producto[]>>(`${this.apiUrl}/Producto/admin/all`);
   }
 
   obtener(idProducto: number): Observable<BaseResponse<Producto>> {

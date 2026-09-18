@@ -51,7 +51,11 @@ public class ResenaService {
         resena.setCalificacion(request.calificacion());
         resena.setComentario(request.comentario());
 
-        return ResenaMapper.toResponseDto(resenasRepository.save(resena));
+        try {
+            return ResenaMapper.toResponseDto(resenasRepository.save(resena));
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new ConflictException("Ya existe una reseña para este pedido");
+        }
     }
 
     @Transactional(readOnly = true)

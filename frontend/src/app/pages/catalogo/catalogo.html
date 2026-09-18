@@ -77,23 +77,23 @@
               <p>{{ producto.descripcion }}</p>
               <div class="producto-meta">
                 <span class="precio">${{ producto.precio }}</span>
-                <span class="stock" [class.sin-stock]="!producto.stockActual">
-                  {{ (producto.stockActual ?? 0) > 0 ? 'Stock: ' + producto.stockActual : 'Sin stock' }}
+                <span class="stock" [class.sin-stock]="!producto.stockMaximo">
+                  {{ (producto.stockMaximo ?? 0) > 0 ? 'Stock: ' + producto.stockMaximo : 'Sin stock' }}
                 </span>
               </div>
               <div class="card-actions">
                 <input
                   type="number"
                   min="1"
-                  [max]="producto.stockActual ?? 0"
+                  [max]="producto.stockMaximo ?? 0"
                   value="1"
-                  [disabled]="!(producto.stockActual)"
+                  [disabled]="!(producto.stockMaximo)"
                 />
                 <button
                   type="button"
                   class="btn btn-primary btn-sm"
                   (click)="agregarAlCarrito(producto, $event)"
-                  [disabled]="!(producto.stockActual)"
+                  [disabled]="!(producto.stockMaximo)"
                 >
                   Agregar
                 </button>

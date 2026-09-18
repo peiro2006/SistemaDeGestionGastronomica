@@ -29,13 +29,16 @@ public class PedidoCreateService implements IPedidoCreateService {
     private final ProductosRepository productosRepository;
     private final UsuarioRepository usuarioRepository;
     private final CajaRepository cajaRepository;
+    private final ProductoStockMaximoService productoStockMaximoService;
 
     public PedidoCreateService(PedidoRepository pedidoRepository, ProductosRepository productosRepository,
-            UsuarioRepository usuarioRepository, CajaRepository cajaRepository) {
+            UsuarioRepository usuarioRepository, CajaRepository cajaRepository,
+            ProductoStockMaximoService productoStockMaximoService) {
         this.pedidoRepository = pedidoRepository;
         this.productosRepository = productosRepository;
         this.usuarioRepository = usuarioRepository;
         this.cajaRepository = cajaRepository;
+        this.productoStockMaximoService = productoStockMaximoService;
     }
 
     @Override
@@ -56,7 +59,6 @@ public class PedidoCreateService implements IPedidoCreateService {
 
         Pedido pedido = PedidoMapper.toModel(request, usuario);
         BigDecimal total = BigDecimal.ZERO;
-        java.util.List<Producto> productosADescontar = new java.util.ArrayList<>();
 
         for (PedidoItemReqDto itemDto : request.items()) {
             Producto producto = productosRepository.findByIdForUpdate(itemDto.idProducto())
@@ -66,14 +68,11 @@ public class PedidoCreateService implements IPedidoCreateService {
                 throw new BadRequestException("El producto " + producto.getNombreProducto() + " no está disponible");
             }
 
-            Integer stockActual = producto.getStockActual() != null ? producto.getStockActual() : 0;
-            if (stockActual < itemDto.cantidad()) {
+            int producible = productoStockMaximoService.calcularStockMaximo(producto.getIdProducto());
+            if (producible < itemDto.cantidad()) {
                 throw new BadRequestException("Stock insuficiente para " + producto.getNombreProducto() +
-                        ". Disponible: " + stockActual + ", solicitado: " + itemDto.cantidad());
+                        ". Disponible: " + producible + ", solicitado: " + itemDto.cantidad());
             }
-
-            producto.setStockActual(stockActual - itemDto.cantidad());
-            productosADescontar.add(producto);
 
             PedidoItem item = PedidoMapper.toItemModel(itemDto, producto);
             if (item.getPrecioUnitario() == null) {
@@ -93,7 +92,6 @@ public class PedidoCreateService implements IPedidoCreateService {
         pedido.setTotal(total);
         pedido.setCaja(cajaActiva);
         Pedido guardado = pedidoRepository.save(pedido);
-        productosRepository.saveAll(productosADescontar);
 
         return PedidoMapper.toResponseDto(guardado);
     }

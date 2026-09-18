@@ -28,7 +28,7 @@ export class RegistroComponent {
     {
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@gmail\.com$/)]],
       password: [
         '',
         [
@@ -99,8 +99,8 @@ export class RegistroComponent {
     if (this.form.errors?.['passwordsCoinciden']) {
       return 'Las contraseñas no coinciden.';
     }
-    if (this.form.get('email')?.errors?.['email']) {
-      return 'El formato del email no es válido.';
+    if (this.form.get('email')?.errors?.['pattern']) {
+      return 'Solo se aceptan direcciones @gmail.com';
     }
     if (this.form.get('password')?.errors?.['pattern']) {
       return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.';

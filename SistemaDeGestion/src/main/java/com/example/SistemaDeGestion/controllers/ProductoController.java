@@ -6,6 +6,8 @@ import com.example.SistemaDeGestion.dtos.request.ProductoEstadoReqDto;
 import com.example.SistemaDeGestion.dtos.request.ProductoUpdateReqDto;
 import com.example.SistemaDeGestion.dtos.response.ProductoCreateResDto;
 import com.example.SistemaDeGestion.interfaces.ICreateProductoService;
+import com.example.SistemaDeGestion.mappers.ProductoMapper;
+import com.example.SistemaDeGestion.repositories.ProductosRepository;
 import com.example.SistemaDeGestion.services.domain.CatalogoProductosService;
 import com.example.SistemaDeGestion.services.domain.ProductoEstadoService;
 import com.example.SistemaDeGestion.services.domain.ProductoGetService;
@@ -32,6 +34,7 @@ public class ProductoController {
     private final ProductoUpdateService productoUpdateService;
     private final ProductoEstadoService productoEstadoService;
     private final ProductoStockMaximoService productoStockMaximoService;
+    private final ProductosRepository productosRepository;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -55,6 +58,17 @@ public class ProductoController {
         return ResponseEntity.ok(
                 BaseResponse.ok(
                         catalogoProductosService.execute(nombre, categoria),
+                        "Productos obtenidos correctamente"
+                )
+        );
+    }
+
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BaseResponse<List<ProductoCreateResDto>>> listAllProductos() {
+        return ResponseEntity.ok(
+                BaseResponse.ok(
+                        ProductoMapper.toResponseDtoList(productosRepository.findAll()),
                         "Productos obtenidos correctamente"
                 )
         );

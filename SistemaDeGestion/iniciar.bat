@@ -17,6 +17,7 @@ if not exist "%~dp0.env" (
     set /p JWT_SECRET="Clave secreta JWT (min 32 caracteres): "
     set /p JWT_EXPIRATION="Expiracion del JWT en segundos (default 86400): "
 
+    if not "!DB_URL:~0,5!"=="jdbc:" set "DB_URL=jdbc:!DB_URL!"
     if "!JWT_EXPIRATION!"=="" set JWT_EXPIRATION=86400
 
     (
@@ -47,7 +48,7 @@ echo.
 
 REM Iniciar backend en una ventana nueva
 echo Iniciando backend (Spring Boot)...
-start "Hambur-Besa Backend" cmd /c "cd /d "%~dp0" && call mvnw spring-boot:run"
+start "Hambur-Besa Backend" cmd /k "cd /d %~dp0 && call mvnw spring-boot:run"
 
 REM Esperar a que el backend arranque
 echo Esperando a que el backend arranque...
@@ -55,7 +56,7 @@ timeout /t 20 /nobreak >nul
 
 REM Iniciar frontend en otra ventana nueva
 echo Iniciando frontend (Angular)...
-start "Hambur-Besa Frontend" cmd /c "cd /d "%~dp0../frontend" && npm start"
+start "Hambur-Besa Frontend" cmd /k "cd /d %~dp0../frontend && npm start"
 
 echo.
 echo ========================================

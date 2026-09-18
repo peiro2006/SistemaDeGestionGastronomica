@@ -125,7 +125,7 @@
                     [formControl]="resenaForm.controls.comentario"
                   ></textarea>
                   <div class="resena-actions">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="enviarResena(pedido.idPedido)">Enviar</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="enviarResena(pedido.idPedido)" [disabled]="enviandoResena()">{{ enviandoResena() ? 'Enviando...' : 'Enviar' }}</button>
                     <button type="button" class="btn btn-light btn-sm" (click)="cerrarResena()">Cancelar</button>
                   </div>
                 </div>

@@ -63,7 +63,7 @@
         @if (form.controls.email.touched && form.controls.email.invalid) {
           <span class="field-error">
             @if (form.controls.email.errors?.['required']) { El email es requerido }
-            @else if (form.controls.email.errors?.['email']) { Formato de email inválido }
+            @else if (form.controls.email.errors?.['pattern']) { Solo se aceptan direcciones @gmail.com }
           </span>
         }
       </div>

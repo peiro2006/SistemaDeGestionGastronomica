@@ -17,7 +17,7 @@ export class CarritoService {
   );
 
   agregar(producto: Producto, cantidad: number): boolean {
-    const stockDisponible = producto.stockActual ?? 0;
+    const stockDisponible = producto.stockMaximo ?? producto.stockActual ?? 0;
     const cantidadSegura = Math.max(1, cantidad);
     const actual = this.items().find((item) => item.producto.idProducto === producto.idProducto)?.cantidad ?? 0;
 

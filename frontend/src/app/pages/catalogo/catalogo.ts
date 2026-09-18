@@ -68,7 +68,7 @@ export class CatalogoComponent implements OnInit {
     const cantidad = input ? Number(input.value) || 1 : 1;
 
     if (!this.carritoService.agregar(producto, cantidad)) {
-      const stock = producto.stockActual ?? 0;
+      const stock = producto.stockMaximo ?? producto.stockActual ?? 0;
       this.error.set(`Stock insuficiente para ${producto.nombreProducto}. Disponible: ${stock}`);
       return;
     }

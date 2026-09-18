@@ -11,18 +11,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class CatalogoProductosService {
 
     private final ProductosRepository productosRepository;
+    private final ProductoStockMaximoService productoStockMaximoService;
 
     @Transactional(readOnly = true)
     public List<ProductoCreateResDto> execute(String nombre, String categoria) {
         Specification<Producto> specification = Specification
-                .where(ProductoSpecs.activos())
-                .and(ProductoSpecs.conStockDisponible());
+                .where(ProductoSpecs.activos());
 
         if (nombre != null && !nombre.isBlank()) {
             specification = specification.and(ProductoSpecs.byNombre(nombre));
@@ -31,7 +32,9 @@ public class CatalogoProductosService {
             specification = specification.and(ProductoSpecs.byCategoria(categoria));
         }
 
-        return ProductoMapper.toResponseDtoList(productosRepository.findAll(specification));
+        List<Producto> productos = productosRepository.findAll(specification);
+        Map<Long, Integer> maximos = productoStockMaximoService.calcularStockMaximoTodos();
+        return ProductoMapper.toResponseDtoList(productos, maximos);
     }
 
 }

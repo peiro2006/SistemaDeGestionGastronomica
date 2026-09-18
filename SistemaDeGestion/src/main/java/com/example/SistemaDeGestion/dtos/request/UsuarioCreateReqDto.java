@@ -16,7 +16,11 @@ public record UsuarioCreateReqDto (
         String apellido,
 
         @NotBlank(message = "Debe ingresar su email")
-        @Email(message = "Debe ingresar un email valido")
+        @Email(message = "Debe ingresar un email válido")
+        @Pattern(
+                regexp = "^[A-Za-z0-9._%+-]+@gmail\\.com$",
+                message = "Solo se aceptan direcciones @gmail.com"
+        )
         String email,
 
         @NotBlank(message = "Debe ingresar una contrasena")

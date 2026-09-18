@@ -7,6 +7,7 @@ import com.example.SistemaDeGestion.models.Producto;
 import com.example.SistemaDeGestion.models.Receta;
 
 import java.util.List;
+import java.util.Map;
 
 public class ProductoMapper {
 
@@ -59,6 +60,33 @@ public class ProductoMapper {
     public static List<ProductoCreateResDto> toResponseDtoList(List<Producto> models) {
         return models.stream()
                 .map(ProductoMapper::toResponseDto)
+                .toList();
+    }
+
+    public static ProductoCreateResDto toResponseDto(Producto producto, Integer stockMaximo) {
+        ProductoCreateResDto base = toResponseDto(producto);
+        return new ProductoCreateResDto(
+                base.idProducto(),
+                base.nombreProducto(),
+                base.descripcion(),
+                base.precio(),
+                base.categoria(),
+                base.imagenUrl(),
+                base.activo(),
+                base.stockActual(),
+                base.stockMinimo(),
+                base.idReceta(),
+                base.nombreReceta(),
+                base.idProveedor(),
+                base.nombreProveedor(),
+                stockMaximo
+        );
+    }
+
+    public static List<ProductoCreateResDto> toResponseDtoList(List<Producto> models, Map<Long, Integer> stockMaximos) {
+        return models.stream()
+                .map(p -> toResponseDto(p,
+                        stockMaximos != null ? stockMaximos.getOrDefault(p.getIdProducto(), 0) : 0))
                 .toList();
     }
 
