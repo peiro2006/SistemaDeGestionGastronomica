@@ -24,7 +24,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/catalogo', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
-  { path: 'catalogo', component: CatalogoComponent },
+  { path: 'catalogo', component: CatalogoComponent, canActivate: [authGuard] },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'mis-pedidos', component: MisPedidosComponent, canActivate: [authGuard] },
   { path: 'acceso-denegado', component: AccesoDenegadoComponent },

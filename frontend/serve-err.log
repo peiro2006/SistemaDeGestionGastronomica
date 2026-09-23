@@ -1,0 +1,157 @@
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of AdminCajasComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-cajas/admin-cajas.ts:11:72:
+[37m      11 │ ...FormsModule, RouterLink, [32mRouterLinkActive[37m, AdminSidebarComponent],
+         ╵                             [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of AdminFeedbackComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-feedback/admin-feedback.ts:11:35:
+[37m      11 │ ...s: [DatePipe, FormsModule, [32mRouterLink[37m, RouterLinkActive, AdminS...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of AdminFeedbackComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-feedback/admin-feedback.ts:11:47:
+[37m      11 │ ...FormsModule, RouterLink, [32mRouterLinkActive[37m, AdminSidebarComponent],
+         ╵                             [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of AdminProductosComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-productos/admin-productos.ts:23:33:
+[37m      23 │ ...rts: [ReactiveFormsModule, [32mRouterLink[37m, RouterLinkActive, DatePi...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of AdminProductosComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-productos/admin-productos.ts:23:45:
+[37m      23 │ ...ormsModule, RouterLink, [32mRouterLinkActive[37m, DatePipe, AdminSideba...
+         ╵                            [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of AdminProveedoresComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-proveedores/admin-proveedores.ts:11:33:
+[37m      11 │ ...rts: [ReactiveFormsModule, [32mRouterLink[37m, RouterLinkActive, DatePi...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of AdminProveedoresComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-proveedores/admin-proveedores.ts:11:45:
+[37m      11 │ ...ormsModule, RouterLink, [32mRouterLinkActive[37m, DatePipe, AdminSideba...
+         ╵                            [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-reportes/admin-reportes.html:96:37:
+[37m      96 │ ...style.width.%]="(([32mr.pedidosPorEstado?.[estado][37m ?? 0) / maxPorEs...
+         ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component AdminReportesComponent.
+
+    src/app/pages/admin-reportes/admin-reportes.ts:15:15:
+[37m      15 │   templateUrl: [32m'./admin-reportes.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-reportes/admin-reportes.html:99:41:
+[37m      99 │ ...n class="bar-value">{{ [32mr.pedidosPorEstado?.[estado][37m ?? 0 }}</span>
+         ╵                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component AdminReportesComponent.
+
+    src/app/pages/admin-reportes/admin-reportes.ts:15:15:
+[37m      15 │   templateUrl: [32m'./admin-reportes.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-reportes/admin-reportes.html:201:29:
+[37m      201 │ ...   <td>{{ [32metiquetasMetodoPago[pedido.metDePago] ?? pedido.metD[37m...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component AdminReportesComponent.
+
+    src/app/pages/admin-reportes/admin-reportes.ts:15:15:
+[37m      15 │   templateUrl: [32m'./admin-reportes.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of AdminReportesComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-reportes/admin-reportes.ts:14:25:
+[37m      14 │   imports: [FormsModule, [32mRouterLink[37m, RouterLinkActive, DatePipe, C...
+         ╵                          [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of AdminReportesComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-reportes/admin-reportes.ts:14:37:
+[37m      14 │ ...ormsModule, RouterLink, [32mRouterLinkActive[37m, DatePipe, CurrencyPip...
+         ╵                            [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of AdminStockComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-stock/admin-stock.ts:15:33:
+[37m      15 │ ...rts: [ReactiveFormsModule, [32mRouterLink[37m, RouterLinkActive, DatePi...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of AdminStockComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/admin-stock/admin-stock.ts:15:45:
+[37m      15 │ ...ormsModule, RouterLink, [32mRouterLinkActive[37m, DatePipe, AdminSideba...
+         ╵                            [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of DetalleCajaComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/detalle-caja/detalle-caja.ts:11:22:
+[37m      11 │   imports: [DatePipe, [32mRouterLink[37m, RouterLinkActive, AdminSidebarCo...
+         ╵                       [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of DetalleCajaComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/detalle-caja/detalle-caja.ts:11:34:
+[37m      11 │ ...: [DatePipe, RouterLink, [32mRouterLinkActive[37m, AdminSidebarComponent],
+         ╵                             [32m~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/empleado-pedidos/gestion-pedidos.html:132:42:
+[37m      132 │                 @if (receta.ingredientes?.[32mlength[37m) {
+          ╵                                           [32m~~~~~~[0m
+
+  Warning occurs in the template of component EmpleadoPedidosComponent.
+
+    src/app/pages/empleado-pedidos/gestion-pedidos.ts:12:15:
+[37m      12 │   templateUrl: [32m'./gestion-pedidos.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of KpiDashboardComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/kpi-dashboard/kpi-dashboard.ts:34:26:
+[37m      34 │   imports: [CommonModule, [32mRouterLink[37m, RouterLinkActive, AdminSideb...
+         ╵                           [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLinkActive is not used within the template of KpiDashboardComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/kpi-dashboard/kpi-dashboard.ts:34:38:
+[37m      34 │ ...ommonModule, RouterLink, [32mRouterLinkActive[37m, AdminSidebarComponent],
+         ╵                             [32m~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
